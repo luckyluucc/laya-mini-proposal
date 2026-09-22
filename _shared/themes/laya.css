@@ -348,3 +348,156 @@ h1.title,.h1,h2.title,.h2{font-family:var(--font-display);font-weight:600;letter
   font-family:var(--font-latin);font-style:italic;font-size:19px;
   color:var(--text-3);letter-spacing:.1em;margin:0 0 26px;
 }
+
+/* ============ MOBILE OPTIMIZATION ============ */
+@media (max-width: 768px) {
+  .slide {
+    padding: 40px 22px !important;
+    overflow-y: auto;
+    -webkit-overflow-scrolling: touch;
+  }
+
+  /* 字号缩放 */
+  h1.title, .h1 { font-size: 36px !important; line-height: 1.15 !important; margin-bottom: 12px !important; }
+  h2.title, .h2 { font-size: 28px !important; line-height: 1.2 !important; margin-bottom: 10px !important; }
+  h3, .h3 { font-size: 20px !important; line-height: 1.25 !important; }
+  h4, .h4 { font-size: 16px !important; }
+  .lede { font-size: 16px !important; line-height: 1.6 !important; max-width: none !important; }
+  .kicker { font-size: 12px !important; letter-spacing: .2em !important; }
+  .eyebrow { font-size: 11px !important; letter-spacing: .2em !important; }
+
+  /* 三扇门卡片缩小 */
+  .door-card {
+    padding: 20px 18px !important;
+    min-height: auto !important;
+  }
+  .door-card .dc-num { font-size: 28px !important; }
+  .door-card .dc-title { font-size: 20px !important; }
+  .door-card .dc-latin { font-size: 13px !important; }
+  .door-card .dc-desc { font-size: 13px !important; }
+
+  /* 价签卡缩小 */
+  .price-card {
+    padding: 20px 18px !important;
+  }
+  .price-card .pc-label { font-size: 12px !important; }
+  .price-card .pc-main { font-size: 36px !important; }
+  .price-card .pc-main small { font-size: 16px !important; }
+  .price-card .pc-sub { font-size: 13px !important; }
+  .price-card .pc-row { font-size: 13px !important; padding: 8px 0 !important; }
+  .price-card .pc-foot { font-size: 11px !important; }
+
+  /* 演示布局：上下堆叠 */
+  .demo-layout {
+    grid-template-columns: 1fr !important;
+    gap: 24px !important;
+  }
+  .demo-copy .h2 { font-size: 26px !important; }
+  .demo-copy .demo-latin { font-size: 14px !important; margin-bottom: 14px !important; }
+
+  /* 手机 mockup 缩小 */
+  .phone {
+    width: 220px !important;
+    height: auto !important;
+    aspect-ratio: 9 / 19.5;
+    margin: 0 auto !important;
+  }
+
+  /* 功能清单缩小 */
+  .feat-list .fi {
+    padding: 12px 0 !important;
+    gap: 12px !important;
+  }
+  .feat-list .fi-num { font-size: 20px !important; }
+  .feat-list .fi h4 { font-size: 15px !important; }
+  .feat-list .fi p { font-size: 12px !important; }
+
+  /* 流程节点缩小 */
+  .flow .node { padding: 12px !important; }
+  .flow .node .ic { font-size: 22px !important; }
+  .flow .node h4 { font-size: 13px !important; }
+  .flow .node p { font-size: 11px !important; }
+
+  /* 时间线缩小 */
+  .tl-v { padding-left: 22px !important; margin-top: 20px !important; }
+  .tl-v-date { font-size: 11px !important; }
+  .tl-v-title { font-size: 15px !important; }
+  .tl-v-text { font-size: 13px !important; }
+
+  /* 承诺页大字 */
+  .promise-big { font-size: 28px !important; }
+
+  /* 上线之路甘特图 */
+  .gantt { padding: 14px !important; }
+  .gantt .hd { font-size: 10px !important; }
+  .gantt .lbl { font-size: 12px !important; }
+
+  /* 投入三线表 */
+  .rm .col { padding: 14px !important; }
+  .rm h4 { font-size: 13px !important; }
+  .rm ul { font-size: 12px !important; padding-left: 14px !important; }
+
+  /* 场景故事 */
+  .scene-desc { font-size: 14px !important; }
+  .scene-time { font-size: 12px !important; }
+
+  /* 排序页的门卡堆叠 */
+  .sort-doors {
+    flex-direction: column !important;
+    gap: 14px !important;
+  }
+  .sort-doors .door-card { flex: none !important; }
+
+  /* 底部滑动提示 */
+  .swipe-hint {
+    position: fixed;
+    bottom: 20px;
+    left: 50%;
+    transform: translateX(-50%);
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 8px 16px;
+    background: rgba(27,58,45,.85);
+    color: #F5F0E8;
+    border-radius: 999px;
+    font-size: 12px;
+    font-weight: 500;
+    letter-spacing: .08em;
+    z-index: 100;
+    pointer-events: none;
+    animation: swipeHintFade 3.5s ease-in-out forwards;
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+  }
+  .swipe-hint .sh-arrow {
+    display: inline-block;
+    animation: swipeArrow 1.2s ease-in-out infinite;
+  }
+  @keyframes swipeArrow {
+    0%, 100% { transform: translateX(0); opacity: .6; }
+    50% { transform: translateX(6px); opacity: 1; }
+  }
+  @keyframes swipeHintFade {
+    0% { opacity: 0; transform: translateX(-50%) translateY(10px); }
+    15% { opacity: 1; transform: translateX(-50%) translateY(0); }
+    85% { opacity: 1; }
+    100% { opacity: 0; transform: translateX(-50%) translateY(-6px); }
+  }
+
+  /* 移动端隐藏桌面元素 */
+  .slide-number { display: none !important; }
+
+  /* 进度条加粗 */
+  .progress-bar { height: 3px !important; }
+}
+
+/* 更小屏幕 */
+@media (max-width: 420px) {
+  .slide { padding: 32px 16px !important; }
+  h1.title, .h1 { font-size: 30px !important; }
+  h2.title, .h2 { font-size: 24px !important; }
+  .price-card .pc-main { font-size: 30px !important; }
+  .door-card .dc-title { font-size: 18px !important; }
+  .phone { width: 200px !important; }
+}

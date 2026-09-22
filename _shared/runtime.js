@@ -1095,6 +1095,53 @@
       if (ind) ind.textContent = a;
     }
 
+    /* ===== touch swipe for mobile ===== */
+    let touchStartX = 0, touchStartY = 0, touchStartTime = 0;
+    const SWIPE_MIN_DIST = 40;   // px
+    const SWIPE_MAX_DURATION = 500; // ms
+    const SWIPE_MAX_Y_DRIFT = 60;  // px vertical tolerance
+
+    function onTouchStart(e) {
+      if (editMode) return;
+      if (e.touches.length !== 1) return;
+      touchStartX = e.touches[0].clientX;
+      touchStartY = e.touches[0].clientY;
+      touchStartTime = Date.now();
+    }
+    function onTouchEnd(e) {
+      if (editMode) return;
+      if (!touchStartTime) return;
+      const touch = e.changedTouches[0];
+      const dx = touch.clientX - touchStartX;
+      const dy = touch.clientY - touchStartY;
+      const dt = Date.now() - touchStartTime;
+      touchStartTime = 0;
+      if (dt > SWIPE_MAX_DURATION) return;
+      if (Math.abs(dy) > SWIPE_MAX_Y_DRIFT) return;
+      if (Math.abs(dx) < SWIPE_MIN_DIST) return;
+      if (dx < 0) { go(idx + 1); } else { go(idx - 1); }
+      e.preventDefault();
+    }
+    document.addEventListener('touchstart', onTouchStart, { passive: true });
+    document.addEventListener('touchend', onTouchEnd, { passive: false });
+
+    /* ===== swipe hint on mobile ===== */
+    (function showSwipeHint() {
+      if (!('ontouchstart' in window)) return;
+      if (window.innerWidth > 768) return;
+      // 只在第一次访问时显示（用 sessionStorage 记住）
+      try {
+        if (sessionStorage.getItem('laya_swipe_hinted')) return;
+        sessionStorage.setItem('laya_swipe_hinted', '1');
+      } catch(e) {}
+      const hint = document.createElement('div');
+      hint.className = 'swipe-hint';
+      hint.innerHTML = '<span>左右滑动翻页</span><span class="sh-arrow">→</span>';
+      document.body.appendChild(hint);
+      // 3.5 秒后动画结束，移除 DOM
+      setTimeout(function(){ hint.remove(); }, 3800);
+    })();
+
     document.addEventListener('keydown', function (e) {
       if (e.metaKey||e.ctrlKey||e.altKey) return;
       // 编辑模式下，只响应 Escape 退出，其余交给浏览器

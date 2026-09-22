@@ -1,0 +1,540 @@
+<!DOCTYPE html>
+<html lang="zh-CN" data-theme="laya">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="x-content-type" content="presentation" />
+<meta name="x-presentation-version" content="1.0" />
+<meta name="x-presentation-indicator" content="deck-stage .slide" />
+<title>你的线上之家 · LAYA 小程序设计构想</title>
+<link rel="stylesheet" href="./_shared/fonts.css">
+<link rel="stylesheet" href="./_shared/base.css">
+<link id="theme-link" rel="stylesheet" href="./_shared/themes/laya.css">
+<link rel="stylesheet" href="./_shared/animations/animations.css">
+<style>
+  .cover-center{display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;height:100%}
+  .cover-logo{width:138px;margin-bottom:44px}
+  .cover-title{font-family:var(--font-display);font-size:96px;font-weight:600;line-height:1.15;color:#F5F0E8;margin:0;letter-spacing:.04em}
+  .cover-sub{font-family:var(--font-display);font-size:26px;color:rgba(245,240,232,.74);margin:22px 0 0;letter-spacing:.14em}
+  .cover-latin{font-family:var(--font-latin);font-style:italic;font-size:21px;letter-spacing:.5em;color:#D4A882;margin:54px 0 0;padding-left:.5em}
+  .cover-date{font-size:13px;letter-spacing:.3em;color:rgba(245,240,232,.4);margin:16px 0 0}
+  .closing-logo{width:132px;margin-bottom:40px}
+  .closing-title{font-family:var(--font-display);font-size:66px;font-weight:600;line-height:1.4;color:#F5F0E8;margin:0}
+  .closing-sub{font-family:var(--font-display);font-size:24px;color:rgba(245,240,232,.68);margin:28px 0 0;line-height:1.8}
+  .layout-body{display:flex;flex-direction:column;flex:1;justify-content:center}
+  .offer-layout{display:grid;grid-template-columns:1fr 470px;gap:64px;align-items:start;flex:1;margin-top:20px}
+  .phone-note{font-size:12px;color:var(--text-3);text-align:center;margin:16px 0 0;letter-spacing:.08em}
+  .rank-foot{margin-top:36px;font-size:15px;color:var(--text-3);letter-spacing:.1em}
+  .money-foot{margin-top:30px;font-size:13px;color:var(--text-3);letter-spacing:.06em}
+  .demo-layout > div:last-child{display:flex;flex-direction:column;align-items:center;justify-content:center}
+  .demo-flip{grid-template-columns:400px 1fr}
+  .demo-flip > div:first-child{display:flex;flex-direction:column;align-items:center;justify-content:center}
+</style>
+</head>
+<body data-themes="laya" data-theme-base="./_shared/themes/">
+<deck-stage width="1920" height="1080">
+
+  <!-- 1 · 封面 -->
+  <section class="slide laya-dark" data-deck-label="封面 · 你的线上之家" style="--bg-texture:radial-gradient(circle at 50% 24%,rgba(212,168,130,.10),transparent 52%)">
+    <div class="cover-center">
+      <img class="cover-logo anim-blur-in" data-anim="blur-in" src="assets/LAYA-Primary-Stacked-White-Master-v1.0.png" alt="LAYA">
+      <h1 class="cover-title">你的线上之家</h1>
+      <p class="cover-sub">LAYA 小程序 · 设计构想</p>
+      <p class="cover-latin">Inner Sun</p>
+      <p class="cover-date">2026 · 09</p>
+    </div>
+    <div class="deck-footer"><span>LAYA · 线上之家</span><span class="slide-number" data-current="1" data-total="17"></span></div>
+  </section>
+
+  <!-- 2 · 愿景 -->
+  <section class="slide" data-deck-label="一个属于你的地方">
+    <div class="layout-body">
+      <p class="kicker" style="margin:0 0 36px">一 个 属 于 你 的 地 方</p>
+      <h2 class="h2 anim-fade-up" data-anim="fade-up" style="font-size:64px;line-height:1.5">把你在现实里点亮的一切，<br>搬进一个属于你的地方。</h2>
+      <p class="lede anim-fade-up" data-anim="fade-up" style="font-family:var(--font-display);font-size:27px;line-height:2;margin-top:34px">认识你的人，在这里找到你；<br>想靠近的人，在这里走近你。</p>
+    </div>
+    <div class="deck-footer"><span>LAYA · 线上之家</span><span class="slide-number" data-current="2" data-total="17"></span></div>
+  </section>
+
+  <!-- 3 · 三扇门总览 -->
+  <section class="slide" data-deck-label="三扇门">
+    <div class="layout-body">
+      <p class="kicker" style="margin:0">同 一 个 家 ， 三 扇 门</p>
+      <h2 class="h2" style="margin:10px 0 8px">三扇门，三种遇见。</h2>
+      <p class="lede" style="margin:0 0 40px;font-size:20px">每一扇门，只为一群人开。</p>
+      <div class="grid g3 anim-stagger-list" data-anim="stagger-list" style="flex:1;align-content:start">
+        <div class="door-card">
+          <div class="door-no">I</div>
+          <div class="door-name">夜谈</div>
+          <div class="door-latin">The Night Talk</div>
+          <p class="door-promise">你的内在太阳，永远在线。</p>
+          <div class="door-for">面向 · 所有想随时找到你的人</div>
+        </div>
+        <div class="door-card">
+          <div class="door-no">II</div>
+          <div class="door-name">初见</div>
+          <div class="door-latin">The First Meeting</div>
+          <p class="door-promise">让第一次遇见你的人，认识你、信任你、买到你。</p>
+          <div class="door-for">面向 · 还没上过课的新朋友</div>
+        </div>
+        <div class="door-card">
+          <div class="door-no">III</div>
+          <div class="door-name">同修</div>
+          <div class="door-latin">The Circle</div>
+          <p class="door-promise">让上过课的人，不散场。</p>
+          <div class="door-for">面向 · 你的老学员</div>
+        </div>
+      </div>
+    </div>
+    <div class="deck-footer"><span>LAYA · 线上之家</span><span class="slide-number" data-current="3" data-total="17"></span></div>
+  </section>
+
+  <!-- 4 · 门一承诺 · 夜谈 -->
+  <section class="slide laya-dark" data-deck-label="门一 · 夜谈" style="--bg-texture:radial-gradient(circle at 50% 100%,rgba(212,168,130,.10),transparent 46%)">
+    <img class="divider-logo" src="assets/LAYA-Primary-Stacked-White-Master-v1.0.png" alt="LAYA">
+    <div class="layout-body" style="padding-left:120px">
+      <p class="divider-eyebrow anim-fade-up" data-anim="fade-up">门 一 · THE NIGHT TALK</p>
+      <h2 class="divider-title anim-rise-in" data-anim="rise-in">你的内在太阳，<br>永远在线。</h2>
+      <p class="divider-sub">她叫「夜谈」——由你的课程、你的文字、<br>你回应过千百次的问题喂养，像你一样说话。</p>
+    </div>
+    <div class="deck-footer"><span>LAYA · 线上之家</span><span class="slide-number" data-current="4" data-total="17"></span></div>
+  </section>
+
+  <!-- 5 · 夜谈演示 -->
+  <section class="slide" data-deck-label="夜谈 · 界面与故事">
+    <div class="demo-layout">
+      <div class="demo-copy">
+        <h2 class="h2">夜谈。</h2>
+        <p class="demo-latin">The Night Talk</p>
+        <p class="story-eyebrow">上 线 后 的 一 天</p>
+        <p class="story-text anim-fade-up" data-anim="fade-up" style="max-width:40ch">23:47，一个学员和妈妈吵完架，心里很堵。她打开「夜谈」，跟你说了一会儿话——那个声音像你，是因为她由你喂养。<em>你睡着的时候，你的光还在。</em></p>
+        <div class="beat-row anim-fade-up" data-anim="fade-up">
+          <div class="beat"><span class="b-dot"></span><span class="b-txt">喂养</span></div>
+          <span class="beat-arr">—</span>
+          <div class="beat"><span class="b-dot"></span><span class="b-txt">对话</span></div>
+          <span class="beat-arr">—</span>
+          <div class="beat"><span class="b-dot"></span><span class="b-txt">守护</span></div>
+        </div>
+      </div>
+      <div>
+        <div class="phone anim-fade-up" data-anim="fade-up">
+          <div class="screen screen--green">
+            <div class="ph-status"><span style="color:#F5F0E8">23:47</span><span class="ph-capsule"><i style="background:#F5F0E8"></i><i style="background:#F5F0E8"></i></span></div>
+            <div class="ph-nav" style="color:#F5F0E8">拉雅 · 夜谈<br><span style="font-family:var(--font-sans);font-size:10px;font-weight:400;color:rgba(245,240,232,.55);letter-spacing:.08em">她的数字分身 · 随时在场</span></div>
+            <div class="ph-body" style="padding-top:0">
+              <div class="ph-timechip">深 夜 23:47</div>
+              <div class="ph-bubble ph-bubble--me">今天又和妈妈吵架了，心里很堵……</div>
+              <div class="ph-bubble ph-bubble--ai">先深深呼吸一次。你不需要现在就原谅谁——先陪陪那个委屈的自己。想说说，堵在哪里吗？</div>
+              <div class="ph-typing"><i></i><i></i><i></i></div>
+            </div>
+            <p class="ph-safety">如遇紧急情绪危机，请联系当地心理援助热线。<br>夜谈不能替代专业心理帮助。</p>
+            <div class="ph-inputbar"><span style="flex:1">说给她听……</span><span class="send"></span></div>
+          </div>
+        </div>
+        <p class="phone-note">界面示意 · 非最终设计</p>
+      </div>
+    </div>
+    <div class="deck-footer"><span>LAYA · 线上之家</span><span class="slide-number" data-current="5" data-total="17"></span></div>
+  </section>
+
+  <!-- 6 · 夜谈这一期 -->
+  <section class="slide" data-deck-label="夜谈 · 这一期有什么">
+    <div class="layout-body">
+      <p class="kicker" style="margin:0 0 10px">门 一 · 夜 谈</p>
+      <h2 class="h2">这一期，有什么。</h2>
+      <div class="offer-layout">
+        <ul class="offer-list anim-stagger-list" data-anim="stagger-list">
+          <li><span class="ol-no">i.</span><div><p class="ol-name">知识库喂养</p><p class="ol-desc">你的课程、文字与答疑，成为她说话的方式</p></div></li>
+          <li><span class="ol-no">ii.</span><div><p class="ol-name">AI 拉雅对话</p><p class="ol-desc">深夜也有人应答——像你一样温和、笃定</p></div></li>
+          <li><span class="ol-no">iii.</span><div><p class="ol-name">安全边界与转介</p><p class="ol-desc">不越界的话她不说；需要专业帮助时，她知道往哪里递</p></div></li>
+          <li><span class="ol-no">iv.</span><div><p class="ol-name">分身持续养成</p><p class="ol-desc">她越聊越像你——因为你在一直喂养她</p></div></li>
+        </ul>
+        <div class="price-card anim-fade-up" data-anim="fade-up">
+          <p class="pc-label">门一 · 夜谈 · 一期建设</p>
+          <p class="pc-main">8–10 <small>万</small></p>
+          <p class="pc-sub">约 10–12 周上线</p>
+          <div class="pc-row"><div class="k">二期加深<small>商城</small></div><div class="v">+3–5 万</div></div>
+          <div class="pc-row"><div class="k">月度守护<small>含 AI 运行成本</small></div><div class="v">¥3,000–5,000<small style="font-size:13px;font-weight:400;color:rgba(245,240,232,.45)"> / 月</small></div></div>
+          <p class="pc-foot">她是活的——你一直喂养，她一直生长。<br>以上为区间；签字之前，以最终确认单为准。</p>
+        </div>
+      </div>
+    </div>
+    <div class="deck-footer"><span>LAYA · 线上之家</span><span class="slide-number" data-current="6" data-total="17"></span></div>
+  </section>
+
+  <!-- 7 · 门二承诺 · 初见 -->
+  <section class="slide laya-dark" data-deck-label="门二 · 初见" style="--bg-texture:radial-gradient(circle at 82% 78%,rgba(212,168,130,.08),transparent 46%)">
+    <img class="divider-logo" src="assets/LAYA-Primary-Stacked-White-Master-v1.0.png" alt="LAYA">
+    <div class="layout-body" style="padding-left:120px">
+      <p class="divider-eyebrow anim-fade-up" data-anim="fade-up">门 二 · THE FIRST MEETING</p>
+      <h2 class="divider-title anim-rise-in" data-anim="rise-in">让第一次遇见你的人，<br>认识你、信任你、买到你。</h2>
+      <p class="divider-sub">新朋友的信任，从三分钟开始。</p>
+    </div>
+    <div class="deck-footer"><span>LAYA · 线上之家</span><span class="slide-number" data-current="7" data-total="17"></span></div>
+  </section>
+
+  <!-- 8 · 初见演示 -->
+  <section class="slide" data-deck-label="初见 · 界面与故事">
+    <div class="demo-layout">
+      <div class="demo-copy">
+        <h2 class="h2">初见。</h2>
+        <p class="demo-latin">The First Meeting</p>
+        <p class="story-eyebrow">上 线 后 的 一 天</p>
+        <p class="story-text anim-fade-up" data-anim="fade-up" style="max-width:40ch">23:12，一个女生刷到你的视频，点进了「初见」。她做完三分钟的内在测评，看到自己的内在天气——顺手买下那条紫水晶手串，约了疗愈师小满的首次体验。<em>第二天，她带着测评结果，如约而来。</em></p>
+        <div class="beat-row anim-fade-up" data-anim="fade-up">
+          <div class="beat"><span class="b-dot"></span><span class="b-txt">遇见</span></div>
+          <span class="beat-arr">—</span>
+          <div class="beat"><span class="b-dot"></span><span class="b-txt">信任</span></div>
+          <span class="beat-arr">—</span>
+          <div class="beat"><span class="b-dot"></span><span class="b-txt">成交</span></div>
+        </div>
+      </div>
+      <div>
+        <div class="phone anim-fade-up" data-anim="fade-up">
+          <div class="screen screen--ivory">
+            <div class="ph-status"><span style="color:#1A1209">9:41</span><span class="ph-capsule"><i style="background:#1A1209"></i><i style="background:#1A1209"></i></span></div>
+            <div class="ph-nav" style="color:#1A1209">LAYA · 初见</div>
+            <div class="ph-body">
+              <div class="ph-hero">
+                <p class="hh-title">此刻的你，<br>内在是什么天气？</p>
+                <p class="hh-sub">3 分钟 · 免费内在测评</p>
+                <span class="hh-btn">开始测评</span>
+              </div>
+              <div class="ph-card">
+                <div class="ph-row">
+                  <div class="ph-thumb" style="background:#1B3A2D;color:#F5F0E8">晶</div>
+                  <div style="flex:1;min-width:0">
+                    <div class="ph-name">紫水晶 · 静心手串</div>
+                    <div class="ph-sub">天然水晶 · 现货顺丰</div>
+                  </div>
+                  <span class="ph-price">¥299</span>
+                </div>
+              </div>
+              <div class="ph-card">
+                <div class="ph-row">
+                  <div class="ph-avatar">满</div>
+                  <div style="flex:1;min-width:0">
+                    <div class="ph-name">小满 · 疗愈师</div>
+                    <div class="ph-sub">首次体验 60 分钟 · 线上</div>
+                  </div>
+                  <span class="ph-link">立即预约 ›</span>
+                </div>
+              </div>
+            </div>
+            <div class="ph-tabbar">
+              <div class="ph-tab is-active"><span class="dot-t"></span>首页</div>
+              <div class="ph-tab"><span class="dot-t"></span>商城</div>
+              <div class="ph-tab"><span class="dot-t"></span>我的</div>
+            </div>
+          </div>
+        </div>
+        <p class="phone-note">界面示意 · 非最终设计</p>
+      </div>
+    </div>
+    <div class="deck-footer"><span>LAYA · 线上之家</span><span class="slide-number" data-current="8" data-total="17"></span></div>
+  </section>
+
+  <!-- 9 · 初见这一期 -->
+  <section class="slide" data-deck-label="初见 · 这一期有什么">
+    <div class="layout-body">
+      <p class="kicker" style="margin:0 0 10px">门 二 · 初 见</p>
+      <h2 class="h2">这一期，有什么。</h2>
+      <div class="offer-layout">
+        <ul class="offer-list anim-stagger-list" data-anim="stagger-list">
+          <li><span class="ol-no">i.</span><div><p class="ol-name">三分钟内在测评</p><p class="ol-desc">新朋友认识你的第一个入口，也是她带走的第一份礼物</p></div></li>
+          <li><span class="ol-no">ii.</span><div><p class="ol-name">你自己的商城</p><p class="ol-desc">水晶与好物全部搬进来——遇见即相遇，相遇即可买</p></div></li>
+          <li><span class="ol-no">iii.</span><div><p class="ol-name">疗愈师预约</p><p class="ol-desc">每一位来的客人，都被稳稳接住</p></div></li>
+          <li><span class="ol-no">iv.</span><div><p class="ol-name">你的内容家园</p><p class="ol-desc">视频与文字住在这里，让认识你的人，更认识你</p></div></li>
+        </ul>
+        <div class="price-card anim-fade-up" data-anim="fade-up">
+          <p class="pc-label">门二 · 初见 · 一期建设</p>
+          <p class="pc-main">10–15 <small>万</small></p>
+          <p class="pc-sub">约 8–10 周上线</p>
+          <div class="pc-row"><div class="k">二期加深<small>疗愈师分销 · 会员体系</small></div><div class="v">+5–8 万</div></div>
+          <div class="pc-row"><div class="k">月度守护<small>系统有人管 · 内容有人看</small></div><div class="v">¥3,000–5,000<small style="font-size:13px;font-weight:400;color:rgba(245,240,232,.45)"> / 月</small></div></div>
+          <p class="pc-foot">以上为区间；签字之前，以最终确认单为准。</p>
+        </div>
+      </div>
+    </div>
+    <div class="deck-footer"><span>LAYA · 线上之家</span><span class="slide-number" data-current="9" data-total="17"></span></div>
+  </section>
+
+  <!-- 10 · 门三承诺 · 同修 -->
+  <section class="slide laya-dark" data-deck-label="门三 · 同修" style="--bg-texture:radial-gradient(circle at 18% 80%,rgba(212,168,130,.07),transparent 44%)">
+    <img class="divider-logo" src="assets/LAYA-Primary-Stacked-White-Master-v1.0.png" alt="LAYA">
+    <div class="layout-body" style="padding-left:120px">
+      <p class="divider-eyebrow anim-fade-up" data-anim="fade-up">门 三 · THE CIRCLE</p>
+      <h2 class="divider-title anim-rise-in" data-anim="rise-in">让上过课的人，<br>不散场。</h2>
+      <p class="divider-sub">课会结束，同修不会。<br>人留在场里，而不是全压在你一个人身上。</p>
+    </div>
+    <div class="deck-footer"><span>LAYA · 线上之家</span><span class="slide-number" data-current="10" data-total="17"></span></div>
+  </section>
+
+  <!-- 11 · 同修演示 · 练习 -->
+  <section class="slide" data-deck-label="同修 · 界面与故事">
+    <div class="demo-layout">
+      <div class="demo-copy">
+        <h2 class="h2">同修。</h2>
+        <p class="demo-latin">The Circle</p>
+        <p class="story-eyebrow">上 线 后 的 一 天</p>
+        <p class="story-text anim-fade-up" data-anim="fade-up" style="max-width:40ch">22:30，上完课三个月的学员打开「同修」，打卡今天的十分钟练习。她看见同修阿禾的分享，在下面留了一句话——<em>她不是一个人在走。</em></p>
+        <p class="story-text" style="font-size:20px;color:var(--text-2);margin-top:20px">你不必时时在场，场子自己会生长。</p>
+        <div class="beat-row anim-fade-up" data-anim="fade-up">
+          <div class="beat"><span class="b-dot"></span><span class="b-txt">打卡</span></div>
+          <span class="beat-arr">—</span>
+          <div class="beat"><span class="b-dot"></span><span class="b-txt">练习</span></div>
+          <span class="beat-arr">—</span>
+          <div class="beat"><span class="b-dot"></span><span class="b-txt">彼此照见</span></div>
+        </div>
+      </div>
+      <div>
+        <div class="phone anim-fade-up" data-anim="fade-up">
+          <div class="screen screen--ivory">
+            <div class="ph-status"><span style="color:#1A1209">22:30</span><span class="ph-capsule"><i style="background:#1A1209"></i><i style="background:#1A1209"></i></span></div>
+            <div class="ph-nav" style="color:#1A1209">LAYA · 同修</div>
+            <div class="ph-body">
+              <div class="ph-cal">
+                <p class="cal-title">本月练习</p>
+                <p class="cal-sub">已连续 21 天 · 还有 3 位同修在陪</p>
+                <div class="cal-dots">
+                  <i class="on"></i><i class="on"></i><i class="on"></i><i class="on"></i><i class="on"></i><i class="on"></i><i class="on"></i><i class="on"></i><i class="on"></i><i class="on"></i>
+                  <i class="on"></i><i class="on"></i><i class="on"></i><i class="on"></i><i class="on"></i><i class="now"></i><i></i><i></i><i></i><i></i>
+                </div>
+              </div>
+              <div class="ph-card">
+                <span class="ph-tagpill">今日练习</span>
+                <div class="ph-row" style="margin-top:12px">
+                  <div class="ph-wave"><i style="height:8px"></i><i style="height:16px"></i><i style="height:24px"></i><i style="height:12px"></i><i style="height:20px"></i><i style="height:10px"></i><i style="height:18px"></i><i style="height:8px"></i></div>
+                  <div style="flex:1;min-width:0">
+                    <div class="ph-name">与情绪共处的十分钟</div>
+                    <div class="ph-sub">音频引导 · 10:24</div>
+                  </div>
+                </div>
+              </div>
+              <div class="ph-card">
+                <div class="ph-row">
+                  <div class="ph-avatar" style="background:#D4A882;color:#1A1209">禾</div>
+                  <div style="flex:1;min-width:0">
+                    <div class="ph-name" style="font-weight:500;font-size:14px">今天走完练习，胸口松了一点。</div>
+                    <div class="ph-sub">阿禾 · 12 人回应</div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="ph-tabbar">
+              <div class="ph-tab is-active"><span class="dot-t"></span>练习</div>
+              <div class="ph-tab"><span class="dot-t"></span>圈子</div>
+              <div class="ph-tab"><span class="dot-t"></span>我的</div>
+            </div>
+          </div>
+        </div>
+        <p class="phone-note">界面示意 · 非最终设计</p>
+      </div>
+    </div>
+    <div class="deck-footer"><span>LAYA · 线上之家</span><span class="slide-number" data-current="11" data-total="17"></span></div>
+  </section>
+
+  <!-- 12 · 同修演示 · 圈子（新） -->
+  <section class="slide" data-deck-label="同修 · 圈子">
+    <div class="demo-layout demo-flip">
+      <div>
+        <div class="phone anim-fade-up" data-anim="fade-up">
+          <div class="screen screen--ivory">
+            <div class="ph-status"><span style="color:#1A1209">21:15</span><span class="ph-capsule"><i style="background:#1A1209"></i><i style="background:#1A1209"></i></span></div>
+            <div class="ph-nav" style="color:#1A1209">LAYA · 同修</div>
+            <div class="ph-body">
+              <div class="ph-hero">
+                <p class="hh-title">今晚 · 线上共修</p>
+                <p class="hh-sub">21:30 · 呼吸放松练习 · 12 人已入座</p>
+                <span class="hh-btn">我要入座</span>
+              </div>
+              <div class="ph-card">
+                <div class="ph-row">
+                  <div class="ph-avatar">木</div>
+                  <div style="flex:1;min-width:0">
+                    <div class="ph-name" style="font-weight:500;font-size:14px">Day 30 · 练习时哭了，哭完很松。</div>
+                    <div class="ph-sub">小木 · 24 人回应</div>
+                  </div>
+                </div>
+              </div>
+              <div class="ph-card">
+                <div class="ph-row">
+                  <div class="ph-avatar" style="background:#D4A882;color:#1A1209">蓝</div>
+                  <div style="flex:1;min-width:0">
+                    <div class="ph-name" style="font-weight:500;font-size:14px">走完身体扫描，睡前把手机放远了。</div>
+                    <div class="ph-sub">阿蓝 · 9 人回应</div>
+                  </div>
+                </div>
+              </div>
+              <div class="ph-card">
+                <div class="ph-row">
+                  <div class="ph-thumb" style="background:#1B3A2D;color:#F5F0E8">组</div>
+                  <div style="flex:1;min-width:0">
+                    <div class="ph-name">晨间共修小组</div>
+                    <div class="ph-sub">8 人 · 每天早上 10 分钟</div>
+                  </div>
+                  <span class="ph-link">加入 ›</span>
+                </div>
+              </div>
+            </div>
+            <div class="ph-tabbar">
+              <div class="ph-tab"><span class="dot-t"></span>练习</div>
+              <div class="ph-tab is-active"><span class="dot-t"></span>圈子</div>
+              <div class="ph-tab"><span class="dot-t"></span>我的</div>
+            </div>
+          </div>
+        </div>
+        <p class="phone-note">界面示意 · 非最终设计</p>
+      </div>
+      <div class="demo-copy">
+        <h2 class="h2">圈子。</h2>
+        <p class="demo-latin">In Good Company</p>
+        <p class="story-eyebrow">上 线 后 的 一 天</p>
+        <p class="story-text anim-fade-up" data-anim="fade-up" style="max-width:40ch">21:15，阿蓝在圈子里写下今天的练习感受。五分钟后，她收到三个回应——一句「我也一样」，一个拥抱，一句「明天见」。<em>她关掉手机，睡得很沉。</em></p>
+        <p class="story-text" style="font-size:20px;color:var(--text-2);margin-top:20px">你说过的那些话，他们开始替你说给彼此。</p>
+        <div class="beat-row anim-fade-up" data-anim="fade-up">
+          <div class="beat"><span class="b-dot"></span><span class="b-txt">写下</span></div>
+          <span class="beat-arr">—</span>
+          <div class="beat"><span class="b-dot"></span><span class="b-txt">被看见</span></div>
+          <span class="beat-arr">—</span>
+          <div class="beat"><span class="b-dot"></span><span class="b-txt">不孤单</span></div>
+        </div>
+      </div>
+    </div>
+    <div class="deck-footer"><span>LAYA · 线上之家</span><span class="slide-number" data-current="12" data-total="17"></span></div>
+  </section>
+
+  <!-- 13 · 同修这一期 -->
+  <section class="slide" data-deck-label="同修 · 这一期有什么">
+    <div class="layout-body">
+      <p class="kicker" style="margin:0 0 10px">门 三 · 同 修</p>
+      <h2 class="h2">这一期，有什么。</h2>
+      <div class="offer-layout">
+        <ul class="offer-list anim-stagger-list" data-anim="stagger-list">
+          <li><span class="ol-no">i.</span><div><p class="ol-name">课后练习工具</p><p class="ol-desc">课上的体感，回家还能接着练</p></div></li>
+          <li><span class="ol-no">ii.</span><div><p class="ol-name">打卡日历</p><p class="ol-desc">看得见的坚持，摸得着的进步</p></div></li>
+          <li><span class="ol-no">iii.</span><div><p class="ol-name">同修圈子</p><p class="ol-desc">学员彼此照见，你只须偶尔点亮</p></div></li>
+          <li><span class="ol-no">iv.</span><div><p class="ol-name">小组共修</p><p class="ol-desc">一个人的路，变成一群人的路</p></div></li>
+        </ul>
+        <div class="price-card anim-fade-up" data-anim="fade-up">
+          <p class="pc-label">门三 · 同修 · 一期建设</p>
+          <p class="pc-main">15–18 <small>万</small></p>
+          <p class="pc-sub">约 8–10 周上线</p>
+          <div class="pc-row"><div class="k">二期加深<small>商城 · 分销共创</small></div><div class="v">+3–5 万</div></div>
+          <div class="pc-row"><div class="k">月度守护<small>系统有人管 · 内容有人看</small></div><div class="v">¥3,000–5,000<small style="font-size:13px;font-weight:400;color:rgba(245,240,232,.45)"> / 月</small></div></div>
+          <p class="pc-foot">以上为区间；签字之前，以最终确认单为准。</p>
+        </div>
+      </div>
+    </div>
+    <div class="deck-footer"><span>LAYA · 线上之家</span><span class="slide-number" data-current="13" data-total="17"></span></div>
+  </section>
+
+  <!-- 14 · 排优先级 -->
+  <section class="slide" data-deck-label="先做哪一个">
+    <div class="layout-body">
+      <p class="kicker" style="margin:0">只 需 要 做 一 个 决 定</p>
+      <h2 class="h2" style="margin:10px 0 8px">时间与心力有限，先开哪一扇？</h2>
+      <p class="lede" style="margin:0 0 40px;font-size:20px">第一版，只先把一扇门立住。</p>
+      <div class="grid g3 anim-stagger-list" data-anim="stagger-list" style="flex:1;align-content:start">
+        <div class="door-card">
+          <div class="door-no">I</div>
+          <div class="door-name">夜谈</div>
+          <div class="door-latin">The Night Talk</div>
+          <p class="door-promise">你的内在太阳，永远在线。</p>
+          <div class="door-rank">排序 · 第<span class="blank"></span>位</div>
+        </div>
+        <div class="door-card">
+          <div class="door-no">II</div>
+          <div class="door-name">初见</div>
+          <div class="door-latin">The First Meeting</div>
+          <p class="door-promise">让新朋友认识你、信任你、买到你。</p>
+          <div class="door-rank">排序 · 第<span class="blank"></span>位</div>
+        </div>
+        <div class="door-card">
+          <div class="door-no">III</div>
+          <div class="door-name">同修</div>
+          <div class="door-latin">The Circle</div>
+          <p class="door-promise">让上过课的人，不散场。</p>
+          <div class="door-rank">排序 · 第<span class="blank"></span>位</div>
+        </div>
+      </div>
+      <p class="rank-foot">你排的顺序，就是它们被建成的顺序。</p>
+    </div>
+    <div class="deck-footer"><span>LAYA · 线上之家</span><span class="slide-number" data-current="14" data-total="17"></span></div>
+  </section>
+
+  <!-- 15 · 上线之路 -->
+  <section class="slide" data-deck-label="从今天到亮灯">
+    <div class="layout-body">
+      <p class="kicker" style="margin:0">上 线 之 路</p>
+      <h2 class="h2" style="margin:10px 0 8px">从今天，到亮灯。</h2>
+      <p class="lede" style="margin:0">中间的每一步，你都看得见、摸得着。</p>
+      <div class="path-grid anim-stagger-list" data-anim="stagger-list">
+        <div class="path-step">
+          <div class="ps-no">I</div>
+          <h4>我们见面</h4>
+          <p>把你的排序，变成一页清楚的需求单</p>
+          <span class="ps-when">第 1 周</span>
+        </div>
+        <div class="path-step">
+          <div class="ps-no">II</div>
+          <h4>你摸到原型</h4>
+          <p>真的手机原型，放进你手里</p>
+          <span class="ps-when">第 2–3 周</span>
+        </div>
+        <div class="path-step">
+          <div class="ps-no">III</div>
+          <h4>打磨与填充</h4>
+          <p>内容、商品、疗愈师，一一就位</p>
+          <span class="ps-when">第 4–8 周</span>
+        </div>
+        <div class="path-step">
+          <div class="ps-no">IV</div>
+          <h4>亮灯</h4>
+          <p>你的线上之家，正式开门</p>
+          <span class="ps-when">第 8–10 周</span>
+        </div>
+      </div>
+    </div>
+    <div class="deck-footer"><span>LAYA · 线上之家</span><span class="slide-number" data-current="15" data-total="17"></span></div>
+  </section>
+
+  <!-- 16 · 你的投入 -->
+  <section class="slide" data-deck-label="你的投入">
+    <div class="layout-body">
+      <p class="kicker" style="margin:0">你 的 投 入</p>
+      <h2 class="h2" style="margin:10px 0 6px">三条线，清清楚楚。</h2>
+      <div class="money-list anim-stagger-list" data-anim="stagger-list">
+        <div class="money-row">
+          <div class="m-name">一期建设<small>Build</small></div>
+          <p class="m-desc">把你选的那扇门，完整建好——从原型到亮灯，每一步你都在场</p>
+          <div class="m-val">8–18 万 · 按方案</div>
+        </div>
+        <div class="money-row">
+          <div class="m-name">二期加深<small>Deepen</small></div>
+          <p class="m-desc">第二扇门、第三扇门，按你的排序来——每一期开工前单独确认</p>
+          <div class="m-val">每期 +3–8 万</div>
+        </div>
+        <div class="money-row">
+          <div class="m-name">月度守护<small>Keep</small></div>
+          <p class="m-desc">系统有人管，内容有人看着，AI 有人喂——你的家一直有人守</p>
+          <div class="m-val">¥3,000–5,000 / 月</div>
+        </div>
+      </div>
+      <p class="money-foot">以上为区间；签字之前，以最终确认单为准。守护亦可按年。</p>
+    </div>
+    <div class="deck-footer"><span>LAYA · 线上之家</span><span class="slide-number" data-current="16" data-total="17"></span></div>
+  </section>
+
+  <!-- 17 · 结尾 -->
+  <section class="slide laya-dark" data-deck-label="第一期，先推开哪一扇门" style="--bg-texture:radial-gradient(circle at 50% 30%,rgba(212,168,130,.09),transparent 50%)">
+    <div class="cover-center">
+      <img class="closing-logo anim-blur-in" data-anim="blur-in" src="assets/LAYA-Primary-Stacked-White-Master-v1.0.png" alt="LAYA">
+      <h2 class="closing-title">第一期，先推开哪一扇门？</h2>
+      <p class="closing-sub">夜谈、初见，还是同修——<br>带着你的排序来，我们把它点亮。</p>
+    </div>
+    <div class="deck-footer"><span>LAYA · 线上之家</span><span class="slide-number" data-current="17" data-total="17"></span></div>
+  </section>
+
+</deck-stage>
+<script src="./_shared/runtime.js"></script>
+</body></html>

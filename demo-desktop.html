@@ -1,0 +1,995 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>LAYA 小程序 · 完整概念演示 · 电脑端</title>
+<style>
+:root{
+  --green:#1B3A2D;
+  --green-2:#234838;
+  --green-3:#15291F;
+  --gold:#D4A882;
+  --gold-2:#E8C9A8;
+  --ivory:#F5F0E8;
+  --ivory-2:#EFE7DA;
+  --card:#FFFFFF;
+  --ink:#1A1209;
+  --t2:rgba(26,18,9,.66);
+  --t3:rgba(26,18,9,.4);
+  --line:rgba(26,18,9,.1);
+  --serif:'Noto Serif SC','Source Han Serif SC','Songti SC','STSong','SimSun',serif;
+  --sans:-apple-system,BlinkMacSystemFont,'PingFang SC','HarmonyOS Sans SC','Microsoft YaHei',sans-serif;
+  --latin:'Cormorant Garamond',Georgia,'Times New Roman',serif;
+  --ease:cubic-bezier(.32,.72,.28,1);
+}
+*{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+html{scroll-behavior:smooth}
+body{background:#0F1B15;font-family:var(--sans);-webkit-font-smoothing:antialiased;color:var(--ink)}
+body::before{content:'';position:fixed;inset:0;pointer-events:none;z-index:0;background:radial-gradient(circle at 15% 4%,rgba(212,168,130,.07),transparent 40%),radial-gradient(circle at 88% 96%,rgba(46,94,74,.25),transparent 44%)}
+main,nav.topnav{position:relative;z-index:1}
+img{display:block;max-width:100%}
+
+/* ===== 顶部导航 ===== */
+.topnav{position:fixed;top:0;left:0;right:0;z-index:60;display:flex;align-items:center;justify-content:space-between;padding:0 44px;height:74px;transition:background .35s,border-color .35s,backdrop-filter .35s;border-bottom:1px solid transparent}
+.topnav.scr{background:rgba(15,27,21,.86);backdrop-filter:blur(18px);-webkit-backdrop-filter:blur(18px);border-bottom-color:rgba(245,240,232,.08)}
+.topnav .tn-logo{height:30px;object-fit:contain}
+.topnav .tn-title{font-family:var(--serif);font-size:13.5px;color:rgba(245,240,232,.85);letter-spacing:.2em;margin-left:18px;padding-left:18px;border-left:1px solid rgba(245,240,232,.16)}
+.topnav .tn-left{display:flex;align-items:center}
+.topnav .tn-right{display:flex;align-items:center;gap:6px}
+.topnav .tn-link{background:none;border:none;font-family:var(--serif);font-size:13px;color:rgba(245,240,232,.55);letter-spacing:.14em;padding:8px 14px;cursor:pointer;transition:color .25s;text-decoration:none}
+.topnav .tn-link:hover{color:var(--ivory)}
+.topnav .tn-link.on{color:var(--gold-2)}
+.topnav .tn-cta{display:inline-flex;align-items:center;gap:8px;background:var(--gold);color:var(--ink);font-size:12px;font-weight:600;letter-spacing:.16em;padding:9px 20px;border-radius:999px;cursor:pointer;text-decoration:none;margin-left:12px;transition:transform .25s,box-shadow .25s;font-family:var(--sans)}
+.topnav .tn-cta:hover{transform:translateY(-1px);box-shadow:0 8px 22px rgba(212,168,130,.25)}
+
+/* ===== Hero ===== */
+.hero{min-height:100vh;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:120px 30px 90px}
+.hero .h-logo{height:104px;object-fit:contain;margin-bottom:44px}
+.hero .h-lat{font-family:var(--latin);font-style:italic;font-size:14px;letter-spacing:.42em;color:var(--gold);padding-left:.42em}
+.hero h1{font-family:var(--serif);font-size:54px;font-weight:500;color:var(--ivory);letter-spacing:.12em;margin-top:22px;line-height:1.35}
+.hero .h-sub{font-size:14px;font-weight:300;color:rgba(245,240,232,.55);letter-spacing:.22em;margin-top:20px;padding-left:.22em}
+.hero .h-chips{display:flex;gap:12px;margin-top:46px;flex-wrap:wrap;justify-content:center}
+.hero .h-chip{display:inline-flex;align-items:baseline;gap:10px;border:1px solid rgba(245,240,232,.16);border-radius:999px;padding:10px 22px;text-decoration:none;transition:border-color .3s,background .3s}
+.hero .h-chip:hover{border-color:rgba(212,168,130,.55);background:rgba(212,168,130,.06)}
+.hero .h-chip i{font-family:var(--latin);font-style:normal;font-size:11px;letter-spacing:.16em;color:rgba(212,168,130,.8)}
+.hero .h-chip span{font-family:var(--serif);font-size:13.5px;color:rgba(245,240,232,.85);letter-spacing:.18em}
+.hero .h-cue{position:absolute;bottom:36px;left:50%;transform:translateX(-50%);display:flex;flex-direction:column;align-items:center;gap:10px;color:rgba(245,240,232,.45);font-size:10px;letter-spacing:.34em;padding-left:.34em}
+.hero .h-cue .chev{width:13px;height:13px;border-right:1.5px solid rgba(212,168,130,.6);border-bottom:1.5px solid rgba(212,168,130,.6);transform:rotate(45deg);animation:cue 1.7s ease-in-out infinite}
+@keyframes cue{0%,100%{opacity:.3;transform:rotate(45deg) translate(0,0)}50%{opacity:1;transform:rotate(45deg) translate(4px,4px)}}
+.hero{position:relative}
+
+/* ===== 模块区 ===== */
+.mod{max-width:1560px;margin:0 auto;padding:96px 56px 104px;border-top:1px solid rgba(245,240,232,.07)}
+.mhead{text-align:center;max-width:700px;margin:0 auto}
+.mk{font-size:11px;letter-spacing:.4em;color:rgba(212,168,130,.85);font-weight:600;padding-left:.4em}
+.mt{font-family:var(--serif);font-size:40px;color:var(--ivory);font-weight:500;letter-spacing:.14em;margin-top:18px}
+.mline{font-family:var(--serif);font-size:15.5px;color:rgba(245,240,232,.62);letter-spacing:.1em;margin-top:14px;font-weight:300}
+.mchips{display:flex;gap:10px;justify-content:center;margin-top:26px;flex-wrap:wrap}
+.mchips span{font-size:11px;letter-spacing:.2em;color:rgba(245,240,232,.6);border:1px solid rgba(245,240,232,.14);border-radius:999px;padding:6px 16px;font-weight:300}
+.mphase{margin-top:22px}
+.mphase span{display:inline-flex;align-items:center;gap:9px;border:1px solid rgba(212,168,130,.5);color:var(--gold-2);font-size:10.5px;letter-spacing:.26em;padding:7px 18px;border-radius:999px;font-weight:500}
+.mphase span::before{content:'';width:5px;height:5px;border-radius:50%;background:var(--gold)}
+
+/* ===== 手机陈列 ===== */
+.phones{display:flex;justify-content:center;align-items:flex-start;gap:46px;margin-top:70px;flex-wrap:wrap}
+.pw{display:flex;flex-direction:column;align-items:center}
+.phone{width:426px;height:898px;background:#0B0F0D;border-radius:62px;padding:12px;box-shadow:0 42px 100px rgba(0,0,0,.5),0 4px 18px rgba(0,0,0,.4),inset 0 0 0 1.5px rgba(255,255,255,.07);transition:transform .5s var(--ease),box-shadow .5s}
+.pw:hover .phone{transform:translateY(-8px);box-shadow:0 56px 120px rgba(0,0,0,.56),0 4px 18px rgba(0,0,0,.4),inset 0 0 0 1.5px rgba(255,255,255,.07)}
+.shot{position:relative;width:402px;height:874px;border-radius:50px;overflow:hidden;background:var(--ivory);display:flex;flex-direction:column}
+.cap{display:flex;flex-direction:column;align-items:center;gap:7px;margin-top:26px}
+.cap b{font-family:var(--serif);font-size:15.5px;color:var(--ivory);letter-spacing:.16em;font-weight:500}
+.cap span{font-family:var(--latin);font-size:10px;letter-spacing:.3em;color:rgba(212,168,130,.65)}
+
+/* ===== 手机系统层 ===== */
+.island{position:absolute;top:11px;left:50%;transform:translateX(-50%);width:120px;height:34px;border-radius:20px;background:#0A0A0A;z-index:30}
+.sbar{position:absolute;top:0;left:0;right:0;height:54px;padding:16px 30px 0;display:flex;justify-content:space-between;align-items:flex-start;z-index:30;pointer-events:none;color:var(--ink)}
+.shot.dark .sbar{color:var(--ivory)}
+.sbar .time{font-size:13.5px;font-weight:600;letter-spacing:.02em}
+.sicons{display:flex;align-items:center;gap:5.5px}
+.sicons svg{display:block}
+.sicons .ic-fill{fill:currentColor}
+.sicons .ic-stroke{stroke:currentColor}
+.capsule{position:absolute;top:62px;right:16px;width:84px;height:32px;border-radius:999px;background:rgba(26,18,9,.05);border:1px solid rgba(26,18,9,.08);display:flex;align-items:center;justify-content:space-around;z-index:30}
+.capsule .dot3{letter-spacing:1.5px;color:rgba(26,18,9,.5);font-size:12px;font-weight:700;line-height:1;margin-top:-2px}
+.capsule .cir{width:11px;height:11px;border-radius:50%;border:1.5px solid rgba(26,18,9,.5)}
+.shot.dark .capsule{background:rgba(245,240,232,.1);border-color:rgba(245,240,232,.18)}
+.shot.dark .capsule .dot3{color:rgba(245,240,232,.75)}
+.shot.dark .capsule .cir{border-color:rgba(245,240,232,.75)}
+.homebar{position:absolute;bottom:8px;left:50%;transform:translateX(-50%);width:120px;height:5px;border-radius:3px;background:rgba(26,18,9,.8);z-index:30}
+.shot.dark .homebar{background:rgba(245,240,232,.85)}
+
+/* ===== Tab 栏（静态） ===== */
+.tabbar{flex-shrink:0;height:88px;background:rgba(245,240,232,.94);backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px);border-top:1px solid var(--line);display:flex;z-index:4;padding:8px 8px 20px}
+.tabbtn{flex:1;background:none;border:none;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:5px;cursor:default;font-family:var(--sans)}
+.tabbtn svg{display:block;stroke:rgba(26,18,9,.36)}
+.tabbtn span{font-size:9.5px;letter-spacing:.1em;color:rgba(26,18,9,.38);font-weight:400}
+.tabbtn.on svg{stroke:var(--green)}
+.tabbtn.on span{color:var(--green);font-weight:600}
+
+/* ===== 页内通用 ===== */
+.pnav{flex-shrink:0;height:98px;padding:58px 16px 0;display:flex;align-items:center;justify-content:center;position:relative;background:var(--ivory);z-index:2}
+.pnav .ttl{font-family:var(--serif);font-size:15.5px;font-weight:600;letter-spacing:.14em;color:var(--ink)}
+.pnav .backbtn{position:absolute;left:10px;top:54px;width:40px;height:40px;display:flex;align-items:center;justify-content:center}
+.pnav .backbtn svg{stroke:var(--ink);opacity:.75}
+.pg-dark .pnav{background:transparent}
+.pg-dark .pnav .ttl{color:var(--ivory)}
+.pg-dark .pnav .backbtn svg{stroke:var(--ivory)}
+.pnav .modchip{position:absolute;right:16px;top:62px;font-size:8.5px;letter-spacing:.18em;color:var(--t3);font-weight:600}
+.pg-dark .pnav .modchip{color:rgba(212,168,130,.8)}
+.pbody{position:relative;flex:1;min-height:0;overflow:hidden;padding:4px 16px 26px}
+.pbody--full{padding:0}
+.footnote{font-size:9px;color:var(--t3);letter-spacing:.14em;line-height:2;text-align:center;margin:22px 0 10px}
+
+/* ===== 首页 ===== */
+.greenhead{background:linear-gradient(165deg,#1E4030,#1B3A2D);padding:66px 20px 26px;position:relative;overflow:hidden;flex-shrink:0}
+.greenhead::after{content:'';position:absolute;top:-70px;right:-60px;width:220px;height:220px;border-radius:50%;background:radial-gradient(circle,rgba(212,168,130,.14),transparent 68%)}
+.brandrow{display:flex;align-items:center;justify-content:space-between;margin-bottom:26px;position:relative;z-index:1}
+.brandrow .slogo{height:34px;object-fit:contain}
+.brandrow .bl{font-family:var(--latin);font-style:italic;font-size:10px;letter-spacing:.3em;color:rgba(212,168,130,.7)}
+.greet{font-family:var(--serif);font-size:23px;font-weight:500;color:var(--ivory);letter-spacing:.05em;line-height:1.5;position:relative;z-index:1}
+.greet-sub{font-size:11px;font-weight:300;color:rgba(245,240,232,.55);letter-spacing:.16em;margin-top:10px;position:relative;z-index:1}
+.aicard{margin-top:24px;background:rgba(245,240,232,.07);border:1px solid rgba(245,240,232,.16);border-radius:20px;padding:20px 20px 18px;position:relative;z-index:1}
+.aicard .ac-eyebrow{font-size:9px;letter-spacing:.26em;color:var(--gold);font-weight:600}
+.aicard .ac-line{font-family:var(--serif);font-size:17px;color:var(--ivory);font-weight:500;letter-spacing:.05em;margin-top:12px}
+.aicard .ac-desc{font-size:10.5px;font-weight:300;color:rgba(245,240,232,.5);letter-spacing:.1em;margin-top:8px}
+.aicard .ac-cta{display:inline-flex;align-items:center;gap:8px;margin-top:16px;background:var(--gold);color:var(--ink);font-size:11px;font-weight:600;letter-spacing:.2em;padding:10px 22px;border-radius:999px;border:none;cursor:default;font-family:var(--sans)}
+.home-inner{padding:4px 16px 26px}
+.duo{display:flex;gap:12px;margin-top:18px}
+.duo-card{flex:1;background:var(--card);border:1px solid var(--line);border-radius:16px;padding:16px 15px}
+.duo-card .ic{width:34px;height:34px;border-radius:50%;background:rgba(212,168,130,.16);display:flex;align-items:center;justify-content:center;margin-bottom:12px}
+.duo-card .ic svg{stroke:var(--green)}
+.duo-card .dc-t{font-family:var(--serif);font-size:14px;font-weight:600;letter-spacing:.08em}
+.duo-card .dc-s{font-size:9.5px;font-weight:300;color:var(--t3);letter-spacing:.1em;margin-top:5px}
+.sec-head{display:flex;align-items:baseline;justify-content:space-between;margin:26px 2px 12px}
+.sec-head h3{font-family:var(--serif);font-size:15px;font-weight:600;letter-spacing:.1em}
+.sec-head span{font-family:var(--latin);font-style:italic;font-size:10px;letter-spacing:.24em;color:var(--gold)}
+.video-card{position:relative;border-radius:18px;height:170px;overflow:hidden}
+.video-card img{width:100%;height:100%;object-fit:cover;display:block}
+.video-card::before{content:'';position:absolute;inset:0;background:linear-gradient(180deg,rgba(21,41,31,.1) 0%,rgba(21,41,31,.24) 55%,rgba(21,41,31,.66) 100%)}
+.video-card .vc-play{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);width:46px;height:46px;border-radius:50%;background:rgba(212,168,130,.93);display:flex;align-items:center;justify-content:center;z-index:1;box-shadow:0 6px 18px rgba(0,0,0,.28)}
+.video-card .vc-meta{position:absolute;left:16px;bottom:14px;color:var(--ivory);z-index:1}
+.video-card .vc-meta .vt{font-family:var(--serif);font-size:13.5px;font-weight:500;letter-spacing:.06em}
+.video-card .vc-meta .vs{font-size:9px;color:rgba(245,240,232,.66);letter-spacing:.16em;margin-top:4px}
+.video-card .vc-dur{position:absolute;right:14px;bottom:16px;font-family:var(--latin);font-size:11px;color:rgba(245,240,232,.8);letter-spacing:.1em;z-index:1}
+.art-row{display:flex;align-items:center;gap:13px;background:var(--card);border:1px solid var(--line);border-radius:14px;padding:14px 15px;margin-top:10px}
+.art-row .ar-ic{width:38px;height:38px;border-radius:11px;background:var(--green);color:var(--ivory);display:flex;align-items:center;justify-content:center;font-family:var(--serif);font-size:14px;flex-shrink:0}
+.art-row .ar-ic.gold{background:var(--gold);color:var(--ink)}
+.art-row .ar-t{font-size:13px;font-weight:400;letter-spacing:.04em}
+.art-row .ar-s{font-size:9.5px;color:var(--t3);letter-spacing:.1em;margin-top:4px;font-weight:300}
+.art-row .ar-go{margin-left:auto;color:var(--t3);font-size:14px;font-weight:300}
+.me-row{display:flex;align-items:center;justify-content:space-between;border:1px solid rgba(27,58,45,.2);border-radius:999px;padding:13px 20px;margin-top:20px;background:var(--card)}
+.me-row span{font-size:11px;letter-spacing:.16em;color:var(--green);font-weight:400}
+.me-row i{font-style:normal;color:rgba(27,58,45,.5);font-weight:300}
+
+/* ===== 商城瀑布流（静态双列） ===== */
+.search{display:flex;align-items:center;gap:9px;background:rgba(26,18,9,.05);border-radius:999px;padding:11px 17px;margin-bottom:14px}
+.search svg{flex-shrink:0;stroke:var(--t3)}
+.search span{font-size:11px;color:var(--t3);letter-spacing:.08em;font-weight:300}
+.cats{display:flex;gap:8px;margin-bottom:4px}
+.cats span{flex-shrink:0;border:1px solid var(--line);border-radius:999px;padding:7px 16px;font-size:10.5px;letter-spacing:.12em;color:var(--t2);font-weight:300}
+.cats span.on{background:var(--green);border-color:var(--green);color:var(--ivory);font-weight:500}
+.wfall{display:flex;gap:10px;margin-top:8px}
+.wf-col{flex:1;display:flex;flex-direction:column;gap:10px;min-width:0}
+.wcard{background:var(--card);border:1px solid var(--line);border-radius:16px;overflow:hidden}
+.wc-img{position:relative;overflow:hidden;background:var(--ivory-2)}
+.wc-img img{width:100%;height:100%;object-fit:cover;display:block}
+.wc-tag{position:absolute;top:10px;left:10px;font-size:8px;letter-spacing:.16em;background:rgba(212,168,130,.93);color:var(--ink);padding:3px 9px;border-radius:999px;font-weight:600;z-index:1}
+.wc-body{padding:11px 13px 13px}
+.wc-t{font-size:12.5px;letter-spacing:.03em;line-height:1.55;font-weight:400}
+.wc-s{font-size:9.5px;color:var(--t3);margin-top:4px;letter-spacing:.06em;font-weight:300}
+.wc-foot{display:flex;align-items:baseline;justify-content:space-between;margin-top:9px}
+.wc-foot b{font-family:var(--latin);font-size:15px;color:var(--green);font-weight:700}
+.wc-foot small{font-size:8.5px;color:var(--t3);letter-spacing:.06em;font-weight:300}
+
+/* ===== 商品详情 ===== */
+.pbody--flush{padding-top:0}
+.dt-hero{position:relative;height:296px;overflow:hidden;margin:0 -16px;flex-shrink:0}
+.dt-hero img{width:100%;height:100%;object-fit:cover;display:block}
+.dt-hero .dt-tag{position:absolute;top:16px;left:16px;font-size:8.5px;letter-spacing:.2em;color:var(--ink);background:var(--gold);border-radius:999px;padding:3px 11px;font-weight:600;z-index:1}
+.dt-head{padding:18px 2px 0}
+.dt-name{font-family:var(--serif);font-size:18px;font-weight:600;letter-spacing:.05em}
+.dt-sub{font-size:10.5px;color:var(--t3);letter-spacing:.1em;margin-top:7px;font-weight:300}
+.dt-price{font-family:var(--latin);font-size:25px;font-weight:700;color:var(--green);margin-top:12px}
+.dt-specs{background:var(--card);border:1px solid var(--line);border-radius:15px;margin-top:18px;padding:4px 17px}
+.dt-specs .sp{display:flex;justify-content:space-between;padding:13px 0;border-bottom:1px solid var(--line);font-size:11px}
+.dt-specs .sp:last-child{border-bottom:none}
+.dt-specs .sp b{font-weight:400;letter-spacing:.14em;color:var(--t3);font-size:9.5px}
+.dt-specs .sp span{letter-spacing:.05em;font-weight:300}
+.dt-block{margin-top:24px}
+.dt-block h4{font-family:var(--serif);font-size:13.5px;font-weight:600;letter-spacing:.12em;display:flex;align-items:baseline;justify-content:space-between}
+.dt-block h4 span{font-family:var(--latin);font-style:italic;font-size:9px;letter-spacing:.22em;color:var(--gold);font-weight:400}
+.dt-desc{font-size:11.5px;color:var(--t2);line-height:2.1;letter-spacing:.03em;margin-top:8px;font-weight:300}
+.ex-row{display:flex;gap:12px;padding:11px 0;border-bottom:1px dashed var(--line);font-size:11px}
+.ex-row:last-child{border-bottom:none}
+.ex-row b{font-weight:500;letter-spacing:.1em;color:var(--green);font-size:10px;flex-shrink:0;width:66px}
+.ex-row span{color:var(--t2);font-weight:300;line-height:1.7}
+.slots{display:flex;gap:8px;flex-wrap:wrap;margin-top:10px}
+.slotbtn{background:none;border:1px solid var(--line);border-radius:12px;padding:10px 14px;font-size:11px;letter-spacing:.06em;color:var(--t2);font-family:var(--sans);font-weight:300}
+.slotbtn.sel{border-color:var(--green);background:rgba(27,58,45,.05);color:var(--green);font-weight:500}
+.rv-item{display:flex;gap:12px;padding:14px 0;border-bottom:1px solid var(--line)}
+.rv-item:last-child{border-bottom:none}
+.rv-av{width:30px;height:30px;border-radius:50%;background:rgba(27,58,45,.08);color:var(--green);display:flex;align-items:center;justify-content:center;font-size:11px;flex-shrink:0;font-family:var(--serif)}
+.rv-t{font-size:11px;line-height:1.85;color:var(--t2);font-weight:300}
+.rv-n{font-size:9.5px;color:var(--t3);letter-spacing:.08em;margin-top:5px}
+.buybar{flex-shrink:0;display:flex;gap:10px;padding:12px 16px 30px;background:rgba(245,240,232,.96);border-top:1px solid var(--line)}
+.buybar .bb-1{flex:1;background:none;border:1px solid rgba(27,58,45,.3);border-radius:999px;font-size:11px;letter-spacing:.16em;color:var(--green);font-weight:400;font-family:var(--sans)}
+.buybar .bb-2{flex:1.4;background:var(--green);border:none;border-radius:999px;font-size:11px;letter-spacing:.2em;color:var(--ivory);font-weight:500;font-family:var(--sans)}
+
+/* ===== 疗愈师 ===== */
+.hprofile{display:flex;align-items:center;gap:15px;background:var(--card);border:1px solid var(--line);border-radius:18px;padding:18px 17px}
+.hprofile .av{width:52px;height:52px;border-radius:50%;object-fit:cover;flex-shrink:0;border:1px solid rgba(212,168,130,.5)}
+.hprofile .hp-n{font-family:var(--serif);font-size:16px;font-weight:600;letter-spacing:.05em}
+.hprofile .hp-s{font-size:10px;color:var(--t3);letter-spacing:.1em;margin-top:5px;font-weight:300}
+.hprofile .hp-go{margin-left:auto;color:var(--t3)}
+.hchips{display:flex;gap:8px;margin-top:14px}
+.hchips span{flex:1;text-align:center;font-size:10.5px;letter-spacing:.14em;padding:10px 0;border:1px solid var(--line);border-radius:999px;color:var(--t2);font-weight:300;background:var(--card)}
+.hchips span.on{background:var(--green);color:var(--ivory);border-color:var(--green);font-weight:500}
+.hlist{background:var(--card);border:1px solid var(--line);border-radius:16px;margin-top:12px;padding:4px 17px}
+.hrow{display:flex;align-items:center;justify-content:space-between;padding:14px 0;border-bottom:1px solid var(--line);font-size:12px;letter-spacing:.05em}
+.hrow:last-child{border-bottom:none}
+.hrow small{display:block;font-size:9px;color:var(--t3);letter-spacing:.1em;margin-top:4px;font-weight:300}
+.hrow i{font-style:normal;color:var(--t3)}
+.dist{margin-top:16px;background:linear-gradient(150deg,rgba(212,168,130,.2),rgba(212,168,130,.07));border:1px solid rgba(212,168,130,.5);border-radius:18px;padding:20px 19px}
+.dist .d-tag{display:inline-block;font-size:8.5px;letter-spacing:.22em;color:var(--ink);background:var(--gold);border-radius:999px;padding:3px 11px;font-weight:600}
+.dist .d-line{font-family:var(--serif);font-size:16.5px;font-weight:600;letter-spacing:.08em;margin-top:14px}
+.dist .d-desc{font-size:10.5px;color:var(--t2);letter-spacing:.05em;line-height:1.9;margin-top:9px;font-weight:300}
+.dstats{display:flex;gap:34px;margin:16px 0 4px}
+.dstats b{font-family:var(--latin);font-size:23px;font-weight:700;color:var(--green);display:block}
+.dstats span{font-size:9px;color:var(--t3);letter-spacing:.14em}
+.dbtn{display:block;text-align:center;margin-top:14px;font-size:11px;font-weight:600;letter-spacing:.2em;color:var(--green);border:1px solid rgba(27,58,45,.3);border-radius:999px;padding:12px;background:none;font-family:var(--sans)}
+
+/* ===== 疗愈村 ===== */
+.vhead{background:linear-gradient(165deg,#1E4030,#1B3A2D);padding:66px 20px 26px;position:relative;overflow:hidden;flex-shrink:0}
+.vhead::after{content:'';position:absolute;bottom:-90px;left:-50px;width:240px;height:240px;border-radius:50%;background:radial-gradient(circle,rgba(212,168,130,.12),transparent 68%)}
+.vhead .bl{font-family:var(--latin);font-style:italic;font-size:10px;letter-spacing:.32em;color:rgba(212,168,130,.75);position:relative;z-index:1}
+.vhead .vt{font-family:var(--serif);font-size:24px;font-weight:500;color:var(--ivory);letter-spacing:.1em;margin-top:14px;position:relative;z-index:1}
+.vhead .vs{font-size:11px;font-weight:300;color:rgba(245,240,232,.55);letter-spacing:.16em;margin-top:10px;position:relative;z-index:1}
+.village-inner{padding:4px 16px 26px}
+.vcard{background:var(--card);border:1px solid var(--line);border-radius:18px;padding:18px 18px}
+.vcard .vc-h{display:flex;align-items:center;justify-content:space-between}
+.vcard .vc-h b{font-family:var(--serif);font-size:14.5px;font-weight:600;letter-spacing:.08em}
+.vcard .vc-h span{font-size:8.5px;letter-spacing:.18em;color:var(--gold);border:1px solid rgba(212,168,130,.5);border-radius:999px;padding:3px 10px;font-weight:600}
+.vrow{display:flex;align-items:center;gap:10px;padding:12px 0;border-bottom:1px solid var(--line);font-size:11.5px;letter-spacing:.06em}
+.vrow:last-child{border-bottom:none;padding-bottom:2px}
+.vrow .st{width:7px;height:7px;border-radius:50%;flex-shrink:0}
+.vrow small{margin-left:auto;font-size:9px;color:var(--t3);letter-spacing:.1em}
+.vbar{height:3px;background:rgba(26,18,9,.08);border-radius:2px;margin-top:14px;overflow:hidden}
+.vbar i{display:block;height:100%;width:62%;background:linear-gradient(90deg,var(--gold),var(--gold-2));border-radius:2px}
+.room{display:flex;align-items:center;gap:14px;background:var(--card);border:1px solid var(--line);border-radius:16px;padding:13px;margin-top:10px}
+.room .th{width:62px;height:62px;border-radius:14px;object-fit:cover;flex-shrink:0}
+.room .rm-t{font-size:13.5px;font-weight:500;letter-spacing:.04em}
+.room .rm-s{font-size:9.5px;color:var(--t3);letter-spacing:.08em;margin-top:5px;font-weight:300}
+.room .rm-p{margin-left:auto;text-align:right;flex-shrink:0}
+.room .rm-p b{font-family:var(--latin);font-size:17px;font-weight:700;color:var(--green)}
+.room .rm-p small{font-size:8.5px;color:var(--t3);font-weight:300}
+.act-card{display:flex;align-items:center;gap:13px;background:rgba(27,58,45,.05);border:1px solid rgba(27,58,45,.12);border-radius:16px;padding:16px 17px;margin-top:12px}
+.act-card .ac-ic{width:38px;height:38px;border-radius:50%;background:var(--green);color:var(--gold-2);display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.act-card .at{font-size:12.5px;letter-spacing:.05em}
+.act-card .as{font-size:9.5px;color:var(--t3);letter-spacing:.1em;margin-top:4px;font-weight:300}
+
+/* ===== 对话 ===== */
+.chat-pg{background:linear-gradient(170deg,#1E4030,#163024)}
+.chatwrap{flex:1;min-height:0;overflow:hidden;padding:14px 16px 10px;display:flex;flex-direction:column;gap:10px}
+.timechip{align-self:center;font-size:9px;letter-spacing:.24em;color:rgba(245,240,232,.4);padding:3px 12px}
+.bub{max-width:78%;padding:11px 15px;border-radius:17px;font-size:12.5px;font-weight:300;line-height:1.8;letter-spacing:.02em}
+.bub.me{align-self:flex-end;background:rgba(245,240,232,.13);color:var(--ivory);border-bottom-right-radius:5px}
+.bub.ai{align-self:flex-start;background:var(--ivory);color:var(--ink);border-bottom-left-radius:5px}
+.typing{display:flex;gap:5px;align-self:flex-start;padding:13px 16px;background:rgba(245,240,232,.12);border-radius:17px;border-bottom-left-radius:5px}
+.typing i{width:5px;height:5px;border-radius:50%;background:rgba(245,240,232,.6);animation:tp 1.2s infinite}
+.typing i:nth-child(2){animation-delay:.2s}
+.typing i:nth-child(3){animation-delay:.4s}
+@keyframes tp{0%,60%,100%{opacity:.25;transform:translateY(0)}30%{opacity:1;transform:translateY(-2.5px)}}
+.chatfoot{flex-shrink:0;padding:8px 14px 26px;z-index:2}
+.chatfoot .safety{font-size:8.5px;color:rgba(245,240,232,.35);text-align:center;line-height:1.8;letter-spacing:.06em;margin-bottom:10px}
+.chips{display:flex;gap:8px;margin-bottom:10px}
+.chips span{background:none;border:1px solid rgba(245,240,232,.22);border-radius:999px;color:rgba(245,240,232,.7);font-size:10px;letter-spacing:.06em;padding:8px 15px;font-weight:300}
+.chatin{display:flex;align-items:center;gap:10px;background:rgba(245,240,232,.09);border:1px solid rgba(245,240,232,.12);border-radius:999px;padding:6px 6px 6px 18px}
+.chatin input{flex:1;background:none;border:none;outline:none;color:var(--ivory);font-size:12.5px;font-weight:300;font-family:var(--sans);letter-spacing:.03em;min-width:0;pointer-events:none}
+.chatin input::placeholder{color:rgba(245,240,232,.35)}
+.chatin .send{width:34px;height:34px;border-radius:50%;background:var(--gold);border:none;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+
+/* ===== 测评 ===== */
+.as-progress{margin:8px 2px 22px}
+.as-progress .ap-t{display:flex;justify-content:space-between;font-size:9px;letter-spacing:.18em;color:var(--t3);margin-bottom:9px}
+.as-progress .ap-bar{height:2.5px;background:rgba(26,18,9,.08);border-radius:2px;overflow:hidden}
+.as-progress .ap-bar i{display:block;height:100%;background:var(--gold);border-radius:2px}
+.as-q{font-family:var(--serif);font-size:19px;font-weight:500;letter-spacing:.04em;line-height:1.7;padding:0 2px}
+.as-opts{margin-top:22px;display:flex;flex-direction:column;gap:10px}
+.as-opt{display:flex;align-items:center;gap:13px;background:var(--card);border:1px solid var(--line);border-radius:15px;padding:16px 17px}
+.as-opt .rd{width:17px;height:17px;border-radius:50%;border:1.5px solid rgba(26,18,9,.22);flex-shrink:0;display:flex;align-items:center;justify-content:center}
+.as-opt .rd i{width:8px;height:8px;border-radius:50%;background:var(--gold);opacity:0}
+.as-opt span{font-size:13px;letter-spacing:.06em;font-weight:300}
+.as-opt.sel{border-color:var(--green);background:rgba(27,58,45,.03)}
+.as-opt.sel .rd{border-color:var(--green)}
+.as-opt.sel .rd i{opacity:1}
+
+/* ===== 订房 ===== */
+.bk-hero{position:relative;height:180px;overflow:hidden;border-radius:0 0 22px 22px;margin:0 -16px;flex-shrink:0}
+.bk-hero img{width:100%;height:100%;object-fit:cover;display:block}
+.bk-hero::after{content:'';position:absolute;inset:0;background:linear-gradient(180deg,rgba(21,41,31,.05),rgba(21,41,31,.34))}
+.bk-room{display:flex;align-items:center;gap:14px;background:var(--card);border:1px solid var(--line);border-radius:16px;padding:15px;margin-top:16px}
+.bk-room .bt{font-family:var(--serif);font-size:15.5px;font-weight:600;letter-spacing:.05em}
+.bk-room .bs{font-size:9.5px;color:var(--t3);letter-spacing:.08em;margin-top:5px;font-weight:300}
+.bk-room .bp{margin-left:auto;font-family:var(--latin);font-size:19px;font-weight:700;color:var(--green);flex-shrink:0}
+.bk-card{background:var(--card);border:1px solid var(--line);border-radius:15px;margin-top:12px;padding:4px 17px}
+.bk-row{display:flex;justify-content:space-between;align-items:center;padding:14px 0;border-bottom:1px solid var(--line);font-size:11.5px}
+.bk-row:last-child{border-bottom:none}
+.bk-row b{font-weight:400;font-size:9.5px;letter-spacing:.16em;color:var(--t3)}
+.bk-row span{letter-spacing:.04em;font-weight:300}
+.stepper{display:flex;align-items:center;gap:16px}
+.stepper button{width:28px;height:28px;border-radius:50%;border:1px solid var(--line);background:none;font-size:15px;color:var(--t2);line-height:1;font-family:var(--sans)}
+.stepper em{font-style:normal;font-family:var(--latin);font-size:16px;font-weight:600;min-width:16px;text-align:center}
+.bk-total{display:flex;justify-content:space-between;align-items:baseline;margin-top:20px;padding:0 2px}
+.bk-total span{font-size:10px;letter-spacing:.2em;color:var(--t3)}
+.bk-total b{font-family:var(--latin);font-size:24px;font-weight:700;color:var(--green)}
+.bk-btn{display:block;width:100%;margin-top:16px;background:var(--green);color:var(--ivory);border:none;border-radius:999px;padding:15px;font-size:12px;letter-spacing:.26em;font-weight:500;font-family:var(--sans)}
+
+/* ===== 收尾 ===== */
+.outro{max-width:1100px;margin:0 auto;padding:130px 40px 60px;text-align:center;border-top:1px solid rgba(245,240,232,.07)}
+.outro .o-lat{font-family:var(--latin);font-style:italic;font-size:13px;letter-spacing:.4em;color:var(--gold);padding-left:.4em}
+.outro h2{font-family:var(--serif);font-size:38px;color:var(--ivory);font-weight:500;letter-spacing:.12em;margin-top:20px}
+.outro .o-sub{font-size:13.5px;font-weight:300;color:rgba(245,240,232,.55);letter-spacing:.1em;line-height:2.2;margin-top:20px}
+.outro .o-cta{display:inline-flex;align-items:center;gap:10px;margin-top:38px;background:var(--gold);color:var(--ink);font-size:13px;font-weight:600;letter-spacing:.2em;padding:16px 40px;border-radius:999px;text-decoration:none;transition:transform .3s,box-shadow .3s;font-family:var(--sans)}
+.outro .o-cta:hover{transform:translateY(-2px);box-shadow:0 14px 36px rgba(212,168,130,.3)}
+.roadmap{display:flex;gap:16px;justify-content:center;margin-top:76px;flex-wrap:wrap}
+.road{flex:1;min-width:240px;max-width:300px;border:1px solid rgba(245,240,232,.12);border-radius:18px;padding:26px 24px;text-align:left}
+.road .r-no{font-family:var(--latin);font-size:11px;letter-spacing:.3em;color:rgba(212,168,130,.75)}
+.road .r-t{font-family:var(--serif);font-size:16.5px;color:var(--ivory);font-weight:500;letter-spacing:.1em;margin-top:12px}
+.road .r-s{font-size:11px;color:rgba(245,240,232,.5);letter-spacing:.08em;line-height:1.9;margin-top:10px;font-weight:300}
+.fin{padding:70px 30px 56px;text-align:center;border-top:1px solid rgba(245,240,232,.07)}
+.fin img{height:44px;object-fit:contain;margin:0 auto 20px;opacity:.9}
+.fin .f-lat{font-family:var(--latin);font-size:10px;letter-spacing:.4em;color:rgba(212,168,130,.55);padding-left:.4em}
+.fin .f-s{font-size:10px;color:rgba(245,240,232,.32);letter-spacing:.2em;margin-top:14px;line-height:2.2}
+
+/* ===== 入场动画 ===== */
+.rv{opacity:0;transform:translateY(30px);transition:opacity .9s var(--ease),transform .9s var(--ease)}
+.rv.vis{opacity:1;transform:none}
+
+/* ===== 响应式 ===== */
+@media (max-width:1380px){.phones{gap:30px}.mod{padding:80px 36px 88px}}
+@media (max-width:920px){
+  .topnav{padding:0 20px}
+  .topnav .tn-title{display:none}
+  .topnav .tn-link{display:none}
+  .hero h1{font-size:38px}
+  .mod{padding:64px 20px 72px}
+  .mt{font-size:30px}
+  .phones{gap:0}
+  .pw{margin-bottom:0}
+  .pw:not(:last-child){margin-bottom:26px}
+  .phone{transform:scale(.84);transform-origin:top center}
+  .pw{width:426px;max-width:100vw}
+  .cap{margin-top:-105px}
+  .roadmap{flex-direction:column;align-items:center}
+}
+@media (prefers-reduced-motion:reduce){
+  .rv{opacity:1;transform:none;transition:none}
+  .typing i,.hero .h-cue .chev{animation:none}
+  html{scroll-behavior:auto}
+}
+</style>
+</head>
+<body>
+
+<nav class="topnav" id="topnav">
+  <div class="tn-left">
+    <img class="tn-logo" src="assets/LAYA-Primary-Stacked-White-Master-v1.0.png" alt="LAYA">
+    <span class="tn-title">完整概念演示</span>
+  </div>
+  <div class="tn-right">
+    <a class="tn-link" href="#m1" data-nav="m1">遇见</a>
+    <a class="tn-link" href="#m2" data-nav="m2">商城</a>
+    <a class="tn-link" href="#m3" data-nav="m3">疗愈师</a>
+    <a class="tn-link" href="#m4" data-nav="m4">疗愈村</a>
+    <a class="tn-cta" href="demo.html">交互演示 →</a>
+  </div>
+</nav>
+
+<main>
+
+  <!-- ============ HERO ============ -->
+  <section class="hero" id="top">
+    <img class="h-logo" src="assets/LAYA-Primary-Stacked-White-Master-v1.0.png" alt="LAYA">
+    <p class="h-lat">THE COMPLETE CONCEPT DEMO</p>
+    <h1>完整概念演示</h1>
+    <p class="h-sub">四个模块 · 一个小程序 · 所有界面，一次看全</p>
+    <div class="h-chips">
+      <a class="h-chip" href="#m1"><i>I</i><span>遇见</span></a>
+      <a class="h-chip" href="#m2"><i>II</i><span>商城</span></a>
+      <a class="h-chip" href="#m3"><i>III</i><span>疗愈师</span></a>
+      <a class="h-chip" href="#m4"><i>IV</i><span>疗愈村</span></a>
+    </div>
+    <div class="h-cue"><span>向下滚动</span><span class="chev"></span></div>
+  </section>
+
+  <!-- ============ 模块一 · 引流 ============ -->
+  <section class="mod" id="m1">
+    <div class="mhead rv">
+      <p class="mk">MODULE I · 新用户引流</p>
+      <h2 class="mt">遇见</h2>
+      <p class="mline">让新用户，遇见拉雅。</p>
+      <div class="mchips"><span>高维沟通 · AI 拉雅</span><span>内在测评</span><span>内容呈现</span></div>
+      <div class="mphase"><span>一期上线</span></div>
+    </div>
+    <div class="phones">
+
+      <!-- 首页 -->
+      <div class="pw rv" style="transition-delay:.05s">
+        <div class="phone"><div class="shot dark">
+          <div class="island"></div>
+          <div class="sbar"><span class="time">9:41</span>
+            <span class="sicons">
+              <svg width="16" height="11" viewBox="0 0 16 11"><g class="ic-fill"><rect x="0" y="7" width="2.5" height="4" rx="1"/><rect x="4" y="5" width="2.5" height="6" rx="1"/><rect x="8" y="3" width="2.5" height="8" rx="1"/><rect x="12" y="1" width="2.5" height="10" rx="1"/></g></svg>
+              <svg width="15" height="11" viewBox="0 0 15 11"><g class="ic-stroke" fill="none" stroke-width="1.6" stroke-linecap="round"><path d="M1.5 4 A 9 9 0 0 1 13.5 4"/><path d="M4 7 A 5.5 5.5 0 0 1 11 7"/><path d="M6.6 9.6 A 2 2 0 0 1 8.4 9.6"/></g></svg>
+              <svg width="23" height="11" viewBox="0 0 23 11"><rect x="0.5" y="0.5" width="19" height="10" rx="3" class="ic-stroke" fill="none" stroke-width="1"/><rect x="2" y="2" width="14" height="7" rx="1.5" class="ic-fill"/><path d="M21.5 3.5 L21.5 7.5 A 2 2 0 0 0 21.5 3.5 Z" class="ic-fill"/></svg>
+            </span>
+          </div>
+          <div class="capsule"><span class="dot3">···</span><span class="cir"></span></div>
+          <div class="homebar"></div>
+          <div class="pbody pbody--full">
+            <div class="greenhead">
+              <div class="brandrow">
+                <img class="slogo" src="assets/LAYA-Primary-Stacked-White-Master-v1.0.png" alt="LAYA">
+                <span class="bl">THE ENCOUNTER · 模块一</span>
+              </div>
+              <p class="greet">今晚，把心放下。</p>
+              <p class="greet-sub">拉雅在这里，随时。</p>
+              <div class="aicard">
+                <p class="ac-eyebrow">AI 拉雅 · 高维沟通</p>
+                <p class="ac-line">深夜，也有人回应你。</p>
+                <p class="ac-desc">由拉雅的课程、文字与答疑训练</p>
+                <button class="ac-cta">开始对话 →</button>
+              </div>
+            </div>
+            <div class="home-inner">
+              <div class="duo">
+                <div class="duo-card">
+                  <div class="ic"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke-width="1.5" stroke-linecap="round"><circle cx="12" cy="12" r="4.2"/><path d="M12 3v2.4M12 18.6V21M3 12h2.4M18.6 12H21M5.4 5.4l1.7 1.7M16.9 16.9l1.7 1.7M18.6 5.4l-1.7 1.7M7.1 16.9l-1.7 1.7"/></svg></div>
+                  <p class="dc-t">内在测评</p>
+                  <p class="dc-s">3 分钟 · 内在天气</p>
+                </div>
+                <div class="duo-card">
+                  <div class="ic"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke-width="1.5" stroke-linejoin="round"><rect x="3.5" y="5" width="17" height="14" rx="2.5"/><path d="M11 9.5l4.5 2.5L11 14.5z"/></svg></div>
+                  <p class="dc-t">拉雅的内容</p>
+                  <p class="dc-s">视频 · 文章</p>
+                </div>
+              </div>
+              <div class="sec-head"><h3>拉雅的内容</h3><span>SELECTED</span></div>
+              <div class="video-card">
+                <img src="assets/home-video.jpg" alt="情绪，是来送信的人" loading="lazy">
+                <div class="vc-play"><svg width="15" height="15" viewBox="0 0 14 16" fill="#1A1209"><path d="M0 0 L14 8 L0 16 Z"/></svg></div>
+                <div class="vc-meta"><p class="vt">情绪，是来送信的人</p><p class="vs">与身体对话 · 第七期</p></div>
+                <span class="vc-dur">12:36</span>
+              </div>
+              <div class="art-row">
+                <div class="ar-ic">文</div>
+                <div><p class="ar-t">与身体和解的七个练习</p><p class="ar-s">练习指引 · 8 分钟阅读</p></div>
+                <span class="ar-go">›</span>
+              </div>
+              <div class="art-row">
+                <div class="ar-ic gold">问</div>
+                <div><p class="ar-t">学员最常问拉雅的十个问题</p><p class="ar-s">答疑合集</p></div>
+                <span class="ar-go">›</span>
+              </div>
+              <div class="me-row"><span>我的 · 订单与预约</span><i>›</i></div>
+              <p class="footnote">模块一 · 新用户引流 · 一期上线<br>界面示意 · 非最终设计</p>
+            </div>
+          </div>
+          <div class="tabbar">
+            <span class="tabbtn on"><svg width="23" height="23" viewBox="0 0 24 24" fill="none" stroke-width="1.5" stroke-linecap="round"><circle cx="12" cy="12" r="4.4"/><path d="M12 2.5v2.6M12 18.9v2.6M2.5 12h2.6M18.9 12h2.6M5.2 5.2l1.9 1.9M16.9 16.9l1.9 1.9M18.8 5.2l-1.9 1.9M7.1 16.9l-1.9 1.9"/></svg><span>首页</span></span>
+            <span class="tabbtn"><svg width="23" height="23" viewBox="0 0 24 24" fill="none" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 8.5h14l-1.2 11a1.8 1.8 0 0 1-1.8 1.6H8a1.8 1.8 0 0 1-1.8-1.6L5 8.5z"/><path d="M8.8 8.5V7a3.2 3.2 0 0 1 6.4 0v1.5"/></svg><span>商城</span></span>
+            <span class="tabbtn"><svg width="23" height="23" viewBox="0 0 24 24" fill="none" stroke-width="1.5" stroke-linecap="round"><circle cx="8.6" cy="8.2" r="3.1"/><path d="M3.4 19.5a5.6 5.6 0 0 1 10.4 0"/><circle cx="16.9" cy="9.4" r="2.5"/><path d="M15.4 15.3a4.6 4.6 0 0 1 5.2 4.2"/></svg><span>疗愈师</span></span>
+            <span class="tabbtn"><svg width="23" height="23" viewBox="0 0 24 24" fill="none" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M2.5 19.5 9 8.2l4 6.6 2.6-4.2 5.9 8.9z"/><path d="M8.2 19.5 12.6 12.6 17 19.5"/></svg><span>疗愈村</span></span>
+          </div>
+        </div></div>
+        <div class="cap"><b>首页 · 深夜的入口</b><span>HOME</span></div>
+      </div>
+
+      <!-- 高维沟通 -->
+      <div class="pw rv" style="transition-delay:.15s">
+        <div class="phone"><div class="shot dark chat-pg">
+          <div class="island"></div>
+          <div class="sbar"><span class="time">23:47</span>
+            <span class="sicons">
+              <svg width="16" height="11" viewBox="0 0 16 11"><g class="ic-fill"><rect x="0" y="7" width="2.5" height="4" rx="1"/><rect x="4" y="5" width="2.5" height="6" rx="1"/><rect x="8" y="3" width="2.5" height="8" rx="1"/><rect x="12" y="1" width="2.5" height="10" rx="1"/></g></svg>
+              <svg width="15" height="11" viewBox="0 0 15 11"><g class="ic-stroke" fill="none" stroke-width="1.6" stroke-linecap="round"><path d="M1.5 4 A 9 9 0 0 1 13.5 4"/><path d="M4 7 A 5.5 5.5 0 0 1 11 7"/><path d="M6.6 9.6 A 2 2 0 0 1 8.4 9.6"/></g></svg>
+              <svg width="23" height="11" viewBox="0 0 23 11"><rect x="0.5" y="0.5" width="19" height="10" rx="3" class="ic-stroke" fill="none" stroke-width="1"/><rect x="2" y="2" width="14" height="7" rx="1.5" class="ic-fill"/><path d="M21.5 3.5 L21.5 7.5 A 2 2 0 0 0 21.5 3.5 Z" class="ic-fill"/></svg>
+            </span>
+          </div>
+          <div class="capsule"><span class="dot3">···</span><span class="cir"></span></div>
+          <div class="homebar"></div>
+          <div class="pnav pg-dark" style="background:transparent"><span class="ttl">拉雅 · 高维沟通</span><span class="modchip">AI 分身</span></div>
+          <div class="chatwrap">
+            <span class="timechip">深 夜 23:47</span>
+            <div class="bub me">今天又和妈妈吵架了，心里很堵……</div>
+            <div class="bub ai">先深深呼吸一次。你不需要现在就原谅谁——先陪陪那个委屈的自己。</div>
+            <div class="bub me">就是觉得很委屈，从小到大都这样。</div>
+            <div class="bub ai">嗯，我在。那股堵，在身体的哪个位置？</div>
+            <div class="typing"><i></i><i></i><i></i></div>
+          </div>
+          <div class="chatfoot">
+            <p class="safety">如遇紧急情绪危机，请联系当地心理援助热线。<br>高维沟通不能替代专业心理帮助。</p>
+            <div class="chips">
+              <span>最近总是睡不好</span>
+              <span>只是想说说话</span>
+            </div>
+            <div class="chatin">
+              <input type="text" value="说给她听……">
+              <span class="send"><svg width="13" height="13" viewBox="0 0 14 14" fill="none" stroke="#1A1209" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M2 12 L12 7 L2 2 L4 7 Z"/></svg></span>
+            </div>
+          </div>
+        </div></div>
+        <div class="cap"><b>高维沟通 · AI 拉雅</b><span>AI LAYA</span></div>
+      </div>
+
+      <!-- 内在测评 -->
+      <div class="pw rv" style="transition-delay:.25s">
+        <div class="phone"><div class="shot">
+          <div class="island"></div>
+          <div class="sbar"><span class="time">9:41</span>
+            <span class="sicons">
+              <svg width="16" height="11" viewBox="0 0 16 11"><g class="ic-fill"><rect x="0" y="7" width="2.5" height="4" rx="1"/><rect x="4" y="5" width="2.5" height="6" rx="1"/><rect x="8" y="3" width="2.5" height="8" rx="1"/><rect x="12" y="1" width="2.5" height="10" rx="1"/></g></svg>
+              <svg width="15" height="11" viewBox="0 0 15 11"><g class="ic-stroke" fill="none" stroke-width="1.6" stroke-linecap="round"><path d="M1.5 4 A 9 9 0 0 1 13.5 4"/><path d="M4 7 A 5.5 5.5 0 0 1 11 7"/><path d="M6.6 9.6 A 2 2 0 0 1 8.4 9.6"/></g></svg>
+              <svg width="23" height="11" viewBox="0 0 23 11"><rect x="0.5" y="0.5" width="19" height="10" rx="3" class="ic-stroke" fill="none" stroke-width="1"/><rect x="2" y="2" width="14" height="7" rx="1.5" class="ic-fill"/><path d="M21.5 3.5 L21.5 7.5 A 2 2 0 0 0 21.5 3.5 Z" class="ic-fill"/></svg>
+            </span>
+          </div>
+          <div class="capsule"><span class="dot3">···</span><span class="cir"></span></div>
+          <div class="homebar"></div>
+          <div class="pnav"><span class="ttl">内在测评</span><span class="modchip">3 分钟</span></div>
+          <div class="pbody">
+            <div class="as-progress">
+              <div class="ap-t"><span>第 2 题 · 共 3 题</span><span>INNER WEATHER</span></div>
+              <div class="ap-bar"><i style="width:66%"></i></div>
+            </div>
+            <p class="as-q">情绪来的时候，你通常……</p>
+            <div class="as-opts">
+              <div class="as-opt"><span class="rd"><i></i></span><span>让它流过</span></div>
+              <div class="as-opt sel"><span class="rd"><i></i></span><span>压下去</span></div>
+              <div class="as-opt"><span class="rd"><i></i></span><span>没注意过它</span></div>
+            </div>
+            <p class="footnote">演示为缩略版 · 完整测评共 12 题<br>测评报告可分享</p>
+          </div>
+        </div></div>
+        <div class="cap"><b>内在测评 · 三分钟</b><span>ASSESSMENT</span></div>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- ============ 模块二 · 商城 ============ -->
+  <section class="mod" id="m2">
+    <div class="mhead rv">
+      <p class="mk">MODULE II · 成交转化</p>
+      <h2 class="mt">商城</h2>
+      <p class="mline">让遇见，成为成交。</p>
+      <div class="mchips"><span>水晶购买</span><span>课程报名</span><span>疗愈师预约</span></div>
+      <div class="mphase"><span>一期上线 · 完整复刻现有至心谷能力</span></div>
+    </div>
+    <div class="phones">
+
+      <!-- 商城瀑布流 -->
+      <div class="pw rv" style="transition-delay:.05s">
+        <div class="phone"><div class="shot">
+          <div class="island"></div>
+          <div class="sbar"><span class="time">9:41</span>
+            <span class="sicons">
+              <svg width="16" height="11" viewBox="0 0 16 11"><g class="ic-fill"><rect x="0" y="7" width="2.5" height="4" rx="1"/><rect x="4" y="5" width="2.5" height="6" rx="1"/><rect x="8" y="3" width="2.5" height="8" rx="1"/><rect x="12" y="1" width="2.5" height="10" rx="1"/></g></svg>
+              <svg width="15" height="11" viewBox="0 0 15 11"><g class="ic-stroke" fill="none" stroke-width="1.6" stroke-linecap="round"><path d="M1.5 4 A 9 9 0 0 1 13.5 4"/><path d="M4 7 A 5.5 5.5 0 0 1 11 7"/><path d="M6.6 9.6 A 2 2 0 0 1 8.4 9.6"/></g></svg>
+              <svg width="23" height="11" viewBox="0 0 23 11"><rect x="0.5" y="0.5" width="19" height="10" rx="3" class="ic-stroke" fill="none" stroke-width="1"/><rect x="2" y="2" width="14" height="7" rx="1.5" class="ic-fill"/><path d="M21.5 3.5 L21.5 7.5 A 2 2 0 0 0 21.5 3.5 Z" class="ic-fill"/></svg>
+            </span>
+          </div>
+          <div class="capsule"><span class="dot3">···</span><span class="cir"></span></div>
+          <div class="homebar"></div>
+          <div class="pnav"><span class="ttl">商城</span><span class="modchip">THE STORE · 模块二</span></div>
+          <div class="pbody">
+            <div class="search">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke-width="1.8" stroke-linecap="round"><circle cx="11" cy="11" r="7"/><path d="M20 20l-4-4"/></svg>
+              <span>搜索水晶、课程、疗愈师</span>
+            </div>
+            <div class="cats">
+              <span class="on">全部</span><span>水晶</span><span>课程</span><span>疗愈师</span>
+            </div>
+            <div class="wfall">
+              <div class="wf-col">
+                <div class="wcard">
+                  <div class="wc-img" style="aspect-ratio:1/1.02">
+                    <img src="assets/prod-amethyst.jpg" alt="紫水晶静心手串" loading="lazy">
+                    <span class="wc-tag">热门</span>
+                  </div>
+                  <div class="wc-body">
+                    <p class="wc-t">紫水晶 · 静心手串</p>
+                    <p class="wc-s">天然水晶 · 现货顺丰</p>
+                    <div class="wc-foot"><b>¥299</b><small>已售 1,204</small></div>
+                  </div>
+                </div>
+                <div class="wcard">
+                  <div class="wc-img" style="aspect-ratio:1/1">
+                    <img src="assets/course-body.jpg" alt="21天身体觉察营" loading="lazy">
+                    <span class="wc-tag">新一期</span>
+                  </div>
+                  <div class="wc-body">
+                    <p class="wc-t">21 天身体觉察营</p>
+                    <p class="wc-s">录播 + 社群共修</p>
+                    <div class="wc-foot"><b>¥680</b><small>10 月 8 日开营</small></div>
+                  </div>
+                </div>
+              </div>
+              <div class="wf-col">
+                <div class="wcard">
+                  <div class="wc-img" style="aspect-ratio:1/1.22">
+                    <img src="assets/prod-morganite.jpg" alt="摩根石安眠原石" loading="lazy">
+                    <span class="wc-tag">助眠</span>
+                  </div>
+                  <div class="wc-body">
+                    <p class="wc-t">摩根石 · 安眠原石</p>
+                    <p class="wc-s">助眠摆放 · 附使用指南</p>
+                    <div class="wc-foot"><b>¥458</b><small>已售 687</small></div>
+                  </div>
+                </div>
+                <div class="wcard">
+                  <div class="wc-img" style="aspect-ratio:1/1.12">
+                    <img src="assets/healer-xiaoman.jpg" alt="小满疗愈师" loading="lazy">
+                    <span class="wc-tag">预约制</span>
+                  </div>
+                  <div class="wc-body">
+                    <p class="wc-t">小满 · 疗愈师</p>
+                    <p class="wc-s">首次体验 60 分钟 · 线上视频</p>
+                    <div class="wc-foot"><b>¥399</b><small>本周可约 3 个时段</small></div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <p class="footnote">完整复刻现有至心谷能力 · 迁移不丢失<br>模块二 · 成交转化 · 一期上线</p>
+          </div>
+          <div class="tabbar">
+            <span class="tabbtn"><svg width="23" height="23" viewBox="0 0 24 24" fill="none" stroke-width="1.5" stroke-linecap="round"><circle cx="12" cy="12" r="4.4"/><path d="M12 2.5v2.6M12 18.9v2.6M2.5 12h2.6M18.9 12h2.6M5.2 5.2l1.9 1.9M16.9 16.9l1.9 1.9M18.8 5.2l-1.9 1.9M7.1 16.9l-1.9 1.9"/></svg><span>首页</span></span>
+            <span class="tabbtn on"><svg width="23" height="23" viewBox="0 0 24 24" fill="none" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 8.5h14l-1.2 11a1.8 1.8 0 0 1-1.8 1.6H8a1.8 1.8 0 0 1-1.8-1.6L5 8.5z"/><path d="M8.8 8.5V7a3.2 3.2 0 0 1 6.4 0v1.5"/></svg><span>商城</span></span>
+            <span class="tabbtn"><svg width="23" height="23" viewBox="0 0 24 24" fill="none" stroke-width="1.5" stroke-linecap="round"><circle cx="8.6" cy="8.2" r="3.1"/><path d="M3.4 19.5a5.6 5.6 0 0 1 10.4 0"/><circle cx="16.9" cy="9.4" r="2.5"/><path d="M15.4 15.3a4.6 4.6 0 0 1 5.2 4.2"/></svg><span>疗愈师</span></span>
+            <span class="tabbtn"><svg width="23" height="23" viewBox="0 0 24 24" fill="none" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M2.5 19.5 9 8.2l4 6.6 2.6-4.2 5.9 8.9z"/><path d="M8.2 19.5 12.6 12.6 17 19.5"/></svg><span>疗愈村</span></span>
+          </div>
+        </div></div>
+        <div class="cap"><b>商城 · 双向瀑布流</b><span>THE STORE</span></div>
+      </div>
+
+      <!-- 商品详情 -->
+      <div class="pw rv" style="transition-delay:.15s">
+        <div class="phone"><div class="shot">
+          <div class="island"></div>
+          <div class="sbar"><span class="time">9:41</span>
+            <span class="sicons">
+              <svg width="16" height="11" viewBox="0 0 16 11"><g class="ic-fill"><rect x="0" y="7" width="2.5" height="4" rx="1"/><rect x="4" y="5" width="2.5" height="6" rx="1"/><rect x="8" y="3" width="2.5" height="8" rx="1"/><rect x="12" y="1" width="2.5" height="10" rx="1"/></g></svg>
+              <svg width="15" height="11" viewBox="0 0 15 11"><g class="ic-stroke" fill="none" stroke-width="1.6" stroke-linecap="round"><path d="M1.5 4 A 9 9 0 0 1 13.5 4"/><path d="M4 7 A 5.5 5.5 0 0 1 11 7"/><path d="M6.6 9.6 A 2 2 0 0 1 8.4 9.6"/></g></svg>
+              <svg width="23" height="11" viewBox="0 0 23 11"><rect x="0.5" y="0.5" width="19" height="10" rx="3" class="ic-stroke" fill="none" stroke-width="1"/><rect x="2" y="2" width="14" height="7" rx="1.5" class="ic-fill"/><path d="M21.5 3.5 L21.5 7.5 A 2 2 0 0 0 21.5 3.5 Z" class="ic-fill"/></svg>
+            </span>
+          </div>
+          <div class="capsule"><span class="dot3">···</span><span class="cir"></span></div>
+          <div class="homebar"></div>
+          <div class="pnav"><span class="ttl">商品</span></div>
+          <div class="pbody pbody--flush">
+            <div class="dt-hero">
+              <img src="assets/prod-amethyst.jpg" alt="紫水晶静心手串" loading="lazy">
+              <span class="dt-tag">热门</span>
+            </div>
+            <div class="dt-head" style="padding:18px 16px 0">
+              <p class="dt-name">紫水晶 · 静心手串</p>
+              <p class="dt-sub">天然水晶 · 现货顺丰</p>
+              <p class="dt-price">¥299</p>
+            </div>
+            <div class="dt-specs" style="margin:18px 16px 0">
+              <div class="sp"><b>发 货</b><span>现货 · 48 小时内</span></div>
+              <div class="sp"><b>规 格</b><span>8mm · 足腕围可调</span></div>
+              <div class="sp"><b>附 赠</b><span>《使用与净化指南》电子版</span></div>
+            </div>
+            <div class="dt-block" style="margin:24px 16px 0">
+              <h4>商品详情<span>DETAILS</span></h4>
+              <p class="dt-desc">为静心时刻挑选的天然紫水晶。佩戴于腕间，或置于枕边，配合三次深呼吸，让夜晚慢下来。每一颗都经过挑选与净化，附使用指南。</p>
+            </div>
+            <div class="dt-block" style="margin:24px 16px 0">
+              <h4>净化与佩戴<span>MORE</span></h4>
+              <div class="ex-list">
+                <div class="ex-row"><b>月光净化</b><span>每月满月夜，置于窗台一夜</span></div>
+                <div class="ex-row"><b>日常佩戴</b><span>左手佩戴 · 配合三次深呼吸</span></div>
+              </div>
+            </div>
+          </div>
+          <div class="buybar">
+            <span class="bb-1">加入购物袋</span>
+            <span class="bb-2">立即请购</span>
+          </div>
+        </div></div>
+        <div class="cap"><b>商品详情 · 完整页面</b><span>PRODUCT DETAIL</span></div>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- ============ 模块三 · 疗愈师 ============ -->
+  <section class="mod" id="m3">
+    <div class="mhead rv">
+      <p class="mk">MODULE III · 裂变增长</p>
+      <h2 class="mt">疗愈师</h2>
+      <p class="mline">疗愈师，即渠道。</p>
+      <div class="mchips"><span>团队管理</span><span>素材中心</span><span>分销结算</span></div>
+      <div class="mphase"><span>二期上线</span></div>
+    </div>
+    <div class="phones">
+
+      <!-- 疗愈师中心 -->
+      <div class="pw rv" style="transition-delay:.05s">
+        <div class="phone"><div class="shot">
+          <div class="island"></div>
+          <div class="sbar"><span class="time">9:41</span>
+            <span class="sicons">
+              <svg width="16" height="11" viewBox="0 0 16 11"><g class="ic-fill"><rect x="0" y="7" width="2.5" height="4" rx="1"/><rect x="4" y="5" width="2.5" height="6" rx="1"/><rect x="8" y="3" width="2.5" height="8" rx="1"/><rect x="12" y="1" width="2.5" height="10" rx="1"/></g></svg>
+              <svg width="15" height="11" viewBox="0 0 15 11"><g class="ic-stroke" fill="none" stroke-width="1.6" stroke-linecap="round"><path d="M1.5 4 A 9 9 0 0 1 13.5 4"/><path d="M4 7 A 5.5 5.5 0 0 1 11 7"/><path d="M6.6 9.6 A 2 2 0 0 1 8.4 9.6"/></g></svg>
+              <svg width="23" height="11" viewBox="0 0 23 11"><rect x="0.5" y="0.5" width="19" height="10" rx="3" class="ic-stroke" fill="none" stroke-width="1"/><rect x="2" y="2" width="14" height="7" rx="1.5" class="ic-fill"/><path d="M21.5 3.5 L21.5 7.5 A 2 2 0 0 0 21.5 3.5 Z" class="ic-fill"/></svg>
+            </span>
+          </div>
+          <div class="capsule"><span class="dot3">···</span><span class="cir"></span></div>
+          <div class="homebar"></div>
+          <div class="pnav"><span class="ttl">疗愈师中心</span><span class="modchip">THE HEALERS · 模块三</span></div>
+          <div class="pbody">
+            <div class="hprofile">
+              <img class="av" src="assets/healer-xiaoman.jpg" alt="小满" loading="lazy">
+              <div><p class="hp-n">小满 · 联创疗愈师</p><p class="hp-s">团队 12 位疗愈师 · 3 个小组</p></div>
+              <span class="hp-go">›</span>
+            </div>
+            <div class="hchips"><span class="on">素材管理</span><span>人员跟进</span><span>培训课程</span></div>
+            <div class="hlist">
+              <div class="hrow"><span>新疗愈师档案<small>待完善 · 2 位</small></span><i>›</i></div>
+              <div class="hrow"><span>联创基础培训<small>第 3 讲 · 本周更新</small></span><i>›</i></div>
+              <div class="hrow"><span>本周分享素材<small>已更新 3 篇</small></span><i>›</i></div>
+            </div>
+            <div class="dist">
+              <span class="d-tag">分销机制</span>
+              <p class="d-line">分享，即生长。</p>
+              <p class="d-desc">把小程序分享给朋友，朋友在其中成交，奖励金自动结算到账。</p>
+              <div class="dstats">
+                <div><b>¥1,280</b><span>本月奖励金</span></div>
+                <div><b>17</b><span>带来的新朋友</span></div>
+              </div>
+              <span class="dbtn" style="display:block">生成我的邀请卡</span>
+            </div>
+            <p class="footnote">模块三 · 疗愈师生态 · 二期上线<br>界面示意 · 非最终设计</p>
+          </div>
+          <div class="tabbar">
+            <span class="tabbtn"><svg width="23" height="23" viewBox="0 0 24 24" fill="none" stroke-width="1.5" stroke-linecap="round"><circle cx="12" cy="12" r="4.4"/><path d="M12 2.5v2.6M12 18.9v2.6M2.5 12h2.6M18.9 12h2.6M5.2 5.2l1.9 1.9M16.9 16.9l1.9 1.9M18.8 5.2l-1.9 1.9M7.1 16.9l-1.9 1.9"/></svg><span>首页</span></span>
+            <span class="tabbtn"><svg width="23" height="23" viewBox="0 0 24 24" fill="none" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 8.5h14l-1.2 11a1.8 1.8 0 0 1-1.8 1.6H8a1.8 1.8 0 0 1-1.8-1.6L5 8.5z"/><path d="M8.8 8.5V7a3.2 3.2 0 0 1 6.4 0v1.5"/></svg><span>商城</span></span>
+            <span class="tabbtn on"><svg width="23" height="23" viewBox="0 0 24 24" fill="none" stroke-width="1.5" stroke-linecap="round"><circle cx="8.6" cy="8.2" r="3.1"/><path d="M3.4 19.5a5.6 5.6 0 0 1 10.4 0"/><circle cx="16.9" cy="9.4" r="2.5"/><path d="M15.4 15.3a4.6 4.6 0 0 1 5.2 4.2"/></svg><span>疗愈师</span></span>
+            <span class="tabbtn"><svg width="23" height="23" viewBox="0 0 24 24" fill="none" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M2.5 19.5 9 8.2l4 6.6 2.6-4.2 5.9 8.9z"/><path d="M8.2 19.5 12.6 12.6 17 19.5"/></svg><span>疗愈村</span></span>
+          </div>
+        </div></div>
+        <div class="cap"><b>疗愈师中心 · 管理与分销</b><span>HEALER CENTER</span></div>
+      </div>
+
+      <!-- 小满预约详情 -->
+      <div class="pw rv" style="transition-delay:.15s">
+        <div class="phone"><div class="shot">
+          <div class="island"></div>
+          <div class="sbar"><span class="time">9:41</span>
+            <span class="sicons">
+              <svg width="16" height="11" viewBox="0 0 16 11"><g class="ic-fill"><rect x="0" y="7" width="2.5" height="4" rx="1"/><rect x="4" y="5" width="2.5" height="6" rx="1"/><rect x="8" y="3" width="2.5" height="8" rx="1"/><rect x="12" y="1" width="2.5" height="10" rx="1"/></g></svg>
+              <svg width="15" height="11" viewBox="0 0 15 11"><g class="ic-stroke" fill="none" stroke-width="1.6" stroke-linecap="round"><path d="M1.5 4 A 9 9 0 0 1 13.5 4"/><path d="M4 7 A 5.5 5.5 0 0 1 11 7"/><path d="M6.6 9.6 A 2 2 0 0 1 8.4 9.6"/></g></svg>
+              <svg width="23" height="11" viewBox="0 0 23 11"><rect x="0.5" y="0.5" width="19" height="10" rx="3" class="ic-stroke" fill="none" stroke-width="1"/><rect x="2" y="2" width="14" height="7" rx="1.5" class="ic-fill"/><path d="M21.5 3.5 L21.5 7.5 A 2 2 0 0 0 21.5 3.5 Z" class="ic-fill"/></svg>
+            </span>
+          </div>
+          <div class="capsule"><span class="dot3">···</span><span class="cir"></span></div>
+          <div class="homebar"></div>
+          <div class="pnav"><span class="ttl">疗愈师预约</span></div>
+          <div class="pbody pbody--flush">
+            <div class="dt-hero">
+              <img src="assets/healer-xiaoman.jpg" alt="小满" loading="lazy">
+              <span class="dt-tag">预约制</span>
+            </div>
+            <div class="dt-head" style="padding:18px 16px 0">
+              <p class="dt-name">小满 · 疗愈师</p>
+              <p class="dt-sub">首次体验 60 分钟 · 线上视频</p>
+              <p class="dt-price">¥399</p>
+            </div>
+            <div class="dt-specs" style="margin:18px 16px 0">
+              <div class="sp"><b>时 长</b><span>60 分钟 · 一对一</span></div>
+              <div class="sp"><b>形 式</b><span>线上视频 · 预约制</span></div>
+              <div class="sp"><b>适 合</b><span>首次体验 · 想被好好倾听的人</span></div>
+            </div>
+            <div class="dt-block" style="margin:24px 16px 0">
+              <h4>疗愈师介绍<span>DETAILS</span></h4>
+              <p class="dt-desc">一次安静的对话。你带来什么都可以——说不清的情绪、身体的不适、或者只是最近有点累。小满陪你看清它，再决定怎么安放它。</p>
+            </div>
+            <div class="dt-block" style="margin:24px 16px 0">
+              <h4>近期可约<span>SLOTS</span></h4>
+              <div class="slots">
+                <span class="slotbtn sel">周三 19:30 – 20:30</span>
+                <span class="slotbtn">周五 10:00 – 11:00</span>
+                <span class="slotbtn">周日 15:00 – 16:00</span>
+              </div>
+            </div>
+            <div class="dt-block" style="margin:24px 16px 0">
+              <h4>他们的感受<span>REVIEWS</span></h4>
+              <div class="rv-item">
+                <div class="rv-av">匿</div>
+                <div><p class="rv-t">第一次体验到「被完整地听见」。结束的时候，胸口松了。</p><p class="rv-n">匿名 · 首次体验</p></div>
+              </div>
+            </div>
+          </div>
+          <div class="buybar">
+            <span class="bb-1">咨询疗愈师</span>
+            <span class="bb-2">立即预约</span>
+          </div>
+        </div></div>
+        <div class="cap"><b>疗愈师预约 · 用户视角</b><span>BOOK A SESSION</span></div>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- ============ 模块四 · 疗愈村 ============ -->
+  <section class="mod" id="m4">
+    <div class="mhead rv">
+      <p class="mk">MODULE IV · 影响力承接</p>
+      <h2 class="mt">疗愈村</h2>
+      <p class="mline">一座村，正在生长。</p>
+      <div class="mchips"><span>村庄介绍与规划</span><span>在线订房</span><span>共修活动</span></div>
+      <div class="mphase"><span>三期上线 · 随村庄建设同步推进</span></div>
+    </div>
+    <div class="phones">
+
+      <!-- 疗愈村 -->
+      <div class="pw rv" style="transition-delay:.05s">
+        <div class="phone"><div class="shot dark">
+          <div class="island"></div>
+          <div class="sbar"><span class="time">9:41</span>
+            <span class="sicons">
+              <svg width="16" height="11" viewBox="0 0 16 11"><g class="ic-fill"><rect x="0" y="7" width="2.5" height="4" rx="1"/><rect x="4" y="5" width="2.5" height="6" rx="1"/><rect x="8" y="3" width="2.5" height="8" rx="1"/><rect x="12" y="1" width="2.5" height="10" rx="1"/></g></svg>
+              <svg width="15" height="11" viewBox="0 0 15 11"><g class="ic-stroke" fill="none" stroke-width="1.6" stroke-linecap="round"><path d="M1.5 4 A 9 9 0 0 1 13.5 4"/><path d="M4 7 A 5.5 5.5 0 0 1 11 7"/><path d="M6.6 9.6 A 2 2 0 0 1 8.4 9.6"/></g></svg>
+              <svg width="23" height="11" viewBox="0 0 23 11"><rect x="0.5" y="0.5" width="19" height="10" rx="3" class="ic-stroke" fill="none" stroke-width="1"/><rect x="2" y="2" width="14" height="7" rx="1.5" class="ic-fill"/><path d="M21.5 3.5 L21.5 7.5 A 2 2 0 0 0 21.5 3.5 Z" class="ic-fill"/></svg>
+            </span>
+          </div>
+          <div class="capsule"><span class="dot3">···</span><span class="cir"></span></div>
+          <div class="homebar"></div>
+          <div class="pbody pbody--full">
+            <div class="vhead">
+              <span class="bl">THE VILLAGE · 模块四</span>
+              <p class="vt">幸福疗愈村</p>
+              <p class="vs">森林里，一个慢慢长成的家</p>
+            </div>
+            <div class="village-inner">
+              <div class="vcard">
+                <div class="vc-h"><b>村庄，在建</b><span>一期</span></div>
+                <div class="vrow"><span class="st" style="background:#4C8A6B"></span>6 间疗愈房<small>已开放</small></div>
+                <div class="vrow"><span class="st" style="background:var(--gold)"></span>共修厅<small>在建</small></div>
+                <div class="vrow"><span class="st" style="background:rgba(26,18,9,.22)"></span>溪谷步道<small>规划中</small></div>
+                <div class="vbar"><i></i></div>
+              </div>
+              <div class="sec-head"><h3>住进村里</h3><span>STAY</span></div>
+              <div class="room">
+                <img class="th" src="assets/room-creek.jpg" alt="溪景双床房" loading="lazy">
+                <div><p class="rm-t">溪景双床房</p><p class="rm-s">含早 · 溪谷景观</p></div>
+                <div class="rm-p"><b>¥880</b><small> /晚</small></div>
+              </div>
+              <div class="room">
+                <img class="th" src="assets/room-cabin.jpg" alt="森屿独栋" loading="lazy">
+                <div><p class="rm-t">森屿独栋</p><p class="rm-s">独院 · 含私人疗愈室</p></div>
+                <div class="rm-p"><b>¥1,280</b><small> /晚</small></div>
+              </div>
+              <div class="sec-head"><h3>村里的日子</h3><span>GATHER</span></div>
+              <div class="act-card">
+                <div class="ac-ic"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3.5c-3.6 5-6.5 8.6-6.5 12.1a6.5 6.5 0 0 0 13 0c0-3.5-2.9-7.1-6.5-12.1z"/></svg></div>
+                <div><p class="at">溪谷共修日</p><p class="as">每月一次 · 本月 28 日 · 剩 8 席</p></div>
+                <span class="ar-go" style="margin-left:auto;color:var(--t3)">›</span>
+              </div>
+              <p class="footnote">模块四 · 影响力承接 · 三期上线<br>随村庄建设同步推进 · 界面示意</p>
+            </div>
+          </div>
+          <div class="tabbar">
+            <span class="tabbtn"><svg width="23" height="23" viewBox="0 0 24 24" fill="none" stroke-width="1.5" stroke-linecap="round"><circle cx="12" cy="12" r="4.4"/><path d="M12 2.5v2.6M12 18.9v2.6M2.5 12h2.6M18.9 12h2.6M5.2 5.2l1.9 1.9M16.9 16.9l1.9 1.9M18.8 5.2l-1.9 1.9M7.1 16.9l-1.9 1.9"/></svg><span>首页</span></span>
+            <span class="tabbtn"><svg width="23" height="23" viewBox="0 0 24 24" fill="none" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 8.5h14l-1.2 11a1.8 1.8 0 0 1-1.8 1.6H8a1.8 1.8 0 0 1-1.8-1.6L5 8.5z"/><path d="M8.8 8.5V7a3.2 3.2 0 0 1 6.4 0v1.5"/></svg><span>商城</span></span>
+            <span class="tabbtn"><svg width="23" height="23" viewBox="0 0 24 24" fill="none" stroke-width="1.5" stroke-linecap="round"><circle cx="8.6" cy="8.2" r="3.1"/><path d="M3.4 19.5a5.6 5.6 0 0 1 10.4 0"/><circle cx="16.9" cy="9.4" r="2.5"/><path d="M15.4 15.3a4.6 4.6 0 0 1 5.2 4.2"/></svg><span>疗愈师</span></span>
+            <span class="tabbtn on"><svg width="23" height="23" viewBox="0 0 24 24" fill="none" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M2.5 19.5 9 8.2l4 6.6 2.6-4.2 5.9 8.9z"/><path d="M8.2 19.5 12.6 12.6 17 19.5"/></svg><span>疗愈村</span></span>
+          </div>
+        </div></div>
+        <div class="cap"><b>疗愈村 · 影响力承接</b><span>THE VILLAGE</span></div>
+      </div>
+
+      <!-- 在线订房 -->
+      <div class="pw rv" style="transition-delay:.15s">
+        <div class="phone"><div class="shot">
+          <div class="island"></div>
+          <div class="sbar"><span class="time">9:41</span>
+            <span class="sicons">
+              <svg width="16" height="11" viewBox="0 0 16 11"><g class="ic-fill"><rect x="0" y="7" width="2.5" height="4" rx="1"/><rect x="4" y="5" width="2.5" height="6" rx="1"/><rect x="8" y="3" width="2.5" height="8" rx="1"/><rect x="12" y="1" width="2.5" height="10" rx="1"/></g></svg>
+              <svg width="15" height="11" viewBox="0 0 15 11"><g class="ic-stroke" fill="none" stroke-width="1.6" stroke-linecap="round"><path d="M1.5 4 A 9 9 0 0 1 13.5 4"/><path d="M4 7 A 5.5 5.5 0 0 1 11 7"/><path d="M6.6 9.6 A 2 2 0 0 1 8.4 9.6"/></g></svg>
+              <svg width="23" height="11" viewBox="0 0 23 11"><rect x="0.5" y="0.5" width="19" height="10" rx="3" class="ic-stroke" fill="none" stroke-width="1"/><rect x="2" y="2" width="14" height="7" rx="1.5" class="ic-fill"/><path d="M21.5 3.5 L21.5 7.5 A 2 2 0 0 0 21.5 3.5 Z" class="ic-fill"/></svg>
+            </span>
+          </div>
+          <div class="capsule"><span class="dot3">···</span><span class="cir"></span></div>
+          <div class="homebar"></div>
+          <div class="pnav"><span class="ttl">在线订房</span></div>
+          <div class="pbody pbody--flush">
+            <div class="bk-hero"><img src="assets/room-creek.jpg" alt="溪景双床房" loading="lazy"></div>
+            <div style="padding:0 16px 26px">
+              <div class="bk-room">
+                <div><p class="bt">溪景双床房</p><p class="bs">含早 · 溪谷景观 · 28㎡</p></div>
+                <span class="bp">¥880</span>
+              </div>
+              <div class="bk-card">
+                <div class="bk-row"><b>入 住</b><span>10 月 24 日 · 周六 14:00 后</span></div>
+                <div class="bk-row"><b>离 店</b><span>10 月 25 日 · 周日 12:00 前</span></div>
+                <div class="bk-row"><b>间 数</b>
+                  <span class="stepper"><span>−</span><em>1</em><span>＋</span></span>
+                </div>
+              </div>
+              <div class="bk-card">
+                <div class="bk-row"><b>房 费</b><span>¥880 × 1 晚</span></div>
+                <div class="bk-row"><b>服务费</b><span>¥0 · 含清洁与布草</span></div>
+              </div>
+              <div class="bk-total"><span>合 计</span><b>¥880</b></div>
+              <span class="bk-btn" style="display:block">确 认 预 订</span>
+              <p class="footnote">界面示意 · 非最终设计</p>
+            </div>
+          </div>
+        </div></div>
+        <div class="cap"><b>在线订房 · 所见即可订</b><span>BOOK A STAY</span></div>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- ============ 收尾 ============ -->
+  <section class="outro">
+    <p class="o-lat rv">INTERACTIVE</p>
+    <h2 class="rv" style="transition-delay:.08s">以上，皆可交互。</h2>
+    <p class="o-sub rv" style="transition-delay:.16s">在可操作的概念机里——<br>开始一次对话 · 完成一场测评 · 点开一件水晶 · 预订一间房</p>
+    <a class="o-cta rv" style="transition-delay:.24s" href="demo.html">打开可交互演示 →</a>
+
+    <div class="roadmap">
+      <div class="road rv"><p class="r-no">PHASE 1</p><p class="r-t">一期 · 遇见与成交</p><p class="r-s">模块一 新用户引流 + 模块二 商城购买<br>先跑通完整闭环</p></div>
+      <div class="road rv" style="transition-delay:.1s"><p class="r-no">PHASE 2</p><p class="r-t">二期 · 疗愈师生态</p><p class="r-s">模块三 团队管理与分销机制<br>自裂变，自然生长</p></div>
+      <div class="road rv" style="transition-delay:.2s"><p class="r-no">PHASE 3</p><p class="r-t">三期 · 疗愈村</p><p class="r-s">模块四 影响力承接<br>随村庄建设同步推进</p></div>
+    </div>
+  </section>
+
+  <footer class="fin">
+    <img src="assets/LAYA-Primary-Stacked-White-Master-v1.0.png" alt="LAYA">
+    <p class="f-lat">INNER SUN</p>
+    <p class="f-s">界面示意 · 非最终设计<br>2026.09</p>
+  </footer>
+
+</main>
+
+<script>
+(function(){
+  'use strict';
+
+  var topnav=document.getElementById('topnav');
+  function onScroll(){
+    topnav.classList.toggle('scr',window.scrollY>40);
+  }
+  window.addEventListener('scroll',onScroll,{passive:true});
+  onScroll();
+
+  if(!('IntersectionObserver' in window)){
+    document.querySelectorAll('.rv').forEach(function(el){el.classList.add('vis')});
+  }else{
+    var io=new IntersectionObserver(function(es){
+      es.forEach(function(e){
+        if(e.isIntersecting){e.target.classList.add('vis');io.unobserve(e.target)}
+      });
+    },{threshold:.12});
+    document.querySelectorAll('.rv').forEach(function(el){io.observe(el)});
+
+    var secs=['m1','m2','m3','m4'].map(function(id){return document.getElementById(id)});
+    var links=document.querySelectorAll('.tn-link');
+    var io2=new IntersectionObserver(function(es){
+      es.forEach(function(e){
+        if(e.isIntersecting){
+          links.forEach(function(l){l.classList.toggle('on',l.getAttribute('href')==='#'+e.target.id)});
+        }
+      });
+    },{rootMargin:'-38% 0px -55% 0px'});
+    secs.forEach(function(s){io2.observe(s)});
+  }
+})();
+</script>
+</body>
+</html>

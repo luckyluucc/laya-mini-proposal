@@ -1,0 +1,918 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no,viewport-fit=cover">
+<title>LAYA 小程序 · 完整概念演示</title>
+<style>
+:root{
+  --green:#1B3A2D;
+  --green-2:#234838;
+  --green-3:#15291F;
+  --green-deep:#163024;
+  --gold:#D4A882;
+  --gold-2:#E8C9A8;
+  --ivory:#F5F0E8;
+  --ivory-2:#EFE7DA;
+  --card:#FFFFFF;
+  --ink:#1A1209;
+  --t2:rgba(26,18,9,.66);
+  --t3:rgba(26,18,9,.4);
+  --line:rgba(26,18,9,.1);
+  --lineIv:rgba(245,240,232,.16);
+  --serif:'Noto Serif SC','Source Han Serif SC','Songti SC','STSong','SimSun',serif;
+  --sans:-apple-system,BlinkMacSystemFont,'PingFang SC','HarmonyOS Sans SC','Microsoft YaHei',sans-serif;
+  --latin:'Cormorant Garamond',Georgia,'Times New Roman',serif;
+  --ease:cubic-bezier(.32,.72,.28,1);
+}
+*{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+html,body{height:100%}
+body{position:fixed;inset:0;overflow:hidden;overscroll-behavior:none;background:#12211A;font-family:var(--sans);-webkit-font-smoothing:antialiased;color:var(--ink)}
+
+.stage{position:absolute;inset:0;background:radial-gradient(circle at 18% 8%,rgba(212,168,130,.07),transparent 42%),radial-gradient(circle at 84% 92%,rgba(46,94,74,.22),transparent 46%),#12211A}
+
+/* ===== 桌面侧栏 ===== */
+.side{display:none;position:absolute;left:0;top:0;bottom:0;width:320px;padding:56px 44px;z-index:2;flex-direction:column}
+.side .slogo{height:58px;object-fit:contain;align-self:flex-start}
+.side h1{font-family:var(--serif);font-size:22px;font-weight:500;color:var(--ivory);letter-spacing:.08em;margin-top:34px}
+.side .ssub{font-family:var(--serif);font-size:12.5px;color:rgba(245,240,232,.5);letter-spacing:.14em;margin-top:8px}
+.side nav{margin-top:44px}
+.side nav button{display:flex;align-items:baseline;gap:14px;width:100%;background:none;border:none;border-bottom:1px solid rgba(245,240,232,.1);padding:15px 2px;cursor:pointer;text-align:left;transition:opacity .25s}
+.side nav button .no{font-family:var(--latin);font-size:11px;letter-spacing:.2em;color:rgba(212,168,130,.75);width:22px;flex-shrink:0}
+.side nav button .nm{font-family:var(--serif);font-size:15px;color:rgba(245,240,232,.82);letter-spacing:.06em;font-weight:500}
+.side nav button .ds{font-size:10px;color:rgba(245,240,232,.34);letter-spacing:.1em;margin-left:auto}
+.side nav button.on .nm{color:var(--gold-2)}
+.side nav button.on .no{color:var(--gold)}
+.side .stry{margin-top:auto;font-size:10px;line-height:2;color:rgba(245,240,232,.32);letter-spacing:.14em}
+.side .stry b{display:block;font-family:var(--latin);font-style:italic;font-weight:400;color:rgba(212,168,130,.6);letter-spacing:.2em;margin-bottom:6px}
+@media (min-width:1080px){.side{display:flex}}
+
+/* ===== 手机 ===== */
+.phone-wrap{position:absolute;left:50%;top:50%;width:426px;height:898px;transform:translate(-50%,-50%);transform-origin:center;z-index:3}
+@media (min-width:1080px){.phone-wrap{left:calc(50% + 160px)}}
+.phone{width:426px;height:898px;background:#0B0F0D;border-radius:62px;padding:12px;box-shadow:0 42px 100px rgba(0,0,0,.55),0 4px 18px rgba(0,0,0,.4),inset 0 0 0 1.5px rgba(255,255,255,.07)}
+.screen{position:relative;width:402px;height:874px;border-radius:50px;overflow:hidden;background:var(--ivory)}
+
+/* 系统层 */
+.island{position:absolute;top:11px;left:50%;transform:translateX(-50%);width:120px;height:34px;border-radius:20px;background:#0A0A0A;z-index:30}
+.sbar{position:absolute;top:0;left:0;right:0;height:54px;padding:16px 30px 0;display:flex;justify-content:space-between;align-items:flex-start;z-index:30;pointer-events:none}
+.sbar .time{font-size:13.5px;font-weight:600;letter-spacing:.02em;color:var(--ink)}
+body.dark-chrome .sbar .time{color:var(--ivory)}
+.sicons{display:flex;align-items:center;gap:5.5px}
+.sicons svg{display:block}
+.sicons .ic-fill{fill:var(--ink)}
+.sicons .ic-stroke{stroke:var(--ink)}
+body.dark-chrome .sicons .ic-fill{fill:var(--ivory)}
+body.dark-chrome .sicons .ic-stroke{stroke:var(--ivory)}
+.capsule{position:absolute;top:62px;right:16px;width:84px;height:32px;border-radius:999px;background:rgba(26,18,9,.05);border:1px solid rgba(26,18,9,.08);display:flex;align-items:center;justify-content:space-around;z-index:30}
+.capsule .dot3{letter-spacing:1.5px;color:rgba(26,18,9,.5);font-size:12px;font-weight:700;line-height:1;margin-top:-2px}
+.capsule .cir{width:11px;height:11px;border-radius:50%;border:1.5px solid rgba(26,18,9,.5)}
+body.dark-chrome .capsule{background:rgba(245,240,232,.1);border-color:rgba(245,240,232,.18)}
+body.dark-chrome .capsule .dot3{color:rgba(245,240,232,.75)}
+body.dark-chrome .capsule .cir{border-color:rgba(245,240,232,.75)}
+.homebar{position:absolute;bottom:8px;left:50%;transform:translateX(-50%);width:120px;height:5px;border-radius:3px;background:rgba(26,18,9,.8);z-index:30;transition:background .3s}
+body.dark-chrome .homebar{background:rgba(245,240,232,.85)}
+
+/* ===== Tab 栏 ===== */
+.tabbar{position:absolute;bottom:0;left:0;right:0;height:88px;background:rgba(245,240,232,.94);backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px);border-top:1px solid var(--line);display:flex;z-index:4;padding:8px 8px 20px}
+.tabbtn{flex:1;background:none;border:none;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:5px;cursor:pointer;font-family:var(--sans)}
+.tabbtn svg{display:block;stroke:rgba(26,18,9,.36);transition:stroke .3s}
+.tabbtn span{font-size:9.5px;letter-spacing:.1em;color:rgba(26,18,9,.38);font-weight:400;transition:color .3s}
+.tabbtn.on svg{stroke:var(--green)}
+.tabbtn.on span{color:var(--green);font-weight:600}
+
+/* ===== 页面容器 ===== */
+.pg{position:absolute;left:0;top:0;bottom:0;right:0;background:var(--ivory);display:none;overflow:hidden}
+.pg.tabroot{bottom:88px}
+.pg.sub{z-index:6;box-shadow:-26px 0 56px rgba(10,18,14,.32)}
+.pg.act{display:block}
+@keyframes pgPush{from{transform:translateX(100%)}to{transform:translateX(0)}}
+@keyframes pgUnder{from{transform:translateX(0)}to{transform:translateX(-22%)}}
+@keyframes pgPop{from{transform:translateX(0)}to{transform:translateX(100%)}}
+@keyframes pgReveal{from{transform:translateX(-22%)}to{transform:translateX(0)}}
+@keyframes pgTab{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:translateY(0)}}
+.pg.anim-push{animation:pgPush .44s var(--ease) both}
+.pg.anim-under{animation:pgUnder .44s var(--ease) both}
+.pg.anim-pop{animation:pgPop .42s var(--ease) both}
+.pg.anim-reveal{animation:pgReveal .42s var(--ease) both}
+.pg.anim-tab{animation:pgTab .4s var(--ease) both}
+
+/* 页面导航 */
+.pnav{height:98px;padding:58px 16px 0;display:flex;align-items:center;justify-content:center;position:relative;flex-shrink:0}
+.pnav .ttl{font-family:var(--serif);font-size:15.5px;font-weight:600;letter-spacing:.14em;color:var(--ink)}
+.pnav .backbtn{position:absolute;left:10px;top:54px;width:40px;height:40px;border:none;background:none;cursor:pointer;display:flex;align-items:center;justify-content:center}
+.pnav .backbtn svg{stroke:var(--ink);opacity:.75}
+.pg.darknav .pnav .ttl{color:var(--ivory)}
+.pg.darknav .pnav .backbtn svg{stroke:var(--ivory)}
+.pnav .modchip{position:absolute;right:16px;top:62px;font-size:8.5px;letter-spacing:.18em;color:var(--t3);font-weight:600}
+.pg.darknav .pnav .modchip{color:rgba(212,168,130,.8)}
+
+.pbody{position:absolute;left:0;right:0;top:98px;bottom:0;overflow-y:auto;-webkit-overflow-scrolling:touch;padding:4px 16px 26px}
+.pg.darknav .pbody{top:0;padding:98px 16px 26px}
+.footnote{font-size:9px;color:var(--t3);letter-spacing:.14em;line-height:2;text-align:center;margin:22px 0 10px}
+
+/* ===== 绿色头部区块 ===== */
+.greenhead{background:linear-gradient(165deg,#1E4030,#1B3A2D);border-radius:0 0 30px 30px;padding:66px 20px 26px;position:relative;overflow:hidden}
+.greenhead::after{content:'';position:absolute;top:-70px;right:-60px;width:220px;height:220px;border-radius:50%;background:radial-gradient(circle,rgba(212,168,130,.14),transparent 68%)}
+.brandrow{display:flex;align-items:center;justify-content:space-between;margin-bottom:26px}
+.brandrow .slogo{height:34px;object-fit:contain}
+.brandrow .bl{font-family:var(--latin);font-style:italic;font-size:10px;letter-spacing:.3em;color:rgba(212,168,130,.7)}
+.greet{font-family:var(--serif);font-size:23px;font-weight:500;color:var(--ivory);letter-spacing:.05em;line-height:1.5}
+.greet-sub{font-size:11px;font-weight:300;color:rgba(245,240,232,.55);letter-spacing:.16em;margin-top:10px}
+
+/* AI 卡 */
+.aicard{margin-top:24px;background:rgba(245,240,232,.07);border:1px solid rgba(245,240,232,.16);border-radius:20px;padding:20px 20px 18px;position:relative;z-index:1}
+.aicard .ac-eyebrow{font-size:9px;letter-spacing:.26em;color:var(--gold);font-weight:600}
+.aicard .ac-line{font-family:var(--serif);font-size:17px;color:var(--ivory);font-weight:500;letter-spacing:.05em;margin-top:12px}
+.aicard .ac-desc{font-size:10.5px;font-weight:300;color:rgba(245,240,232,.5);letter-spacing:.1em;margin-top:8px}
+.aicard .ac-cta{display:inline-flex;align-items:center;gap:8px;margin-top:16px;background:var(--gold);color:var(--ink);font-size:11px;font-weight:600;letter-spacing:.2em;padding:10px 22px;border-radius:999px;border:none;cursor:pointer;font-family:var(--sans)}
+
+/* 双卡 */
+.duo{display:flex;gap:12px;margin-top:18px}
+.duo-card{flex:1;background:var(--card);border:1px solid var(--line);border-radius:16px;padding:16px 15px;cursor:pointer}
+.duo-card .ic{width:34px;height:34px;border-radius:50%;background:rgba(212,168,130,.16);display:flex;align-items:center;justify-content:center;margin-bottom:12px}
+.duo-card .ic svg{stroke:var(--green)}
+.duo-card .dc-t{font-family:var(--serif);font-size:14px;font-weight:600;letter-spacing:.08em}
+.duo-card .dc-s{font-size:9.5px;font-weight:300;color:var(--t3);letter-spacing:.1em;margin-top:5px}
+
+/* 内容区 */
+.sec-head{display:flex;align-items:baseline;justify-content:space-between;margin:26px 2px 12px}
+.sec-head h3{font-family:var(--serif);font-size:15px;font-weight:600;letter-spacing:.1em}
+.sec-head span{font-family:var(--latin);font-style:italic;font-size:10px;letter-spacing:.24em;color:var(--gold)}
+.video-card{background:linear-gradient(150deg,#1E4030,#1B3A2D);border-radius:18px;height:148px;position:relative;overflow:hidden;cursor:pointer}
+.video-card .vc-play{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);width:44px;height:44px;border-radius:50%;background:rgba(212,168,130,.92);display:flex;align-items:center;justify-content:center}
+.video-card .vc-play svg{display:block}
+.video-card .vc-meta{position:absolute;left:16px;bottom:14px;color:var(--ivory)}
+.video-card .vc-meta .vt{font-family:var(--serif);font-size:13.5px;font-weight:500;letter-spacing:.06em}
+.video-card .vc-meta .vs{font-size:9px;color:rgba(245,240,232,.55);letter-spacing:.16em;margin-top:4px}
+.video-card .vc-dur{position:absolute;right:14px;bottom:16px;font-family:var(--latin);font-size:11px;color:rgba(245,240,232,.7);letter-spacing:.1em}
+.art-row{display:flex;align-items:center;gap:13px;background:var(--card);border:1px solid var(--line);border-radius:14px;padding:14px 15px;margin-top:10px;cursor:pointer}
+.art-row .ar-ic{width:38px;height:38px;border-radius:11px;background:var(--green);color:var(--ivory);display:flex;align-items:center;justify-content:center;font-family:var(--serif);font-size:14px;flex-shrink:0}
+.art-row .ar-ic.gold{background:var(--gold);color:var(--ink)}
+.art-row .ar-t{font-size:13px;font-weight:400;letter-spacing:.04em}
+.art-row .ar-s{font-size:9.5px;color:var(--t3);letter-spacing:.1em;margin-top:4px;font-weight:300}
+.art-row .ar-go{margin-left:auto;color:var(--t3);font-size:14px;font-weight:300}
+.me-row{display:flex;align-items:center;justify-content:space-between;border:1px solid rgba(27,58,45,.2);border-radius:999px;padding:13px 20px;margin-top:20px;cursor:pointer}
+.me-row span{font-size:11px;letter-spacing:.16em;color:var(--green);font-weight:400}
+.me-row i{font-style:normal;color:rgba(27,58,45,.5);font-weight:300}
+
+/* ===== 商城 ===== */
+.search{display:flex;align-items:center;gap:9px;background:rgba(26,18,9,.05);border-radius:999px;padding:11px 17px;margin-bottom:14px}
+.search svg{flex-shrink:0;stroke:var(--t3)}
+.search span{font-size:11px;color:var(--t3);letter-spacing:.08em;font-weight:300}
+.cats{display:flex;gap:8px;overflow-x:auto;scrollbar-width:none;margin-bottom:6px}
+.cats::-webkit-scrollbar{display:none}
+.cats button{flex-shrink:0;background:none;border:1px solid var(--line);border-radius:999px;padding:7px 16px;font-size:10.5px;letter-spacing:.12em;color:var(--t2);cursor:pointer;font-family:var(--sans);font-weight:300}
+.cats button.on{background:var(--green);border-color:var(--green);color:var(--ivory);font-weight:500}
+.prod{display:flex;align-items:center;gap:14px;background:var(--card);border:1px solid var(--line);border-radius:16px;padding:14px;margin-top:10px;cursor:pointer}
+.prod .th{width:58px;height:58px;border-radius:14px;display:flex;align-items:center;justify-content:center;font-family:var(--serif);font-size:17px;flex-shrink:0}
+.prod .th.green{background:var(--green);color:var(--ivory)}
+.prod .th.gold{background:var(--gold);color:var(--ink)}
+.prod .th.soft{background:rgba(27,58,45,.08);color:var(--green)}
+.prod .pd-t{font-size:13.5px;font-weight:400;letter-spacing:.03em;display:flex;align-items:center;gap:8px}
+.prod .pd-tag{font-size:8px;letter-spacing:.14em;color:var(--gold);border:1px solid rgba(212,168,130,.55);border-radius:999px;padding:2px 8px;font-weight:500}
+.prod .pd-s{font-size:9.5px;color:var(--t3);letter-spacing:.08em;margin-top:5px;font-weight:300}
+.prod .pd-p{margin-left:auto;text-align:right;flex-shrink:0}
+.prod .pd-p b{font-family:var(--latin);font-size:17px;font-weight:700;color:var(--green)}
+.prod .pd-p small{display:block;font-size:8.5px;color:var(--t3);letter-spacing:.1em;margin-top:3px;font-weight:300}
+
+/* ===== 疗愈师 ===== */
+.hprofile{display:flex;align-items:center;gap:15px;background:var(--card);border:1px solid var(--line);border-radius:18px;padding:18px 17px}
+.hprofile .av{width:52px;height:52px;border-radius:50%;background:var(--green);color:var(--ivory);display:flex;align-items:center;justify-content:center;font-family:var(--serif);font-size:19px;flex-shrink:0}
+.hprofile .hp-n{font-family:var(--serif);font-size:16px;font-weight:600;letter-spacing:.05em}
+.hprofile .hp-s{font-size:10px;color:var(--t3);letter-spacing:.1em;margin-top:5px;font-weight:300}
+.hprofile .hp-go{margin-left:auto;color:var(--t3)}
+.hchips{display:flex;gap:8px;margin-top:14px}
+.hchips span{flex:1;text-align:center;font-size:10.5px;letter-spacing:.14em;padding:10px 0;border:1px solid var(--line);border-radius:999px;color:var(--t2);font-weight:300}
+.hchips span.on{background:var(--green);color:var(--ivory);border-color:var(--green);font-weight:500}
+.hlist{background:var(--card);border:1px solid var(--line);border-radius:16px;margin-top:12px;padding:4px 17px}
+.hrow{display:flex;align-items:center;justify-content:space-between;padding:14px 0;border-bottom:1px solid var(--line);font-size:12px;letter-spacing:.05em}
+.hrow:last-child{border-bottom:none}
+.hrow small{display:block;font-size:9px;color:var(--t3);letter-spacing:.1em;margin-top:4px;font-weight:300}
+.hrow i{font-style:normal;color:var(--t3)}
+.dist{margin-top:16px;background:linear-gradient(150deg,rgba(212,168,130,.2),rgba(212,168,130,.07));border:1px solid rgba(212,168,130,.5);border-radius:18px;padding:20px 19px}
+.dist .d-tag{display:inline-block;font-size:8.5px;letter-spacing:.22em;color:var(--ink);background:var(--gold);border-radius:999px;padding:3px 11px;font-weight:600}
+.dist .d-line{font-family:var(--serif);font-size:16.5px;font-weight:600;letter-spacing:.08em;margin-top:14px}
+.dist .d-desc{font-size:10.5px;color:var(--t2);letter-spacing:.05em;line-height:1.9;margin-top:9px;font-weight:300}
+.dstats{display:flex;gap:34px;margin:16px 0 4px}
+.dstats b{font-family:var(--latin);font-size:23px;font-weight:700;color:var(--green);display:block}
+.dstats span{font-size:9px;color:var(--t3);letter-spacing:.14em}
+.dbtn{display:block;text-align:center;margin-top:14px;font-size:11px;font-weight:600;letter-spacing:.2em;color:var(--green);border:1px solid rgba(27,58,45,.3);border-radius:999px;padding:12px;cursor:pointer;background:none;font-family:var(--sans)}
+
+/* ===== 疗愈村 ===== */
+.vhead{background:linear-gradient(165deg,#1E4030,#1B3A2D);border-radius:0 0 30px 30px;padding:66px 20px 26px;position:relative;overflow:hidden}
+.vhead::after{content:'';position:absolute;bottom:-90px;left:-50px;width:240px;height:240px;border-radius:50%;background:radial-gradient(circle,rgba(212,168,130,.12),transparent 68%)}
+.vhead .bl{font-family:var(--latin);font-style:italic;font-size:10px;letter-spacing:.32em;color:rgba(212,168,130,.75)}
+.vhead .vt{font-family:var(--serif);font-size:24px;font-weight:500;color:var(--ivory);letter-spacing:.1em;margin-top:14px}
+.vhead .vs{font-size:11px;font-weight:300;color:rgba(245,240,232,.55);letter-spacing:.16em;margin-top:10px}
+.vcard{background:var(--card);border:1px solid var(--line);border-radius:18px;padding:18px 18px}
+.vcard .vc-h{display:flex;align-items:center;justify-content:space-between}
+.vcard .vc-h b{font-family:var(--serif);font-size:14.5px;font-weight:600;letter-spacing:.08em}
+.vcard .vc-h span{font-size:8.5px;letter-spacing:.18em;color:var(--gold);border:1px solid rgba(212,168,130,.5);border-radius:999px;padding:3px 10px;font-weight:600}
+.vrow{display:flex;align-items:center;gap:10px;padding:12px 0;border-bottom:1px solid var(--line);font-size:11.5px;letter-spacing:.06em}
+.vrow:last-child{border-bottom:none;padding-bottom:2px}
+.vrow .st{width:7px;height:7px;border-radius:50%;flex-shrink:0}
+.vrow small{margin-left:auto;font-size:9px;color:var(--t3);letter-spacing:.1em}
+.vbar{height:3px;background:rgba(26,18,9,.08);border-radius:2px;margin-top:14px;overflow:hidden}
+.vbar i{display:block;height:100%;width:62%;background:linear-gradient(90deg,var(--gold),var(--gold-2));border-radius:2px}
+.room{display:flex;align-items:center;gap:14px;background:var(--card);border:1px solid var(--line);border-radius:16px;padding:14px;margin-top:10px;cursor:pointer}
+.room .th{width:58px;height:58px;border-radius:14px;background:linear-gradient(150deg,#2A5240,#1B3A2D);color:var(--gold-2);display:flex;align-items:center;justify-content:center;font-family:var(--serif);font-size:16px;flex-shrink:0}
+.room .rm-t{font-size:13.5px;font-weight:400;letter-spacing:.04em}
+.room .rm-s{font-size:9.5px;color:var(--t3);letter-spacing:.08em;margin-top:5px;font-weight:300}
+.room .rm-p{margin-left:auto;text-align:right;flex-shrink:0}
+.room .rm-p b{font-family:var(--latin);font-size:17px;font-weight:700;color:var(--green)}
+.room .rm-p small{font-size:8.5px;color:var(--t3);font-weight:300}
+.act-card{display:flex;align-items:center;gap:13px;background:rgba(27,58,45,.05);border:1px solid rgba(27,58,45,.12);border-radius:16px;padding:16px 17px;margin-top:12px}
+.act-card .ac-ic{width:38px;height:38px;border-radius:50%;background:var(--green);color:var(--gold-2);display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.act-card .at{font-size:12.5px;letter-spacing:.05em}
+.act-card .as{font-size:9.5px;color:var(--t3);letter-spacing:.1em;margin-top:4px;font-weight:300}
+
+/* ===== 对话页 ===== */
+#pg-chat{background:linear-gradient(170deg,#1E4030,#163024)}
+.chatwrap{position:absolute;top:98px;bottom:128px;left:0;right:0;overflow-y:auto;-webkit-overflow-scrolling:touch;padding:14px 16px 10px;display:flex;flex-direction:column;gap:10px}
+.timechip{align-self:center;font-size:9px;letter-spacing:.24em;color:rgba(245,240,232,.4);padding:3px 12px}
+.bub{max-width:78%;padding:11px 15px;border-radius:17px;font-size:12.5px;font-weight:300;line-height:1.8;letter-spacing:.02em}
+.bub.me{align-self:flex-end;background:rgba(245,240,232,.13);color:var(--ivory);border-bottom-right-radius:5px}
+.bub.ai{align-self:flex-start;background:var(--ivory);color:var(--ink);border-bottom-left-radius:5px}
+.typing{display:none;align-self:flex-start;padding:13px 16px;background:rgba(245,240,232,.12);border-radius:17px;border-bottom-left-radius:5px}
+.typing.on{display:flex;gap:5px}
+.typing i{width:5px;height:5px;border-radius:50%;background:rgba(245,240,232,.6);animation:tp 1.2s infinite}
+.typing i:nth-child(2){animation-delay:.2s}
+.typing i:nth-child(3){animation-delay:.4s}
+@keyframes tp{0%,60%,100%{opacity:.25;transform:translateY(0)}30%{opacity:1;transform:translateY(-2.5px)}}
+.chatfoot{position:absolute;bottom:0;left:0;right:0;padding:8px 14px 26px;z-index:2}
+.chatfoot .safety{font-size:8.5px;color:rgba(245,240,232,.35);text-align:center;line-height:1.8;letter-spacing:.06em;margin-bottom:10px}
+.chips{display:flex;gap:8px;margin-bottom:10px;overflow-x:auto;scrollbar-width:none}
+.chips::-webkit-scrollbar{display:none}
+.chips button{flex-shrink:0;background:none;border:1px solid rgba(245,240,232,.22);border-radius:999px;color:rgba(245,240,232,.7);font-size:10px;letter-spacing:.06em;padding:8px 15px;cursor:pointer;font-family:var(--sans);font-weight:300}
+.chatin{display:flex;align-items:center;gap:10px;background:rgba(245,240,232,.09);border:1px solid rgba(245,240,232,.12);border-radius:999px;padding:6px 6px 6px 18px}
+.chatin input{flex:1;background:none;border:none;outline:none;color:var(--ivory);font-size:12.5px;font-weight:300;font-family:var(--sans);letter-spacing:.03em;min-width:0}
+.chatin input::placeholder{color:rgba(245,240,232,.35)}
+.chatin .send{width:34px;height:34px;border-radius:50%;background:var(--gold);border:none;cursor:pointer;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+
+/* ===== 测评 ===== */
+.as-progress{margin:8px 2px 22px}
+.as-progress .ap-t{display:flex;justify-content:space-between;font-size:9px;letter-spacing:.18em;color:var(--t3);margin-bottom:9px}
+.as-progress .ap-bar{height:2.5px;background:rgba(26,18,9,.08);border-radius:2px;overflow:hidden}
+.as-progress .ap-bar i{display:block;height:100%;background:var(--gold);border-radius:2px;transition:width .4s var(--ease)}
+.as-q{font-family:var(--serif);font-size:19px;font-weight:500;letter-spacing:.04em;line-height:1.7;padding:0 2px}
+.as-opts{margin-top:22px;display:flex;flex-direction:column;gap:10px}
+.as-opt{display:flex;align-items:center;gap:13px;background:var(--card);border:1px solid var(--line);border-radius:15px;padding:16px 17px;cursor:pointer;transition:border-color .2s,background .2s}
+.as-opt .rd{width:17px;height:17px;border-radius:50%;border:1.5px solid rgba(26,18,9,.22);flex-shrink:0;display:flex;align-items:center;justify-content:center;transition:border-color .2s}
+.as-opt .rd i{width:8px;height:8px;border-radius:50%;background:var(--gold);opacity:0;transition:opacity .2s}
+.as-opt span{font-size:13px;letter-spacing:.06em;font-weight:300}
+.as-opt.sel{border-color:var(--green);background:rgba(27,58,45,.03)}
+.as-opt.sel .rd{border-color:var(--green)}
+.as-opt.sel .rd i{opacity:1}
+.as-result{display:none;text-align:center;padding:26px 10px 10px}
+.as-result.on{display:block}
+.as-result .ar-ic{width:64px;height:64px;margin:0 auto 20px;border-radius:50%;background:rgba(212,168,130,.14);display:flex;align-items:center;justify-content:center}
+.as-result .ar-w{font-family:var(--serif);font-size:27px;font-weight:500;letter-spacing:.14em}
+.as-result .ar-c{font-size:10px;letter-spacing:.26em;color:var(--gold);margin-top:10px;font-weight:500}
+.as-result .ar-d{font-size:11.5px;color:var(--t2);line-height:2;letter-spacing:.04em;margin-top:16px;font-weight:300;padding:0 14px}
+.as-result .ar-btns{display:flex;flex-direction:column;gap:10px;margin-top:26px;padding:0 16px}
+.as-result .ar-btn{background:var(--green);color:var(--ivory);border:none;border-radius:999px;padding:14px;font-size:12px;letter-spacing:.24em;font-weight:500;cursor:pointer;font-family:var(--sans)}
+.as-result .ar-again{background:none;border:none;color:var(--t3);font-size:10.5px;letter-spacing:.18em;padding:8px;cursor:pointer;font-family:var(--sans)}
+
+/* ===== 商品详情 / 订房 ===== */
+.dt-hero{height:186px;background:linear-gradient(150deg,#2A5240,#1B3A2D);border-radius:0 0 26px 26px;display:flex;align-items:center;justify-content:center;position:relative;overflow:hidden}
+.dt-hero::after{content:'';position:absolute;width:240px;height:240px;border-radius:50%;background:radial-gradient(circle,rgba(212,168,130,.16),transparent 66%)}
+.dt-hero .big{font-family:var(--serif);font-size:52px;color:var(--gold-2);position:relative;z-index:1}
+.dt-hero .dt-tag{position:absolute;top:16px;left:16px;font-size:8.5px;letter-spacing:.2em;color:var(--ink);background:var(--gold);border-radius:999px;padding:3px 11px;font-weight:600;z-index:1}
+.dt-name{font-family:var(--serif);font-size:18px;font-weight:600;letter-spacing:.05em;margin-top:20px;padding:0 2px}
+.dt-sub{font-size:10.5px;color:var(--t3);letter-spacing:.1em;margin-top:7px;padding:0 2px;font-weight:300}
+.dt-price{font-family:var(--latin);font-size:25px;font-weight:700;color:var(--green);margin-top:14px;padding:0 2px}
+.dt-specs{background:var(--card);border:1px solid var(--line);border-radius:15px;margin-top:20px;padding:4px 17px}
+.dt-specs .sp{display:flex;justify-content:space-between;padding:13px 0;border-bottom:1px solid var(--line);font-size:11px}
+.dt-specs .sp:last-child{border-bottom:none}
+.dt-specs .sp b{font-weight:400;letter-spacing:.14em;color:var(--t3);font-size:9.5px}
+.dt-specs .sp span{letter-spacing:.05em;font-weight:300}
+.dt-desc{font-size:11.5px;color:var(--t2);line-height:2.1;letter-spacing:.03em;margin-top:18px;padding:0 2px;font-weight:300}
+.buybar{position:absolute;bottom:0;left:0;right:0;padding:12px 16px 30px;display:flex;gap:10px;background:rgba(245,240,232,.94);backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);border-top:1px solid var(--line)}
+.buybar .bb-1{flex:1;background:none;border:1px solid rgba(27,58,45,.3);border-radius:999px;font-size:11px;letter-spacing:.16em;color:var(--green);font-weight:400;cursor:pointer;font-family:var(--sans)}
+.buybar .bb-2{flex:1.4;background:var(--green);border:none;border-radius:999px;font-size:11px;letter-spacing:.2em;color:var(--ivory);font-weight:500;cursor:pointer;font-family:var(--sans)}
+.dt-body{padding-bottom:120px}
+
+/* 订房 */
+.bk-room{display:flex;align-items:center;gap:14px;background:var(--card);border:1px solid var(--line);border-radius:16px;padding:15px;margin-top:14px}
+.bk-room .th{width:56px;height:56px;border-radius:14px;background:linear-gradient(150deg,#2A5240,#1B3A2D);color:var(--gold-2);display:flex;align-items:center;justify-content:center;font-family:var(--serif);font-size:16px;flex-shrink:0}
+.bk-room .bt{font-family:var(--serif);font-size:15.5px;font-weight:600;letter-spacing:.05em}
+.bk-room .bs{font-size:9.5px;color:var(--t3);letter-spacing:.08em;margin-top:5px;font-weight:300}
+.bk-room .bp{margin-left:auto;font-family:var(--latin);font-size:19px;font-weight:700;color:var(--green);flex-shrink:0}
+.bk-card{background:var(--card);border:1px solid var(--line);border-radius:15px;margin-top:12px;padding:4px 17px}
+.bk-row{display:flex;justify-content:space-between;align-items:center;padding:14px 0;border-bottom:1px solid var(--line);font-size:11.5px}
+.bk-row:last-child{border-bottom:none}
+.bk-row b{font-weight:400;font-size:9.5px;letter-spacing:.16em;color:var(--t3)}
+.bk-row span{letter-spacing:.04em;font-weight:300}
+.stepper{display:flex;align-items:center;gap:16px}
+.stepper button{width:28px;height:28px;border-radius:50%;border:1px solid var(--line);background:none;font-size:15px;color:var(--t2);cursor:pointer;line-height:1;font-family:var(--sans)}
+.stepper em{font-style:normal;font-family:var(--latin);font-size:16px;font-weight:600;min-width:16px;text-align:center}
+.bk-total{display:flex;justify-content:space-between;align-items:baseline;margin-top:20px;padding:0 2px}
+.bk-total span{font-size:10px;letter-spacing:.2em;color:var(--t3)}
+.bk-total b{font-family:var(--latin);font-size:24px;font-weight:700;color:var(--green)}
+.bk-btn{display:block;width:100%;margin-top:16px;background:var(--green);color:var(--ivory);border:none;border-radius:999px;padding:15px;font-size:12px;letter-spacing:.26em;font-weight:500;cursor:pointer;font-family:var(--sans)}
+
+/* ===== 我的 ===== */
+.pf-head{background:linear-gradient(165deg,#1E4030,#1B3A2D);border-radius:0 0 30px 30px;padding:64px 20px 28px;display:flex;align-items:center;gap:16px}
+.pf-head .av{width:56px;height:56px;border-radius:50%;background:rgba(245,240,232,.1);border:1px solid rgba(212,168,130,.5);color:var(--gold-2);display:flex;align-items:center;justify-content:center;font-family:var(--serif);font-size:20px}
+.pf-head .pn{font-family:var(--serif);font-size:19px;font-weight:500;color:var(--ivory);letter-spacing:.1em}
+.pf-head .ps{font-size:9.5px;color:rgba(245,240,232,.5);letter-spacing:.14em;margin-top:7px;font-weight:300}
+.pf-orders{display:flex;background:var(--card);border:1px solid var(--line);border-radius:16px;padding:16px 0;margin-top:16px}
+.pf-orders div{flex:1;text-align:center;border-right:1px solid var(--line)}
+.pf-orders div:last-child{border-right:none}
+.pf-orders span{display:block;font-size:9.5px;letter-spacing:.12em;color:var(--t2);font-weight:300}
+.pf-list{background:var(--card);border:1px solid var(--line);border-radius:16px;margin-top:12px;padding:2px 17px}
+.pf-row{display:flex;align-items:center;padding:15px 0;border-bottom:1px solid var(--line);font-size:12px;letter-spacing:.08em;cursor:pointer}
+.pf-row:last-child{border-bottom:none}
+.pf-row .d{width:6px;height:6px;border-radius:50%;background:var(--gold);margin-right:14px;flex-shrink:0}
+.pf-row i{font-style:normal;margin-left:auto;color:var(--t3)}
+.pf-identity{display:flex;align-items:center;justify-content:space-between;border:1px dashed rgba(27,58,45,.3);border-radius:16px;padding:16px 18px;margin-top:14px;cursor:pointer}
+.pf-identity span{font-size:11px;letter-spacing:.1em;color:var(--t2)}
+.pf-identity b{font-size:10.5px;letter-spacing:.14em;color:var(--green);font-weight:600}
+
+/* ===== Toast / 提示 ===== */
+#toast{position:absolute;bottom:130px;left:50%;transform:translateX(-50%) translateY(8px);background:rgba(21,41,31,.94);color:var(--ivory);font-size:10.5px;letter-spacing:.12em;padding:11px 22px;border-radius:999px;opacity:0;transition:opacity .3s,transform .3s;z-index:40;pointer-events:none;white-space:nowrap}
+#toast.on{opacity:1;transform:translateX(-50%) translateY(0)}
+#hint{position:absolute;bottom:22px;left:50%;transform:translateX(-50%);background:rgba(10,16,12,.7);color:rgba(245,240,232,.8);font-size:10.5px;letter-spacing:.2em;padding:10px 20px;border-radius:999px;z-index:40;pointer-events:none;animation:hintfade 6s ease forwards}
+@keyframes hintfade{0%{opacity:0}10%{opacity:1}80%{opacity:1}100%{opacity:0}}
+@media (min-width:1080px){#hint{display:none}}
+
+@media (prefers-reduced-motion:reduce){
+  .pg.anim-push,.pg.anim-under,.pg.anim-pop,.pg.anim-reveal,.pg.anim-tab{animation-duration:.01s}
+  .typing i{animation:none}
+}
+</style>
+</head>
+<body>
+<div class="stage">
+
+  <aside class="side">
+    <img class="slogo" src="assets/LAYA-Primary-Stacked-White-Master-v1.0.png" alt="LAYA">
+    <h1>完整概念演示</h1>
+    <p class="ssub">四个模块 · 一个小程序</p>
+    <nav>
+      <button data-panel="home" data-go="tab-home"><span class="no">I</span><span class="nm">遇见</span><span class="ds">模块一 · 引流</span></button>
+      <button data-panel="mall" data-go="tab-mall"><span class="no">II</span><span class="nm">商城</span><span class="ds">模块二 · 成交</span></button>
+      <button data-panel="healer" data-go="tab-healer"><span class="no">III</span><span class="nm">疗愈师</span><span class="ds">模块三 · 裂变</span></button>
+      <button data-panel="village" data-go="tab-village"><span class="no">IV</span><span class="nm">疗愈村</span><span class="ds">模块四 · 承接</span></button>
+    </nav>
+    <p class="stry"><b>TRY IT</b>开始一次对话 · 完成一场测评<br>点开一件水晶 · 预订一间房</p>
+  </aside>
+
+  <div class="phone-wrap" id="phoneWrap">
+    <div class="phone">
+      <div class="screen" id="screen">
+
+        <div class="island"></div>
+        <div class="sbar">
+          <span class="time">9:41</span>
+          <span class="sicons">
+            <svg width="16" height="11" viewBox="0 0 16 11"><g class="ic-fill"><rect x="0" y="7" width="2.5" height="4" rx="1"/><rect x="4" y="5" width="2.5" height="6" rx="1"/><rect x="8" y="3" width="2.5" height="8" rx="1"/><rect x="12" y="1" width="2.5" height="10" rx="1"/></g></svg>
+            <svg width="15" height="11" viewBox="0 0 15 11"><g class="ic-stroke" fill="none" stroke-width="1.6" stroke-linecap="round"><path d="M1.5 4 A 9 9 0 0 1 13.5 4"/><path d="M4 7 A 5.5 5.5 0 0 1 11 7"/><path d="M6.6 9.6 A 2 2 0 0 1 8.4 9.6"/></g></svg>
+            <svg width="23" height="11" viewBox="0 0 23 11"><rect x="0.5" y="0.5" width="19" height="10" rx="3" class="ic-stroke" fill="none" stroke-width="1"/><rect x="2" y="2" width="14" height="7" rx="1.5" class="ic-fill"/><path d="M21.5 3.5 L21.5 7.5 A 2 2 0 0 0 21.5 3.5 Z" class="ic-fill"/></svg>
+          </span>
+        </div>
+        <div class="capsule"><span class="dot3">···</span><span class="cir"></span></div>
+        <div class="homebar"></div>
+
+        <div class="tabbar" id="tabbar">
+          <button class="tabbtn on" data-tab="home">
+            <svg width="23" height="23" viewBox="0 0 24 24" fill="none" stroke-width="1.5" stroke-linecap="round"><circle cx="12" cy="12" r="4.4"/><path d="M12 2.5v2.6M12 18.9v2.6M2.5 12h2.6M18.9 12h2.6M5.2 5.2l1.9 1.9M16.9 16.9l1.9 1.9M18.8 5.2l-1.9 1.9M7.1 16.9l-1.9 1.9"/></svg>
+            <span>首页</span>
+          </button>
+          <button class="tabbtn" data-tab="mall">
+            <svg width="23" height="23" viewBox="0 0 24 24" fill="none" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 8.5h14l-1.2 11a1.8 1.8 0 0 1-1.8 1.6H8a1.8 1.8 0 0 1-1.8-1.6L5 8.5z"/><path d="M8.8 8.5V7a3.2 3.2 0 0 1 6.4 0v1.5"/></svg>
+            <span>商城</span>
+          </button>
+          <button class="tabbtn" data-tab="healer">
+            <svg width="23" height="23" viewBox="0 0 24 24" fill="none" stroke-width="1.5" stroke-linecap="round"><circle cx="8.6" cy="8.2" r="3.1"/><path d="M3.4 19.5a5.6 5.6 0 0 1 10.4 0"/><circle cx="16.9" cy="9.4" r="2.5"/><path d="M15.4 15.3a4.6 4.6 0 0 1 5.2 4.2"/></svg>
+            <span>疗愈师</span>
+          </button>
+          <button class="tabbtn" data-tab="village">
+            <svg width="23" height="23" viewBox="0 0 24 24" fill="none" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M2.5 19.5 9 8.2l4 6.6 2.6-4.2 5.9 8.9z"/><path d="M8.2 19.5 12.6 12.6 17 19.5"/></svg>
+            <span>疗愈村</span>
+          </button>
+        </div>
+
+        <!-- ============ 首页（模块一） ============ -->
+        <section class="pg tabroot darknav act" id="pg-home">
+          <div class="greenhead">
+            <div class="brandrow">
+              <img class="slogo" src="assets/LAYA-Primary-Stacked-White-Master-v1.0.png" alt="LAYA">
+              <span class="bl">THE ENCOUNTER · 模块一</span>
+            </div>
+            <p class="greet">今晚，把心放下。</p>
+            <p class="greet-sub">拉雅在这里，随时。</p>
+            <div class="aicard">
+              <p class="ac-eyebrow">AI 拉雅 · 高维沟通</p>
+              <p class="ac-line">深夜，也有人回应你。</p>
+              <p class="ac-desc">由拉雅的课程、文字与答疑训练</p>
+              <button class="ac-cta" data-go="chat">开始对话 →</button>
+            </div>
+          </div>
+          <div class="pbody">
+            <div class="duo">
+              <div class="duo-card" data-go="assess">
+                <div class="ic"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke-width="1.5" stroke-linecap="round"><circle cx="12" cy="12" r="4.2"/><path d="M12 3v2.4M12 18.6V21M3 12h2.4M18.6 12H21M5.4 5.4l1.7 1.7M16.9 16.9l1.7 1.7M18.6 5.4l-1.7 1.7M7.1 16.9l-1.7 1.7"/></svg></div>
+                <p class="dc-t">内在测评</p>
+                <p class="dc-s">3 分钟 · 内在天气</p>
+              </div>
+              <div class="duo-card" data-go="content">
+                <div class="ic"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke-width="1.5" stroke-linejoin="round"><rect x="3.5" y="5" width="17" height="14" rx="2.5"/><path d="M11 9.5l4.5 2.5L11 14.5z"/></svg></div>
+                <p class="dc-t">拉雅的内容</p>
+                <p class="dc-s">视频 · 文章</p>
+              </div>
+            </div>
+
+            <div class="sec-head"><h3>拉雅的内容</h3><span>SELECTED</span></div>
+            <div class="video-card">
+              <div class="vc-play"><svg width="15" height="15" viewBox="0 0 14 16" fill="#1A1209"><path d="M0 0 L14 8 L0 16 Z"/></svg></div>
+              <div class="vc-meta"><p class="vt">情绪，是来送信的人</p><p class="vs">与身体对话 · 第七期</p></div>
+              <span class="vc-dur">12:36</span>
+            </div>
+            <div class="art-row">
+              <div class="ar-ic">文</div>
+              <div><p class="ar-t">与身体和解的七个练习</p><p class="ar-s">练习指引 · 8 分钟阅读</p></div>
+              <span class="ar-go">›</span>
+            </div>
+            <div class="art-row">
+              <div class="ar-ic gold">问</div>
+              <div><p class="ar-t">学员最常问拉雅的十个问题</p><p class="ar-s">答疑合集</p></div>
+              <span class="ar-go">›</span>
+            </div>
+
+            <div class="me-row" data-go="profile"><span>我的 · 订单与预约</span><i>›</i></div>
+            <p class="footnote">模块一 · 新用户引流 · 一期上线<br>界面示意 · 非最终设计</p>
+          </div>
+        </section>
+
+        <!-- ============ 商城（模块二） ============ -->
+        <section class="pg tabroot" id="pg-mall">
+          <div class="pnav"><span class="ttl">商城</span><span class="modchip">THE STORE · 模块二</span></div>
+          <div class="pbody">
+            <div class="search">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke-width="1.8" stroke-linecap="round"><circle cx="11" cy="11" r="7"/><path d="M20 20l-4-4"/></svg>
+              <span>搜索水晶、课程、疗愈师</span>
+            </div>
+            <div class="cats" id="cats">
+              <button class="on" data-cat="all">全部</button>
+              <button data-cat="crystal">水晶</button>
+              <button data-cat="course">课程</button>
+              <button data-cat="healer">疗愈师</button>
+            </div>
+
+            <div class="prod" data-cat="crystal" data-detail="p1">
+              <div class="th green">晶</div>
+              <div><p class="pd-t">紫水晶 · 静心手串 <span class="pd-tag">热门</span></p><p class="pd-s">天然水晶 · 现货顺丰</p></div>
+              <div class="pd-p"><b>¥299</b><small>已售 1,204</small></div>
+            </div>
+            <div class="prod" data-cat="course" data-detail="p3">
+              <div class="th gold">课</div>
+              <div><p class="pd-t">21 天身体觉察营 <span class="pd-tag">新一期</span></p><p class="pd-s">录播 + 社群共修</p></div>
+              <div class="pd-p"><b>¥680</b><small>10 月 8 日开营</small></div>
+            </div>
+            <div class="prod" data-cat="healer" data-detail="p5">
+              <div class="th soft">满</div>
+              <div><p class="pd-t">小满 · 疗愈师 <span class="pd-tag">预约制</span></p><p class="pd-s">首次体验 60 分钟 · 线上</p></div>
+              <div class="pd-p"><b>¥399</b><small>立即预约</small></div>
+            </div>
+            <div class="prod" data-cat="crystal" data-detail="p2">
+              <div class="th green">晶</div>
+              <div><p class="pd-t">摩根石 · 安眠原石</p><p class="pd-s">助眠摆放 · 附使用指南</p></div>
+              <div class="pd-p"><b>¥458</b><small>已售 687</small></div>
+            </div>
+            <div class="prod" data-cat="course" data-detail="p4">
+              <div class="th gold">课</div>
+              <div><p class="pd-t">与身体对话 · 音频课</p><p class="pd-s">24 节 · 永久回听</p></div>
+              <div class="pd-p"><b>¥199</b><small>随时开始</small></div>
+            </div>
+
+            <p class="footnote">完整复刻现有至心谷能力 · 迁移不丢失<br>模块二 · 成交转化 · 一期上线</p>
+          </div>
+        </section>
+
+        <!-- ============ 疗愈师中心（模块三） ============ -->
+        <section class="pg tabroot" id="pg-healer">
+          <div class="pnav"><span class="ttl">疗愈师中心</span><span class="modchip">THE HEALERS · 模块三</span></div>
+          <div class="pbody">
+            <div class="hprofile">
+              <div class="av">满</div>
+              <div><p class="hp-n">小满 · 联创疗愈师</p><p class="hp-s">团队 12 位疗愈师 · 3 个小组</p></div>
+              <span class="hp-go">›</span>
+            </div>
+            <div class="hchips"><span class="on">素材管理</span><span>人员跟进</span><span>培训课程</span></div>
+            <div class="hlist">
+              <div class="hrow"><span>新疗愈师档案<small>待完善 · 2 位</small></span><i>›</i></div>
+              <div class="hrow"><span>联创基础培训<small>第 3 讲 · 本周更新</small></span><i>›</i></div>
+              <div class="hrow"><span>本周分享素材<small>已更新 3 篇</small></span><i>›</i></div>
+            </div>
+            <div class="dist">
+              <span class="d-tag">分销机制</span>
+              <p class="d-line">分享，即生长。</p>
+              <p class="d-desc">把小程序分享给朋友，朋友在其中成交，奖励金自动结算到账。</p>
+              <div class="dstats">
+                <div><b>¥1,280</b><span>本月奖励金</span></div>
+                <div><b>17</b><span>带来的新朋友</span></div>
+              </div>
+              <button class="dbtn" id="inviteBtn">生成我的邀请卡</button>
+            </div>
+            <p class="footnote">模块三 · 疗愈师生态 · 二期上线<br>界面示意 · 非最终设计</p>
+          </div>
+        </section>
+
+        <!-- ============ 疗愈村（模块四） ============ -->
+        <section class="pg tabroot darknav" id="pg-village">
+          <div class="vhead">
+            <span class="bl">THE VILLAGE · 模块四</span>
+            <p class="vt">幸福疗愈村</p>
+            <p class="vs">森林里，一个慢慢长成的家</p>
+          </div>
+          <div class="pbody">
+            <div class="vcard">
+              <div class="vc-h"><b>村庄，在建</b><span>一期</span></div>
+              <div class="vrow"><span class="st" style="background:#4C8A6B"></span>6 间疗愈房<small>已开放</small></div>
+              <div class="vrow"><span class="st" style="background:var(--gold)"></span>共修厅<small>在建</small></div>
+              <div class="vrow"><span class="st" style="background:rgba(26,18,9,.22)"></span>溪谷步道<small>规划中</small></div>
+              <div class="vbar"><i></i></div>
+            </div>
+
+            <div class="sec-head"><h3>住进村里</h3><span>STAY</span></div>
+            <div class="room" data-room="r1">
+              <div class="th">溪</div>
+              <div><p class="rm-t">溪景双床房</p><p class="rm-s">含早 · 溪谷景观</p></div>
+              <div class="rm-p"><b>¥880</b><small> /晚</small></div>
+            </div>
+            <div class="room" data-room="r2">
+              <div class="th">森</div>
+              <div><p class="rm-t">森屿独栋</p><p class="rm-s">独院 · 含私人疗愈室</p></div>
+              <div class="rm-p"><b>¥1,280</b><small> /晚</small></div>
+            </div>
+
+            <div class="sec-head"><h3>村里的日子</h3><span>GATHER</span></div>
+            <div class="act-card">
+              <div class="ac-ic"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3.5c-3.6 5-6.5 8.6-6.5 12.1a6.5 6.5 0 0 0 13 0c0-3.5-2.9-7.1-6.5-12.1z"/></svg></div>
+              <div><p class="at">溪谷共修日</p><p class="as">每月一次 · 本月 28 日 · 剩 8 席</p></div>
+              <span class="ar-go" style="margin-left:auto;color:var(--t3)">›</span>
+            </div>
+
+            <p class="footnote">模块四 · 影响力承接 · 三期上线<br>随村庄建设同步推进 · 界面示意</p>
+          </div>
+        </section>
+
+        <!-- ============ 高维沟通（对话） ============ -->
+        <section class="pg sub darknav" id="pg-chat">
+          <div class="pnav"><button class="backbtn" data-back><svg width="12" height="20" viewBox="0 0 12 20" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 2 L2.5 10 L10 18"/></svg></button><span class="ttl">拉雅 · 高维沟通</span><span class="modchip">AI 分身</span></div>
+          <div class="chatwrap" id="chatwrap">
+            <span class="timechip">深 夜 23:47</span>
+            <div class="bub me">今天又和妈妈吵架了，心里很堵……</div>
+            <div class="bub ai">先深深呼吸一次。你不需要现在就原谅谁——先陪陪那个委屈的自己。</div>
+            <div class="typing" id="typing"><i></i><i></i><i></i></div>
+          </div>
+          <div class="chatfoot">
+            <p class="safety">如遇紧急情绪危机，请联系当地心理援助热线。<br>高维沟通不能替代专业心理帮助。</p>
+            <div class="chips">
+              <button data-chip="最近总是睡不好">最近总是睡不好</button>
+              <button data-chip="和家人的关系让我很累">和家人的关系让我很累</button>
+              <button data-chip="只是想说说话">只是想说说话</button>
+            </div>
+            <div class="chatin">
+              <input id="chatInput" type="text" placeholder="说给她听……" maxlength="60">
+              <button class="send" id="sendBtn"><svg width="13" height="13" viewBox="0 0 14 14" fill="none" stroke="#1A1209" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M2 12 L12 7 L2 2 L4 7 Z"/></svg></button>
+            </div>
+          </div>
+        </section>
+
+        <!-- ============ 内在测评 ============ -->
+        <section class="pg sub" id="pg-assess">
+          <div class="pnav"><button class="backbtn" data-back><svg width="12" height="20" viewBox="0 0 12 20" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 2 L2.5 10 L10 18"/></svg></button><span class="ttl">内在测评</span><span class="modchip">3 分钟</span></div>
+          <div class="pbody">
+            <div class="as-progress">
+              <div class="ap-t"><span id="asStep">第 1 题 · 共 3 题</span><span>INNER WEATHER</span></div>
+              <div class="ap-bar"><i id="asBar" style="width:33%"></i></div>
+            </div>
+            <div id="asQView">
+              <p class="as-q" id="asQ"></p>
+              <div class="as-opts" id="asOpts"></div>
+            </div>
+            <div class="as-result" id="asResult">
+              <div class="ar-ic"><svg width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="#1B3A2D" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"><circle cx="9" cy="9" r="3.4"/><path d="M9 2.2v1.8M9 14v1.8M2.2 9H4M14 9h1.8M4.2 4.2l1.3 1.3M12.5 12.5l1.3 1.3M13.8 4.2l-1.3 1.3M5.5 12.5l-1.3 1.3"/><path d="M8 19.5a3.2 3.2 0 0 1 .6-6.3 4.4 4.4 0 0 1 8.5 1.1 2.8 2.8 0 0 1-.4 5.2z"/></svg></div>
+              <p class="ar-w">晴间多云</p>
+              <p class="ar-c">你 的 内 在 天 气</p>
+              <p class="ar-d">有一点压力，也有晴朗的时刻。<br>给自己三分钟安静，天气会变。</p>
+              <div class="ar-btns">
+                <button class="ar-btn" id="asShare">生成分享报告</button>
+                <button class="ar-again" id="asAgain">重新测评</button>
+              </div>
+            </div>
+            <p class="footnote">演示为缩略版 · 完整测评共 12 题</p>
+          </div>
+        </section>
+
+        <!-- ============ 商品详情 ============ -->
+        <section class="pg sub" id="pg-detail">
+          <div class="pnav"><button class="backbtn" data-back><svg width="12" height="20" viewBox="0 0 12 20" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 2 L2.5 10 L10 18"/></svg></button><span class="ttl">商品</span></div>
+          <div class="pbody dt-body">
+            <div class="dt-hero"><span class="dt-tag" id="dtTag">热门</span><span class="big" id="dtBig">晶</span></div>
+            <p class="dt-name" id="dtName"></p>
+            <p class="dt-sub" id="dtSub"></p>
+            <p class="dt-price" id="dtPrice"></p>
+            <div class="dt-specs">
+              <div class="sp"><b>发 货</b><span>现货 · 48 小时内</span></div>
+              <div class="sp"><b>适 合</b><span>静心 · 助眠 · 日常佩戴</span></div>
+              <div class="sp"><b>附 赠</b><span>《使用与净化指南》</span></div>
+            </div>
+            <p class="dt-desc">为静心时刻挑选的天然水晶。佩戴或置于床头，配合呼吸练习，让夜晚慢下来。每一件都经过挑选与净化，附使用指南。</p>
+            <p class="footnote">界面示意 · 非最终设计</p>
+          </div>
+          <div class="buybar">
+            <button class="bb-1" id="cartBtn">加入购物袋</button>
+            <button class="bb-2" id="buyBtn">立即请购</button>
+          </div>
+        </section>
+
+        <!-- ============ 在线订房 ============ -->
+        <section class="pg sub" id="pg-booking">
+          <div class="pnav"><button class="backbtn" data-back><svg width="12" height="20" viewBox="0 0 12 20" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 2 L2.5 10 L10 18"/></svg></button><span class="ttl">在线订房</span></div>
+          <div class="pbody dt-body">
+            <div class="bk-room">
+              <div class="th" id="bkThumb">溪</div>
+              <div><p class="bt" id="bkName"></p><p class="bs" id="bkSub"></p></div>
+              <span class="bp" id="bkPrice"></span>
+            </div>
+            <div class="bk-card">
+              <div class="bk-row"><b>入 住</b><span>10 月 24 日 · 周六 14:00 后</span></div>
+              <div class="bk-row"><b>离 店</b><span>10 月 25 日 · 周日 12:00 前</span></div>
+              <div class="bk-row"><b>房 间</b>
+                <span class="stepper"><button id="minus">−</button><em id="cnt">1</em><button id="plus">＋</button></span>
+              </div>
+            </div>
+            <div class="bk-card">
+              <div class="bk-row"><b>房 费</b><span id="feeRow">¥880 × 1 晚</span></div>
+              <div class="bk-row"><b>服务费</b><span>¥0 · 含清洁与布草</span></div>
+            </div>
+            <div class="bk-total"><span>合 计</span><b id="totalRow">¥880</b></div>
+            <button class="bk-btn" id="bookBtn">确 认 预 订</button>
+            <p class="footnote">界面示意 · 非最终设计</p>
+          </div>
+        </section>
+
+        <!-- ============ 我的 ============ -->
+        <section class="pg sub darknav" id="pg-profile">
+          <div class="pf-head">
+            <div class="av">心</div>
+            <div><p class="pn">心禾</p><p class="ps">她的朋友 · 加入 128 天</p></div>
+          </div>
+          <div class="pbody" style="top:158px">
+            <div class="pf-orders">
+              <div><span>全部订单</span></div>
+              <div><span>待付款</span></div>
+              <div><span>待预约</span></div>
+              <div><span>已完成</span></div>
+            </div>
+            <div class="pf-list">
+              <div class="pf-row"><span class="d"></span>我的预约<i>›</i></div>
+              <div class="pf-row"><span class="d"></span>我的测评<i>›</i></div>
+              <div class="pf-row"><span class="d"></span>奖励金<i>›</i></div>
+              <div class="pf-row"><span class="d"></span>地址管理<i>›</i></div>
+              <div class="pf-row"><span class="d"></span>联系客服<i>›</i></div>
+            </div>
+            <div class="pf-identity" data-go="tab-healer"><span>你是疗愈师？</span><b>切换疗愈师身份 ›</b></div>
+            <p class="footnote">LAYA · INNER SUN<br>界面示意 · 非最终设计</p>
+          </div>
+        </section>
+
+        <div id="toast"></div>
+      </div>
+    </div>
+  </div>
+
+  <div id="hint">可操作概念机 · 试试点点看</div>
+</div>
+
+<script>
+(function(){
+  'use strict';
+  var PRODUCTS={
+    p1:{tag:'热门',big:'晶',name:'紫水晶 · 静心手串',sub:'天然水晶 · 现货顺丰',price:'¥299',btn:'立即请购'},
+    p2:{tag:'助眠',big:'晶',name:'摩根石 · 安眠原石',sub:'助眠摆放 · 附使用指南',price:'¥458',btn:'立即请购'},
+    p3:{tag:'新一期',big:'课',name:'21 天身体觉察营',sub:'录播 + 社群共修 · 10 月 8 日开营',price:'¥680',btn:'立即报名'},
+    p4:{tag:'音频',big:'课',name:'与身体对话 · 音频课',sub:'24 节 · 永久回听',price:'¥199',btn:'立即报名'},
+    p5:{tag:'预约制',big:'满',name:'小满 · 疗愈师',sub:'首次体验 60 分钟 · 线上视频',price:'¥399',btn:'立即预约'}
+  };
+  var ROOMS={
+    r1:{thumb:'溪',name:'溪景双床房',sub:'含早 · 溪谷景观',price:880},
+    r2:{thumb:'森',name:'森屿独栋',sub:'独院 · 含私人疗愈室',price:1280}
+  };
+
+  var byId=function(id){return document.getElementById('pg-'+id)};
+  var stack=['home'];
+  var DARK={home:1,chat:1,village:1,profile:1};
+  var PANELMAP={home:'home',assess:'home',chat:'home',profile:'home',detail:'mall',mall:'mall',healer:'healer',village:'village',booking:'village'};
+  function topId(){return stack[stack.length-1]}
+  function setChrome(){
+    document.body.classList.toggle('dark-chrome',!!DARK[topId()]);
+    var cur=PANELMAP[topId()];
+    document.querySelectorAll('.side nav button').forEach(function(b){b.classList.toggle('on',b.dataset.panel===cur)});
+    document.querySelectorAll('.tabbtn').forEach(function(b){b.classList.toggle('on',b.dataset.tab===cur)});
+  }
+  function tab(id){
+    stack.forEach(function(s){byId(s).classList.remove('act','anim-tab','anim-push','anim-under','anim-pop','anim-reveal')});
+    stack=[id];
+    byId(id).classList.add('act','anim-tab');
+    setChrome();
+  }
+  function push(id){
+    var cur=byId(topId()),nx=byId(id);
+    nx.classList.add('act','anim-push');
+    cur.classList.add('anim-under');
+    stack.push(id);
+    setChrome();
+    setTimeout(function(){nx.classList.remove('anim-push');cur.classList.remove('anim-under')},460);
+  }
+  function pop(){
+    if(stack.length<2)return;
+    var top=byId(stack.pop()),under=byId(topId());
+    top.classList.add('anim-pop');
+    under.classList.add('anim-reveal');
+    setChrome();
+    setTimeout(function(){top.classList.remove('act','anim-pop');under.classList.remove('anim-reveal')},440);
+  }
+
+  function openDetail(pid){
+    var p=PRODUCTS[pid];if(!p)return;
+    document.getElementById('dtTag').textContent=p.tag;
+    document.getElementById('dtBig').textContent=p.big;
+    document.getElementById('dtName').textContent=p.name;
+    document.getElementById('dtSub').textContent=p.sub;
+    document.getElementById('dtPrice').textContent=p.price;
+    document.getElementById('buyBtn').textContent=p.btn;
+    push('detail');
+  }
+  var bkRoom=null,bkCnt=1;
+  function refreshBooking(){
+    document.getElementById('cnt').textContent=bkCnt;
+    document.getElementById('feeRow').textContent='¥'+bkRoom.price+' × '+bkCnt+' 晚';
+    document.getElementById('totalRow').textContent='¥'+(bkRoom.price*bkCnt);
+  }
+  function openBooking(rid){
+    var r=ROOMS[rid];if(!r)return;
+    bkRoom=r;bkCnt=1;
+    document.getElementById('bkThumb').textContent=r.thumb;
+    document.getElementById('bkName').textContent=r.name;
+    document.getElementById('bkSub').textContent=r.sub;
+    document.getElementById('bkPrice').innerHTML='¥'+r.price+'<small style="font-size:9px;color:var(--t3);font-weight:300"> /晚</small>';
+    refreshBooking();
+    push('booking');
+  }
+
+  var toastTimer=null;
+  function toast(msg){
+    var t=document.getElementById('toast');
+    t.textContent=msg;t.classList.add('on');
+    clearTimeout(toastTimer);
+    toastTimer=setTimeout(function(){t.classList.remove('on')},1900);
+  }
+
+  /* 商城筛选 */
+  document.getElementById('cats').addEventListener('click',function(e){
+    var b=e.target.closest('button');if(!b)return;
+    this.querySelectorAll('button').forEach(function(x){x.classList.toggle('on',x===b)});
+    var cat=b.dataset.cat;
+    document.querySelectorAll('#pg-mall .prod').forEach(function(p){
+      p.style.display=(cat==='all'||p.dataset.cat===cat)?'flex':'none';
+    });
+  });
+
+  /* 对话 */
+  var replies=[
+    '嗯，我在。先不急着解决什么——那股堵，在身体的哪个位置？',
+    '慢慢来。你想被理解的那部分，值得多待一会儿。',
+    '如果这份情绪会说话，它最想对你说什么？',
+    '你已经做得够多了。今晚，允许自己只负责休息。',
+    '我在这里。想说什么就说什么，不用组织语言。'
+  ];
+  var ri=0;
+  var wrap=document.getElementById('chatwrap'),typing=document.getElementById('typing');
+  function scrollChat(){wrap.scrollTop=wrap.scrollHeight}
+  function addMsg(text,me){
+    var d=document.createElement('div');
+    d.className='bub '+(me?'me':'ai');
+    d.textContent=text;
+    wrap.insertBefore(d,typing);
+    scrollChat();
+  }
+  function aiReply(){
+    typing.classList.add('on');scrollChat();
+    setTimeout(function(){
+      typing.classList.remove('on');
+      addMsg(replies[ri++%replies.length],false);
+    },1150);
+  }
+  function sendMsg(text){
+    if(!text)return;
+    addMsg(text,true);
+    aiReply();
+  }
+  document.getElementById('sendBtn').addEventListener('click',function(){
+    var inp=document.getElementById('chatInput');
+    sendMsg(inp.value.trim());
+    inp.value='';
+  });
+  document.getElementById('chatInput').addEventListener('keydown',function(e){
+    if(e.key==='Enter'){
+      var v=this.value.trim();
+      if(v){sendMsg(v);this.value=''}
+    }
+  });
+  document.querySelectorAll('.chips button').forEach(function(b){
+    b.addEventListener('click',function(){sendMsg(b.dataset.chip)});
+  });
+
+  /* 测评 */
+  var qs=[
+    {q:'最近两周，你的睡眠怎么样？',o:['安稳踏实','时好时坏','经常失眠']},
+    {q:'情绪来的时候，你通常……',o:['让它流过','压下去','没注意过它']},
+    {q:'你有多久，没有为自己停下来？',o:['就在今天','有一阵子了','想不起来了']}
+  ];
+  var qi=0,locked=false;
+  function renderQ(){
+    document.getElementById('asStep').textContent='第 '+(qi+1)+' 题 · 共 '+qs.length+' 题';
+    document.getElementById('asBar').style.width=((qi)/qs.length*100+33)+'%';
+    document.getElementById('asQ').textContent=qs[qi].q;
+    var box=document.getElementById('asOpts');
+    box.innerHTML='';
+    qs[qi].o.forEach(function(t){
+      var d=document.createElement('div');
+      d.className='as-opt';
+      d.innerHTML='<span class="rd"><i></i></span><span>'+t+'</span>';
+      d.addEventListener('click',function(){
+        if(locked)return;locked=true;
+        d.classList.add('sel');
+        setTimeout(function(){
+          locked=false;qi++;
+          if(qi>=qs.length){showResult()}else{renderQ()}
+        },380);
+      });
+      box.appendChild(d);
+    });
+  }
+  function showResult(){
+    document.getElementById('asQView').style.display='none';
+    document.getElementById('asResult').classList.add('on');
+    document.getElementById('asBar').style.width='100%';
+    document.getElementById('asStep').textContent='测评完成';
+  }
+  document.getElementById('asAgain').addEventListener('click',function(){
+    qi=0;
+    document.getElementById('asResult').classList.remove('on');
+    document.getElementById('asQView').style.display='block';
+    renderQ();
+  });
+  renderQ();
+
+  /* 各类动作 */
+  document.getElementById('asShare').addEventListener('click',function(){toast('报告已生成（演示）')});
+  document.getElementById('inviteBtn').addEventListener('click',function(){toast('邀请卡已生成（演示）')});
+  document.getElementById('buyBtn').addEventListener('click',function(){toast('演示环境 · 支付未接入')});
+  document.getElementById('cartBtn').addEventListener('click',function(){toast('已加入购物袋（演示）')});
+  document.getElementById('bookBtn').addEventListener('click',function(){toast('预订请求已提交（演示）')});
+  document.getElementById('plus').addEventListener('click',function(){if(bkCnt<5){bkCnt++;refreshBooking()}});
+  document.getElementById('minus').addEventListener('click',function(){if(bkCnt>1){bkCnt--;refreshBooking()}});
+
+  /* 统一点击路由 */
+  document.addEventListener('click',function(e){
+    var t=e.target.closest('[data-go],[data-back],[data-tab],[data-detail],[data-room]');
+    if(!t)return;
+    if(t.dataset.tab){tab(t.dataset.tab);return}
+    if('back' in t.dataset){pop();return}
+    if(t.dataset.detail){openDetail(t.dataset.detail);return}
+    if(t.dataset.room){openBooking(t.dataset.room);return}
+    var g=t.dataset.go;
+    if(!g)return;
+    if(g.indexOf('tab-')===0){tab(g.slice(4));return}
+    if(g==='content'){
+      var body=byId('home').querySelector('.pbody');
+      var sec=body.querySelector('.sec-head');
+      body.scrollTo({top:sec.offsetTop-10,behavior:'smooth'});
+      return;
+    }
+    push(g);
+  });
+
+  /* 自适应缩放 */
+  var wrapEl=document.getElementById('phoneWrap');
+  function fit(){
+    var w=window.innerWidth,h=window.innerHeight;
+    var wide=w>=1080;
+    var padX=wide?60:10,padY=wide?44:16;
+    var s=Math.min((w-padX*2)/426,(h-padY*2)/898,1.04);
+    wrapEl.style.transform='translate(-50%,-50%) scale('+s+')';
+  }
+  window.addEventListener('resize',fit);
+  window.addEventListener('orientationchange',fit);
+  fit();
+  setChrome();
+})();
+</script>
+</body>
+</html>

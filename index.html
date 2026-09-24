@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-<title>你的线上之家 · LAYA 小程序模块规划</title>
+<title>LAYA 小程序 · 设计推进方案</title>
 <style>
 :root{
   --green:#1B3A2D;
@@ -29,12 +29,10 @@ body{background:var(--green-3);font-family:var(--sans);color:var(--ink);line-hei
 .page{max-width:560px;margin:0 auto;background:var(--ivory);overflow-x:hidden}
 img{display:block;max-width:100%}
 
-/* ===== 滚动进度条 ===== */
 #bar{position:fixed;top:0;left:0;height:3px;width:0;background:linear-gradient(90deg,var(--gold),#E8C9A8);z-index:99;transition:width .1s linear}
 
-/* ===== 通用 ===== */
 .sec{padding:64px 26px 72px;position:relative}
-.kicker{font-size:11px;letter-spacing:.34em;color:var(--green);font-weight:600;margin-bottom:18px;text-transform:uppercase}
+.kicker{font-size:11px;letter-spacing:.34em;color:var(--green);font-weight:600;margin-bottom:18px}
 h2.big{font-family:var(--serif);font-size:29px;font-weight:600;line-height:1.5;letter-spacing:.02em;margin-bottom:14px}
 .lede{font-family:var(--serif);font-size:17px;line-height:2;color:var(--t2)}
 .latin{font-family:var(--latin);font-style:italic;color:var(--gold);letter-spacing:.28em;font-size:14px}
@@ -53,29 +51,30 @@ h2.big{font-family:var(--serif);font-size:29px;font-weight:600;line-height:1.5;l
 .scroll-cue .chev{width:14px;height:14px;border-right:1.5px solid var(--gold-soft);border-bottom:1.5px solid var(--gold-soft);transform:rotate(45deg);animation:cue 1.6s ease-in-out infinite}
 @keyframes cue{0%,100%{opacity:.35;transform:rotate(45deg) translate(0,0)}50%{opacity:1;transform:rotate(45deg) translate(4px,4px)}}
 
-/* ===== 开篇 · 四模块总览 ===== */
+/* ===== 推进策略 · 四模块总览 ===== */
 .overview{padding-top:84px;padding-bottom:84px}
 .overview h2{font-size:27px}
 .overview .lede{margin-top:26px}
 .flow{display:flex;align-items:center;justify-content:center;gap:8px;margin:36px 0 26px;flex-wrap:wrap}
 .flow .fchip{font-size:12px;font-weight:700;letter-spacing:.14em;color:var(--green);background:rgba(27,58,45,.06);border:1px solid rgba(27,58,45,.14);padding:7px 16px;border-radius:999px}
 .flow .farr{color:rgba(26,18,9,.3);font-family:var(--latin);font-size:15px}
-
+.phase-tag{display:inline-block;font-size:10px;letter-spacing:.18em;color:var(--gold);border:1px solid rgba(212,168,130,.6);padding:2px 9px;border-radius:999px;font-weight:600;margin-left:8px;vertical-align:middle}
 .mod-card{background:var(--card);border:1px solid var(--line);border-radius:16px;padding:24px 22px;margin-bottom:14px;position:relative;box-shadow:0 2px 10px rgba(26,18,9,.04)}
 .mod-card .no{font-family:var(--latin);font-size:15px;letter-spacing:.3em;color:var(--gold);font-weight:600}
-.mod-card .name{font-family:var(--serif);font-size:26px;font-weight:600;margin:8px 0 2px;letter-spacing:.1em;display:flex;align-items:baseline;gap:12px}
+.mod-card .name{font-family:var(--serif);font-size:26px;font-weight:600;margin:8px 0 2px;letter-spacing:.1em;display:flex;align-items:baseline;gap:12px;flex-wrap:wrap}
 .mod-card .name em{font-style:normal;font-size:13px;font-weight:400;color:var(--t3);letter-spacing:.08em}
 .mod-card .lt{font-family:var(--latin);font-style:italic;font-size:13px;color:var(--t3);letter-spacing:.12em}
 .mod-card .promise{font-family:var(--serif);font-size:15px;color:var(--t2);margin-top:14px;line-height:1.8}
 .mod-card .for{margin-top:14px;padding-top:14px;border-top:1px solid var(--line);font-size:11.5px;letter-spacing:.1em;color:var(--t3)}
 
-/* ===== 分隔页（模块承诺） ===== */
+/* ===== 分隔页（模块章节） ===== */
 .divider{background:var(--green);padding:88px 30px;position:relative;overflow:hidden}
 .divider::after{content:'';position:absolute;inset:0;background:radial-gradient(circle at 80% 88%,rgba(212,168,130,.09),transparent 50%);pointer-events:none}
 .divider .logo{width:56px;margin-bottom:34px;opacity:.9}
 .divider .eyebrow{font-size:11px;letter-spacing:.32em;color:var(--gold);font-weight:600;margin-bottom:22px}
 .divider h2{font-family:var(--serif);font-size:30px;font-weight:600;line-height:1.6;color:var(--ivory);letter-spacing:.02em}
 .divider .sub{font-family:var(--serif);font-size:15.5px;color:rgba(245,240,232,.66);margin-top:24px;line-height:2}
+.divider .phase{display:inline-block;margin-top:26px;font-size:11px;letter-spacing:.24em;color:var(--gold);border:1px solid rgba(212,168,130,.55);padding:6px 16px;border-radius:999px;font-weight:600}
 
 /* ===== 功能清单 ===== */
 .offer-list{list-style:none;margin-top:26px}
@@ -87,15 +86,15 @@ h2.big{font-family:var(--serif);font-size:29px;font-weight:600;line-height:1.5;l
 
 /* ===== 手机 mockup ===== */
 .phone{width:272px;margin:0 auto;background:#0F1D16;border-radius:42px;padding:9px;box-shadow:0 18px 44px rgba(26,18,9,.22)}
-.screen{border-radius:34px;overflow:hidden;display:flex;flex-direction:column;min-height:430px}
+.screen{border-radius:34px;overflow:hidden;display:flex;flex-direction:column;min-height:460px;background:#F8F4ED;font-weight:300}
 .screen--green{background:linear-gradient(170deg,#1E4030,#1B3A2D);color:var(--ivory)}
 .screen--ivory{background:#F8F4ED;color:var(--ink)}
 .ph-status{display:flex;justify-content:space-between;align-items:center;padding:12px 18px 6px;font-size:10px;letter-spacing:.06em}
 .ph-capsule{display:inline-flex;gap:3px;align-items:center}
 .ph-capsule i{width:3.5px;height:7px;border-radius:2px;display:block}
-.ph-nav{padding:8px 18px 12px;font-family:var(--serif);font-size:15px;font-weight:600;border-bottom:1px solid var(--line-iv)}
-.screen--ivory .ph-nav{border-bottom:1px solid var(--line)}
-.ph-nav small{display:block;font-family:var(--sans);font-size:9px;font-weight:400;letter-spacing:.1em;margin-top:2px;color:rgba(245,240,232,.5)}
+.ph-nav{padding:8px 18px 12px;font-family:var(--serif);font-size:15px;font-weight:500;border-bottom:1px solid var(--line-iv)}
+.screen--ivory .ph-nav{border-bottom:1px solid var(--line);color:var(--ink)}
+.ph-nav small{display:block;font-family:var(--sans);font-size:9px;font-weight:300;letter-spacing:.1em;margin-top:2px;color:rgba(245,240,232,.5)}
 .ph-body{flex:1;padding:14px 14px 10px;display:flex;flex-direction:column;gap:10px}
 .ph-timechip{align-self:center;font-size:9.5px;letter-spacing:.2em;color:rgba(245,240,232,.45);padding:2px 10px}
 .bub{max-width:82%;padding:10px 13px;border-radius:15px;font-size:12.5px;line-height:1.7}
@@ -110,14 +109,14 @@ h2.big{font-family:var(--serif);font-size:29px;font-weight:600;line-height:1.5;l
 .ph-input .send{width:26px;height:26px;border-radius:50%;background:var(--gold);flex-shrink:0;position:relative}
 .ph-input .send::after{content:'';position:absolute;top:8px;left:10px;width:7px;height:7px;border-top:1.6px solid #1A1209;border-right:1.6px solid #1A1209;transform:rotate(45deg)}
 .hero-card{background:linear-gradient(150deg,#1E4030,#1B3A2D);border-radius:16px;padding:20px 18px;color:var(--ivory);text-align:center}
-.hero-card .ht{font-family:var(--serif);font-size:15.5px;font-weight:600;line-height:1.7}
+.hero-card .ht{font-family:var(--serif);font-size:15.5px;font-weight:500;line-height:1.7}
 .hero-card .hs{font-size:10px;color:rgba(245,240,232,.6);letter-spacing:.1em;margin:8px 0 14px}
 .hero-card .hb{display:inline-block;font-size:11.5px;letter-spacing:.14em;background:var(--gold);color:var(--ink);font-weight:600;padding:8px 22px;border-radius:999px}
 .ph-card{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:13px 14px}
 .ph-row{display:flex;align-items:center;gap:11px}
-.ph-thumb{width:38px;height:38px;border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:15px;font-weight:600;flex-shrink:0}
+.ph-thumb{width:38px;height:38px;border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:15px;font-weight:400;flex-shrink:0}
 .ph-avatar{width:38px;height:38px;border-radius:50%;background:var(--green);color:var(--ivory);display:flex;align-items:center;justify-content:center;font-size:15px;flex-shrink:0}
-.ph-name{font-size:13px;font-weight:600}
+.ph-name{font-size:13px;font-weight:400}
 .ph-sub{font-size:10.5px;color:var(--t3);margin-top:2px;letter-spacing:.04em}
 .ph-price{font-family:var(--latin);font-size:15px;font-weight:700;color:var(--green)}
 .ph-link{font-size:11px;color:var(--green);font-weight:600;letter-spacing:.06em;flex-shrink:0}
@@ -139,50 +138,34 @@ h2.big{font-family:var(--serif);font-size:29px;font-weight:600;line-height:1.5;l
 .share-stats span{font-size:9.5px;color:var(--t3);letter-spacing:.1em}
 .share-btn{margin-top:12px;text-align:center;font-size:11.5px;font-weight:700;letter-spacing:.14em;color:var(--green);border:1px solid rgba(27,58,45,.28);border-radius:999px;padding:8px}
 .phones{display:flex;flex-direction:column;align-items:center;gap:30px;margin-top:38px}
-.phones .phone-note{margin-top:-14px}
 
-/* ===== 价签（模块一 · 一期） ===== */
+/* ===== 交互 Tab（模块一 · 三个界面） ===== */
+.ph-pane{display:none;flex:1;flex-direction:column;min-height:0}
+.ph-pane.is-on{display:flex}
+.pane--green{background:linear-gradient(170deg,#1E4030,#1B3A2D);color:var(--ivory)}
+.pane--ivory{background:#F8F4ED;color:var(--ink)}
+.pane--ivory .ph-status{color:var(--ink)}
+.pane--ivory .ph-capsule i{background:var(--ink)}
+.pane--ivory .ph-nav{color:var(--ink);border-bottom:1px solid var(--line)}
+.ph-tabbar3{display:flex;border-top:1px solid var(--line);padding:8px 0 12px;background:#F8F4ED}
+.ptab{flex:1;background:none;border:none;font-family:var(--sans);font-size:11px;letter-spacing:.08em;color:var(--t3);padding:6px 0;display:flex;flex-direction:column;align-items:center;gap:4px;cursor:pointer;font-weight:300}
+.ptab .dot-t{width:7px;height:7px;border-radius:50%;background:rgba(26,18,9,.15)}
+.ptab.is-active{color:var(--green);font-weight:600}
+.ptab.is-active .dot-t{background:var(--gold)}
+.tab-hint{display:flex;align-items:center;justify-content:center;gap:8px;margin-top:22px;font-size:11px;letter-spacing:.2em;color:var(--t3)}
+.tab-hint .tdot{width:6px;height:6px;border-radius:50%;background:var(--gold);animation:pulse 1.8s ease-in-out infinite}
+@keyframes pulse{0%,100%{opacity:.3}50%{opacity:1}}
+
+/* ===== 投入构成 ===== */
 .price-card{margin-top:34px;background:linear-gradient(155deg,#1E4030,#1B3A2D);border-radius:20px;padding:28px 24px;color:var(--ivory);box-shadow:0 16px 40px rgba(27,58,45,.28)}
 .pc-label{font-size:11px;letter-spacing:.26em;color:var(--gold);font-weight:600}
-.pc-main{font-family:var(--latin);font-size:46px;font-weight:700;color:var(--ivory);margin:12px 0 2px;line-height:1}
-.pc-main small{font-size:17px;font-weight:500;color:rgba(245,240,232,.6);letter-spacing:.1em;margin-left:4px}
-.pc-sub{font-size:12.5px;color:rgba(245,240,232,.55);letter-spacing:.1em}
-.pc-rows{margin-top:20px;border-top:1px solid var(--line-iv)}
-.pc-row{display:flex;justify-content:space-between;align-items:baseline;gap:12px;padding:13px 0;border-bottom:1px solid var(--line-iv)}
-.pc-row .k{font-size:13px;letter-spacing:.08em}
-.pc-row .k small{display:block;font-size:10px;color:rgba(245,240,232,.45);margin-top:2px;letter-spacing:.06em}
-.pc-row .v{font-family:var(--latin);font-size:17px;font-weight:700;color:var(--gold);white-space:nowrap}
-.pc-row .v small{font-size:10px;font-weight:400;color:rgba(245,240,232,.45)}
+.pc-rows{margin-top:14px;border-top:1px solid var(--line-iv)}
+.pc-row{display:flex;justify-content:space-between;align-items:baseline;gap:12px;padding:15px 0;border-bottom:1px solid var(--line-iv)}
+.pc-row .k{font-size:13.5px;letter-spacing:.08em;font-family:var(--serif)}
+.pc-row .k small{display:block;font-family:var(--sans);font-size:10px;color:rgba(245,240,232,.45);margin-top:3px;letter-spacing:.06em}
+.pc-row .v{font-family:var(--latin);font-size:24px;font-weight:700;color:var(--gold);white-space:nowrap}
+.pc-row .v small{font-size:12px;font-weight:400;color:rgba(245,240,232,.55);margin-left:2px}
 .pc-foot{font-size:11px;color:rgba(245,240,232,.45);line-height:1.9;margin-top:16px}
-
-/* ===== 价签（模块二三四 · 迭代） ===== */
-.iter-card{margin-top:30px;background:var(--card);border:1px solid var(--line);border-radius:18px;padding:24px 22px;box-shadow:0 2px 10px rgba(26,18,9,.04)}
-.iter-card .ic-top{display:flex;justify-content:space-between;align-items:baseline;gap:12px}
-.ic-label{font-size:11px;letter-spacing:.24em;color:var(--t3);font-weight:600}
-.ic-price{font-family:var(--latin);font-size:30px;font-weight:700;color:var(--green);white-space:nowrap}
-.ic-price small{font-size:13px;font-weight:500;color:var(--t3);letter-spacing:.08em;margin-left:3px}
-.ic-sub{font-size:12px;color:var(--t3);letter-spacing:.1em;margin-top:4px}
-.ic-chips{display:flex;flex-wrap:wrap;gap:7px;margin-top:16px}
-.ic-chip{font-size:11px;letter-spacing:.08em;background:rgba(27,58,45,.06);border:1px solid rgba(27,58,45,.14);color:var(--green);padding:5px 12px;border-radius:999px;font-weight:600}
-.ic-note{font-size:11px;color:var(--t3);margin-top:16px;line-height:1.8}
-
-/* ===== 建设节奏 ===== */
-.order{display:flex;align-items:center;gap:7px;flex-wrap:wrap;margin-top:32px}
-.ochip{font-size:12.5px;font-weight:700;letter-spacing:.1em;color:var(--ivory);background:var(--green);padding:8px 15px;border-radius:999px}
-.ochip em{font-style:normal;color:var(--gold);margin-right:6px;font-family:var(--latin)}
-.oarr{color:rgba(26,18,9,.3);font-family:var(--latin);font-size:15px}
-.path{margin-top:38px;position:relative}
-.path::before{content:'';position:absolute;left:17px;top:10px;bottom:10px;width:1.5px;background:linear-gradient(var(--gold),rgba(212,168,130,.15))}
-.pstep{position:relative;padding:0 0 34px 54px}
-.pstep:last-child{padding-bottom:0}
-.pstep .dot{position:absolute;left:8px;top:2px;width:19px;height:19px;border-radius:50%;background:var(--ivory);border:1.5px solid var(--gold);display:flex;align-items:center;justify-content:center}
-.pstep .dot::after{content:'';width:7px;height:7px;border-radius:50%;background:var(--gold)}
-.pstep .no{font-family:var(--latin);font-size:12px;letter-spacing:.3em;color:var(--gold);font-weight:700}
-.pstep h4{font-family:var(--serif);font-size:18px;font-weight:600;margin:4px 0 6px}
-.pstep p{font-size:13.5px;color:var(--t2);line-height:1.8}
-.pstep .when{display:inline-block;margin-top:10px;font-size:11px;letter-spacing:.14em;color:var(--green);background:rgba(27,58,45,.07);border:1px solid rgba(27,58,45,.14);padding:4px 12px;border-radius:999px;font-weight:600}
-
-/* ===== 投入三线 ===== */
 .money-row{background:var(--card);border:1px solid var(--line);border-radius:16px;padding:24px 22px;margin-top:14px}
 .money-row .mn{display:flex;align-items:baseline;justify-content:space-between;gap:10px}
 .money-row .mn b{font-family:var(--serif);font-size:18px;font-weight:600}
@@ -190,11 +173,29 @@ h2.big{font-family:var(--serif);font-size:29px;font-weight:600;line-height:1.5;l
 .money-row .mv{font-family:var(--latin);font-size:24px;font-weight:700;color:var(--green);margin-top:8px}
 .money-row p{font-size:13px;color:var(--t2);margin-top:10px;line-height:1.8}
 
+/* ===== 实施节奏 ===== */
+.path{margin-top:38px;position:relative}
+.path::before{content:'';position:absolute;left:17px;top:10px;bottom:10px;width:1.5px;background:linear-gradient(var(--gold),rgba(212,168,130,.15))}
+.pstep{position:relative;padding:0 0 34px 54px}
+.pstep:last-child{padding-bottom:0}
+.pstep .dot{position:absolute;left:8px;top:2px;width:19px;height:19px;border-radius:50%;background:var(--ivory-2);border:1.5px solid var(--gold);display:flex;align-items:center;justify-content:center}
+.pstep .dot::after{content:'';width:7px;height:7px;border-radius:50%;background:var(--gold)}
+.pstep .no{font-family:var(--latin);font-size:12px;letter-spacing:.3em;color:var(--gold);font-weight:700}
+.pstep h4{font-family:var(--serif);font-size:18px;font-weight:600;margin:4px 0 6px}
+.pstep p{font-size:13.5px;color:var(--t2);line-height:1.8}
+.pstep .chips{display:flex;flex-wrap:wrap;gap:8px;margin-top:10px}
+.pstep .when{font-size:11px;letter-spacing:.14em;color:var(--green);background:rgba(27,58,45,.07);border:1px solid rgba(27,58,45,.14);padding:4px 12px;border-radius:999px;font-weight:600}
+.pstep .deliver{font-size:11px;letter-spacing:.12em;color:var(--gold);border:1px solid rgba(212,168,130,.6);padding:4px 12px;border-radius:999px;font-weight:600;background:rgba(212,168,130,.08)}
+
 /* ===== 结尾 ===== */
 .closing{background:radial-gradient(circle at 50% 26%,rgba(212,168,130,.1),transparent 52%),var(--green);padding:100px 30px 90px;text-align:center}
 .closing .logo{width:84px;margin:0 auto 38px}
 .closing h2{font-family:var(--serif);font-size:30px;font-weight:600;color:var(--ivory);line-height:1.6}
-.closing p{font-family:var(--serif);font-size:15.5px;color:rgba(245,240,232,.68);margin-top:26px;line-height:2.1}
+.closing .sub{font-family:var(--serif);font-size:15.5px;color:rgba(245,240,232,.68);margin-top:20px;line-height:2.1}
+.confirm-list{list-style:none;margin-top:40px;text-align:left;display:inline-block}
+.confirm-list li{display:flex;gap:16px;align-items:baseline;padding:14px 4px;border-bottom:1px solid var(--line-iv);font-family:var(--serif);font-size:15.5px;color:rgba(245,240,232,.85)}
+.confirm-list li:last-child{border-bottom:none}
+.confirm-list .cno{font-family:var(--latin);font-size:13px;color:var(--gold);letter-spacing:.12em}
 .closing .fin{font-size:10px;letter-spacing:.34em;color:rgba(245,240,232,.35);margin-top:64px}
 
 /* ===== 入场动画 ===== */
@@ -211,11 +212,10 @@ h2.big{font-family:var(--serif);font-size:29px;font-weight:600;line-height:1.5;l
   .divider h2{font-size:36px}
   .phones{flex-direction:row;justify-content:center;gap:44px}
   .price-card{padding:34px 32px}
-  .pc-main{font-size:54px}
 }
 @media (prefers-reduced-motion:reduce){
   .rv{transition:none;opacity:1;transform:none}
-  .scroll-cue .chev,.typing i{animation:none}
+  .scroll-cue .chev,.typing i,.tab-hint .tdot{animation:none}
 }
 </style>
 </head>
@@ -223,166 +223,198 @@ h2.big{font-family:var(--serif);font-size:29px;font-weight:600;line-height:1.5;l
 <div id="bar"></div>
 <main class="page">
 
-  <!-- 01 封面 -->
+  <!-- P01 封面 -->
   <header class="cover">
     <img class="logo" src="assets/LAYA-Primary-Stacked-White-Master-v1.0.png" alt="LAYA">
-    <h1>你的线上之家</h1>
-    <p class="sub">LAYA 小程序 · 模块规划构想</p>
+    <h1>LAYA 小程序</h1>
+    <p class="sub">设 计 推 进 方 案</p>
     <p class="latin">Inner Sun</p>
     <p class="date">2026 · 09</p>
     <div class="scroll-cue"><span>向下滑动</span><i class="chev"></i></div>
   </header>
 
-  <!-- 02 开篇 · 四个模块 -->
+  <!-- P02 推进策略 · 四模块一览 -->
   <section class="sec overview">
-    <p class="kicker rv">我 们 把 它 想 清 楚 了</p>
-    <h2 class="big rv">你的小程序，<br>一共四个模块。</h2>
-    <p class="lede rv">它们不是四个产品，<br>是一个家的四个房间——<br>按你生意的脉络，一个一个长出来。</p>
+    <p class="kicker rv">推 进 策 略</p>
+    <h2 class="big rv">四个模块。<br>一个体系。</h2>
+    <p class="lede rv">从引流到承接，<br>完整商业闭环。</p>
     <div class="flow rv">
-      <span class="fchip">遇见</span><span class="farr">—</span>
+      <span class="fchip">引流</span><span class="farr">—</span>
       <span class="fchip">成交</span><span class="farr">—</span>
       <span class="fchip">裂变</span><span class="farr">—</span>
       <span class="fchip">承接</span>
     </div>
     <div class="mod-card rv">
       <div class="no">I</div>
-      <div class="name">引流<em>新用户</em></div>
+      <div class="name">引流<em>新用户获取</em></div>
       <div class="lt">The Encounter</div>
-      <p class="promise">让更多人遇见你。</p>
-      <div class="for">高维沟通 · 三分钟测评 · 资料分享</div>
+      <p class="promise">让新用户，遇见拉雅。</p>
+      <div class="for">高维沟通 · 内在测评 · 内容呈现</div>
     </div>
     <div class="mod-card rv">
       <div class="no">II</div>
-      <div class="name">商城<em>购买</em></div>
+      <div class="name">商城<em>成交转化</em></div>
       <div class="lt">The Store</div>
-      <p class="promise">让遇见，变成成交。</p>
-      <div class="for">水晶上架购买 · 课程购买 · 疗愈师预约</div>
+      <p class="promise">让遇见，成为成交。</p>
+      <div class="for">水晶购买 · 疗愈师预约 · 课程购买</div>
     </div>
     <div class="mod-card rv">
       <div class="no">III</div>
-      <div class="name">疗愈师<em>裂变</em></div>
+      <div class="name">疗愈师<em>裂变增长</em></div>
       <div class="lt">The Healers</div>
-      <p class="promise">让成交，带来更多人。</p>
-      <div class="for">疗愈师预约体系 · 分销机制</div>
+      <p class="promise">让疗愈师，也参与进来。</p>
+      <div class="for">疗愈师团队管理 · 分销机制</div>
     </div>
     <div class="mod-card rv">
       <div class="no">IV</div>
-      <div class="name">疗愈村<em>承接</em></div>
+      <div class="name">疗愈村生态<em>影响力承接</em></div>
       <div class="lt">The Village</div>
-      <p class="promise">让影响力，落成一座村。</p>
-      <div class="for">幸福疗愈村介绍与规划 · 在线订房</div>
+      <p class="promise">一座村，正在生长。</p>
+      <div class="for">疗愈村活动 · 在线订房</div>
     </div>
-    <p class="footnote rv" style="margin-top:26px;text-align:center">先立住模块一，<br>再按你的节奏，长出后面的三个。</p>
+    <p class="footnote rv" style="margin-top:26px;text-align:center">四个模块，按阶段迭代上线。</p>
   </section>
 
-  <!-- 03 模块一承诺 -->
+  <!-- P04 模块一 · 章节页 -->
   <section class="divider">
     <img class="logo" src="assets/LAYA-Primary-Stacked-White-Master-v1.0.png" alt="LAYA">
     <p class="eyebrow rv">模 块 一 · THE ENCOUNTER</p>
-    <h2 class="rv">让更多人，<br>遇见你。</h2>
-    <p class="sub rv">新朋友的信任，从三分钟开始；<br>深夜的靠近，交给高维沟通。</p>
+    <h2 class="rv">让新用户，<br>遇见拉雅。</h2>
+    <p class="sub rv">模块一 · 新用户引流<br>高维沟通 · 内在测评 · 内容呈现</p>
+    <span class="phase rv">一 期 上 线</span>
   </section>
 
-  <!-- 04 模块一内容 -->
+  <!-- P05 模块一 · 功能定义 -->
   <section class="sec" style="background:var(--ivory-2)">
-    <p class="kicker rv">模 块 一 · 引 流</p>
-    <h2 class="big rv">这一个模块，有什么。</h2>
+    <p class="kicker rv">模 块 一 · 功 能 定 义</p>
+    <h2 class="big rv">高维沟通。<br>随时在场。</h2>
+    <p class="lede rv">AI 拉雅——由你的课程、文字与答疑<br>训练的数字分身。</p>
     <ul class="offer-list">
-      <li class="rv"><span class="ol-no">i.</span><div><p class="ol-name">高维沟通</p><p class="ol-desc">你的数字分身，深夜也在场——由你的课程与文字喂养，像你一样说话</p></div></li>
-      <li class="rv"><span class="ol-no">ii.</span><div><p class="ol-name">三分钟内在测评</p><p class="ol-desc">新朋友认识你的第一个入口，也是她带走的第一份礼物</p></div></li>
-      <li class="rv"><span class="ol-no">iii.</span><div><p class="ol-name">资料分享</p><p class="ol-desc">视频与文字住在这里；想了解你的人，随时可以进来坐坐</p></div></li>
+      <li class="rv"><span class="ol-no">i.</span><div><p class="ol-name">高维沟通（AI 拉雅）</p><p class="ol-desc">新用户的第一入口。深夜在线，回应如你。安全边界内对话，必要时转介专业支持。</p></div></li>
+      <li class="rv"><span class="ol-no">ii.</span><div><p class="ol-name">内在测评</p><p class="ol-desc">三分钟，一份可分享的测评报告。认识你的第一步，也是用户带走的第一份礼物。</p></div></li>
+      <li class="rv"><span class="ol-no">iii.</span><div><p class="ol-name">内容呈现</p><p class="ol-desc">视频与文章沉淀于此。认识你的人，更了解你。</p></div></li>
     </ul>
+    <p class="footnote rv" style="margin-top:24px">AI 拉雅的功能清单，将在项目启动会上共同确认。</p>
+  </section>
+
+  <!-- P06 模块一 · 界面示意（三个 Tab，可交互） -->
+  <section class="sec">
+    <p class="kicker rv">模 块 一 · 界 面 示 意</p>
+    <h2 class="big rv">首页即入口，<br>对话即连接。</h2>
+    <p class="lede rv">三个 Tab，逐个点开，<br>看每个页面的样子。</p>
 
     <div class="phones">
       <div>
         <div class="phone rv">
-          <div class="screen screen--ivory">
-            <div class="ph-status"><span style="color:#1A1209">9:41</span><span class="ph-capsule"><i style="background:#1A1209"></i><i style="background:#1A1209"></i></span></div>
-            <div class="ph-nav" style="color:#1A1209">LAYA · 首页</div>
-            <div class="ph-body">
-              <div class="hero-card">
-                <p class="ht">此刻的你，<br>内在是什么天气？</p>
-                <p class="hs">3 分钟 · 免费内在测评</p>
-                <span class="hb">开始测评</span>
+          <div class="screen">
+            <!-- Tab 一 · 高维沟通 -->
+            <div class="ph-pane pane--green is-on" data-pane="chat">
+              <div class="ph-status"><span>23:47</span><span class="ph-capsule"><i style="background:rgba(245,240,232,.8)"></i><i style="background:rgba(245,240,232,.8)"></i></span></div>
+              <div class="ph-nav">拉雅 · 高维沟通<small>她的数字分身 · 随时在场</small></div>
+              <div class="ph-body">
+                <div class="ph-timechip">深 夜 23:47</div>
+                <div class="bub bub--me">今天又和妈妈吵架了，心里很堵……</div>
+                <div class="bub bub--ai">先深深呼吸一次。你不需要现在就原谅谁——先陪陪那个委屈的自己。</div>
+                <div class="typing"><i></i><i></i><i></i></div>
               </div>
-              <div class="ph-card">
-                <div class="ph-row">
-                  <div class="ph-avatar">拉</div>
-                  <div style="flex:1;min-width:0"><div class="ph-name">和拉雅聊聊</div><div class="ph-sub">高维沟通 · 深夜也在场</div></div>
-                  <span class="ph-link">进入 ›</span>
+              <p class="ph-safety">如遇紧急情绪危机，请联系当地心理援助热线。<br>高维沟通不能替代专业心理帮助。</p>
+              <div class="ph-input"><span style="flex:1">说给她听……</span><span class="send"></span></div>
+            </div>
+            <!-- Tab 二 · 测评 -->
+            <div class="ph-pane pane--ivory" data-pane="test">
+              <div class="ph-status"><span>9:41</span><span class="ph-capsule"><i></i><i></i></span></div>
+              <div class="ph-nav">LAYA · 内在测评</div>
+              <div class="ph-body">
+                <div class="hero-card">
+                  <p class="ht">此刻的你，<br>内在是什么天气？</p>
+                  <p class="hs">3 分钟 · 免费内在测评</p>
+                  <span class="hb">开始测评</span>
                 </div>
-              </div>
-              <div class="ph-card">
-                <span class="ph-tagpill">资料分享</span>
-                <div class="ph-row" style="margin-top:12px">
-                  <div class="ph-thumb" style="background:#D4A882;color:#1A1209">▶</div>
-                  <div style="flex:1;min-width:0"><div class="ph-name">情绪，是来送信的人</div><div class="ph-sub">视频 · 12:36</div></div>
+                <div class="ph-card">
+                  <span class="ph-tagpill">第 3 题 · 共 12 题</span>
+                  <p style="font-size:12.5px;margin-top:10px;line-height:1.7">最近两周，你的睡眠怎么样？</p>
+                  <div class="cat-chips" style="margin-top:10px"><span class="on">安稳</span><span>时好时坏</span><span>经常失眠</span></div>
+                </div>
+                <div class="ph-card">
+                  <div class="ph-row">
+                    <div class="ph-thumb" style="background:#D4A882;color:#1A1209">晴</div>
+                    <div style="flex:1;min-width:0"><div class="ph-name">你的内在天气 · 晴间多云</div><div class="ph-sub">测评完成 · 可生成分享报告</div></div>
+                    <span class="ph-link">分享 ›</span>
+                  </div>
                 </div>
               </div>
             </div>
-            <div class="ph-tabbar">
-              <div class="ph-tab is-active"><span class="dot-t"></span>首页</div>
-              <div class="ph-tab"><span class="dot-t"></span>商城</div>
-              <div class="ph-tab"><span class="dot-t"></span>我的</div>
+            <!-- Tab 三 · 介绍 -->
+            <div class="ph-pane pane--ivory" data-pane="intro">
+              <div class="ph-status"><span>9:41</span><span class="ph-capsule"><i></i><i></i></span></div>
+              <div class="ph-nav">LAYA · 介绍</div>
+              <div class="ph-body">
+                <div class="ph-card">
+                  <p style="font-family:var(--serif);font-size:14px;line-height:1.9">「身体不是问题的来源，<br>是答案的居所。」</p>
+                  <p class="ph-sub" style="margin-top:8px">拉雅 · 疗愈师</p>
+                </div>
+                <div class="ph-card">
+                  <span class="ph-tagpill">视频</span>
+                  <div class="ph-row" style="margin-top:10px">
+                    <div class="ph-thumb" style="background:#D4A882;color:#1A1209">▶</div>
+                    <div style="flex:1;min-width:0"><div class="ph-name">情绪，是来送信的人</div><div class="ph-sub">12:36 · 系列 · 与身体对话</div></div>
+                  </div>
+                </div>
+                <div class="ph-card">
+                  <span class="ph-tagpill">文章</span>
+                  <div class="ph-row" style="margin-top:10px">
+                    <div class="ph-thumb" style="background:#1B3A2D;color:#F5F0E8">文</div>
+                    <div style="flex:1;min-width:0"><div class="ph-name">与身体和解的七个练习</div><div class="ph-sub">8 分钟阅读</div></div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <!-- 底部 Tab 栏 -->
+            <div class="ph-tabbar3">
+              <button class="ptab is-active" data-tab="chat" type="button"><span class="dot-t"></span>高维沟通</button>
+              <button class="ptab" data-tab="test" type="button"><span class="dot-t"></span>测评</button>
+              <button class="ptab" data-tab="intro" type="button"><span class="dot-t"></span>介绍</button>
             </div>
           </div>
         </div>
-        <p class="phone-note rv">小程序首页 · 界面示意</p>
+        <p class="phone-note rv">界面示意 · 非最终设计</p>
+        <div class="tab-hint rv"><span class="tdot"></span><span>点 击 上 方 Tab 切 换</span></div>
       </div>
-      <div>
-        <div class="phone rv">
-          <div class="screen screen--green">
-            <div class="ph-status"><span>23:47</span><span class="ph-capsule"><i></i><i></i></span></div>
-            <div class="ph-nav">拉雅 · 高维沟通<small>她的数字分身 · 随时在场</small></div>
-            <div class="ph-body">
-              <div class="ph-timechip">深 夜 23:47</div>
-              <div class="bub bub--me">今天又和妈妈吵架了，心里很堵……</div>
-              <div class="bub bub--ai">先深深呼吸一次。你不需要现在就原谅谁——先陪陪那个委屈的自己。</div>
-              <div class="typing"><i></i><i></i><i></i></div>
-            </div>
-            <p class="ph-safety">如遇紧急情绪危机，请联系当地心理援助热线。<br>高维沟通不能替代专业心理帮助。</p>
-            <div class="ph-input"><span style="flex:1">说给她听……</span><span class="send"></span></div>
-          </div>
-        </div>
-        <p class="phone-note rv">高维沟通对话 · 界面示意</p>
-      </div>
-    </div>
-
-    <div class="price-card rv">
-      <p class="pc-label">模块一 · 引流 · 一期建设</p>
-      <p class="pc-main">10–14 <small>万</small></p>
-      <p class="pc-sub">约 10–12 周上线</p>
-      <div class="pc-rows">
-        <div class="pc-row"><div class="k">月度守护<small>含 AI 运行成本</small></div><div class="v">¥3,000–5,000<small> / 月</small></div></div>
-      </div>
-      <p class="pc-foot">她是活的——你一直喂养，她一直生长。<br>以上为区间；签字之前，以最终确认单为准。</p>
     </div>
   </section>
 
-  <!-- 05 模块二承诺 -->
+  <!-- P07 模块二 · 章节页 -->
   <section class="divider">
     <img class="logo" src="assets/LAYA-Primary-Stacked-White-Master-v1.0.png" alt="LAYA">
     <p class="eyebrow rv">模 块 二 · THE STORE</p>
-    <h2 class="rv">让遇见，<br>变成成交。</h2>
-    <p class="sub rv">水晶、课程、疗愈师——<br>喜欢你的方式，从遇见升级为拥有。</p>
+    <h2 class="rv">让遇见，<br>成为成交。</h2>
+    <p class="sub rv">模块二 · 商城购买<br>水晶购买 · 疗愈师预约 · 课程购买</p>
+    <span class="phase rv">一 期 上 线</span>
   </section>
 
-  <!-- 06 模块二内容 -->
-  <section class="sec">
-    <p class="kicker rv">模 块 二 · 商 城</p>
-    <h2 class="big rv">这一个模块，有什么。</h2>
+  <!-- P08 模块二 · 功能定义 -->
+  <section class="sec" style="background:var(--ivory-2)">
+    <p class="kicker rv">模 块 二 · 功 能 定 义</p>
+    <h2 class="big rv">完整的<br>商业闭环。</h2>
+    <p class="lede rv">完整复刻现有至心谷能力，<br>一次搬进自己的家。</p>
     <ul class="offer-list">
-      <li class="rv"><span class="ol-no">i.</span><div><p class="ol-name">水晶商城</p><p class="ol-desc">你的水晶与好物全部上架——遇见即可买</p></div></li>
-      <li class="rv"><span class="ol-no">ii.</span><div><p class="ol-name">课程购买</p><p class="ol-desc">线上课、训练营，一站式报名与学习</p></div></li>
-      <li class="rv"><span class="ol-no">iii.</span><div><p class="ol-name">疗愈师预约</p><p class="ol-desc">从首次体验到深度服务，在线约时间</p></div></li>
+      <li class="rv"><span class="ol-no">i.</span><div><p class="ol-name">水晶商城</p><p class="ol-desc">商品上架、下单、支付、订单管理，全流程自有。</p></div></li>
+      <li class="rv"><span class="ol-no">ii.</span><div><p class="ol-name">疗愈师预约</p><p class="ol-desc">服务展示、档期管理、在线预约。</p></div></li>
+      <li class="rv"><span class="ol-no">iii.</span><div><p class="ol-name">课程购买</p><p class="ol-desc">线上课程与训练营，一站式报名。</p></div></li>
     </ul>
+  </section>
 
+  <!-- P09 模块二 · 界面示意 -->
+  <section class="sec">
+    <p class="kicker rv">模 块 二 · 界 面 示 意</p>
+    <h2 class="big rv">所见，<br>即所购。</h2>
+    <p class="lede rv">分类清晰，路径最短。</p>
     <div class="phones" style="margin-top:38px">
       <div>
         <div class="phone rv">
           <div class="screen screen--ivory">
-            <div class="ph-status"><span style="color:#1A1209">9:41</span><span class="ph-capsule"><i style="background:#1A1209"></i><i style="background:#1A1209"></i></span></div>
-            <div class="ph-nav" style="color:#1A1209">LAYA · 商城</div>
+            <div class="ph-status"><span>9:41</span><span class="ph-capsule"><i></i><i></i></span></div>
+            <div class="ph-nav">LAYA · 商城</div>
             <div class="ph-body">
               <div class="cat-chips"><span class="on">全部</span><span>水晶</span><span>课程</span><span>疗愈师</span></div>
               <div class="ph-card">
@@ -414,64 +446,51 @@ h2.big{font-family:var(--serif);font-size:29px;font-weight:600;line-height:1.5;l
             </div>
           </div>
         </div>
-        <p class="phone-note rv">商城 · 界面示意</p>
+        <p class="phone-note rv">界面示意 · 非最终设计</p>
       </div>
-    </div>
-
-    <div class="iter-card rv">
-      <div class="ic-top">
-        <span class="ic-label">模块二 · 商城 · 迭代建设</span>
-        <span class="ic-price">4–6<small>万</small></span>
-      </div>
-      <p class="ic-sub">约 4–6 周上线</p>
-      <div class="ic-chips">
-        <span class="ic-chip">水晶上架</span>
-        <span class="ic-chip">课程购买</span>
-        <span class="ic-chip">疗愈师预约</span>
-      </div>
-      <p class="ic-note">以上为区间；每期开工前，单独确认内容与报价。</p>
     </div>
   </section>
 
-  <!-- 07 模块三承诺 -->
+  <!-- P10 模块三 · 章节页 -->
   <section class="divider">
     <img class="logo" src="assets/LAYA-Primary-Stacked-White-Master-v1.0.png" alt="LAYA">
     <p class="eyebrow rv">模 块 三 · THE HEALERS</p>
-    <h2 class="rv">让成交，<br>带来裂变。</h2>
-    <p class="sub rv">你手上的疗愈师，不只是资源——<br>他们是会走动的入口。</p>
+    <h2 class="rv">让疗愈师，<br>也参与进来。</h2>
+    <p class="sub rv">模块三 · 疗愈师生态<br>研究院疗愈师资源，即增长渠道</p>
+    <span class="phase rv">二 期 上 线</span>
   </section>
 
-  <!-- 08 模块三内容 -->
+  <!-- P11 模块三 · 功能定义与界面示意 -->
   <section class="sec" style="background:var(--ivory-2)">
-    <p class="kicker rv">模 块 三 · 疗 愈 师</p>
-    <h2 class="big rv">这一个模块，有什么。</h2>
+    <p class="kicker rv">模 块 三 · 功 能 与 界 面</p>
+    <h2 class="big rv">疗愈师，<br>即渠道。</h2>
+    <p class="lede rv">团队管理、分销，一体完成。</p>
     <ul class="offer-list">
-      <li class="rv"><span class="ol-no">i.</span><div><p class="ol-name">疗愈师主页与预约</p><p class="ol-desc">每位疗愈师有自己的页面、自己的档期，来客被稳稳接住</p></div></li>
-      <li class="rv"><span class="ol-no">ii.</span><div><p class="ol-name">分销机制</p><p class="ol-desc">疗愈师分享小程序，朋友在里面成交，奖励金自动结算</p></div></li>
-      <li class="rv"><span class="ol-no">iii.</span><div><p class="ol-name">专属邀请卡</p><p class="ol-desc">每个人都有自己的邀请卡——把信任，变成扩散</p></div></li>
+      <li class="rv"><span class="ol-no">i.</span><div><p class="ol-name">疗愈师团队管理</p><p class="ol-desc">针对疗愈师联创团队的素材管理、人员跟进、培训课程。</p></div></li>
+      <li class="rv"><span class="ol-no">ii.</span><div><p class="ol-name">分销机制</p><p class="ol-desc">疗愈师分享小程序，用户经分享成交，奖励金自动结算。</p></div></li>
     </ul>
 
     <div class="phones" style="margin-top:38px">
       <div>
         <div class="phone rv">
           <div class="screen screen--ivory">
-            <div class="ph-status"><span style="color:#1A1209">9:41</span><span class="ph-capsule"><i style="background:#1A1209"></i><i style="background:#1A1209"></i></span></div>
-            <div class="ph-nav" style="color:#1A1209">LAYA · 疗愈师</div>
+            <div class="ph-status"><span>9:41</span><span class="ph-capsule"><i></i><i></i></span></div>
+            <div class="ph-nav">LAYA · 疗愈师中心</div>
             <div class="ph-body">
               <div class="ph-card">
                 <div class="ph-row">
                   <div class="ph-avatar">满</div>
-                  <div style="flex:1;min-width:0"><div class="ph-name">小满 · 疗愈师</div><div class="ph-sub">情绪释放 · 身体扫描 · 4.9 分</div></div>
+                  <div style="flex:1;min-width:0"><div class="ph-name">小满 · 联创疗愈师</div><div class="ph-sub">团队 12 位疗愈师 · 3 个小组</div></div>
                 </div>
-                <div style="margin-top:12px">
-                  <div class="slot"><span>周三 19:00 – 20:00</span><span class="ph-link">可约 ›</span></div>
-                  <div class="slot"><span>周五 10:00 – 11:00</span><span class="ph-link">可约 ›</span></div>
-                  <div class="slot" style="border-bottom:none"><span>周日 15:00 – 16:00</span><span style="font-size:11px;color:var(--t3)">已满</span></div>
+                <div class="cat-chips" style="margin-top:12px"><span class="on">素材管理</span><span>人员跟进</span><span>培训课程</span></div>
+                <div style="margin-top:6px">
+                  <div class="slot"><span>新疗愈师档案 · 待完善</span><span class="ph-link">跟进 ›</span></div>
+                  <div class="slot" style="border-bottom:none"><span>联创基础培训 · 第 3 讲</span><span class="ph-link">查看 ›</span></div>
                 </div>
               </div>
               <div class="share-card">
-                <span class="ph-tagpill">分享有礼</span>
-                <p class="sc-t">把小程序分享给朋友，朋友在里面成交后，你获得奖励金。</p>
+                <span class="ph-tagpill">分销</span>
+                <p class="sc-t">把小程序分享给朋友，朋友在其中成交，奖励金自动结算。</p>
                 <div class="share-stats">
                   <div><b>¥1,280</b><span>本月奖励金</span></div>
                   <div><b>17</b><span>带来的新朋友</span></div>
@@ -486,49 +505,37 @@ h2.big{font-family:var(--serif);font-size:29px;font-weight:600;line-height:1.5;l
             </div>
           </div>
         </div>
-        <p class="phone-note rv">疗愈师主页 · 界面示意</p>
+        <p class="phone-note rv">界面示意 · 非最终设计</p>
       </div>
-    </div>
-
-    <div class="iter-card rv">
-      <div class="ic-top">
-        <span class="ic-label">模块三 · 疗愈师 · 迭代建设</span>
-        <span class="ic-price">5–8<small>万</small></span>
-      </div>
-      <p class="ic-sub">约 5–8 周上线</p>
-      <div class="ic-chips">
-        <span class="ic-chip">主页与预约</span>
-        <span class="ic-chip">分销机制</span>
-        <span class="ic-chip">专属邀请卡</span>
-      </div>
-      <p class="ic-note">以上为区间；每期开工前，单独确认内容与报价。</p>
     </div>
   </section>
 
-  <!-- 09 模块四承诺 -->
+  <!-- P12 模块四 · 章节页 -->
   <section class="divider">
     <img class="logo" src="assets/LAYA-Primary-Stacked-White-Master-v1.0.png" alt="LAYA">
     <p class="eyebrow rv">模 块 四 · THE VILLAGE</p>
-    <h2 class="rv">让影响力，<br>落成一座村。</h2>
-    <p class="sub rv">幸福疗愈村正在长成——<br>小程序，是它对外的门。</p>
+    <h2 class="rv">一座村，<br>正在生长。</h2>
+    <p class="sub rv">模块四 · 疗愈村 · 影响力承接<br>幸福疗愈村的线上门户</p>
+    <span class="phase rv">三 期 上 线 · 随 村 庄 建 设 同 步 推 进</span>
   </section>
 
-  <!-- 10 模块四内容 -->
+  <!-- P13 模块四 · 功能定义与界面示意 -->
   <section class="sec">
-    <p class="kicker rv">模 块 四 · 疗 愈 村</p>
-    <h2 class="big rv">这一个模块，有什么。</h2>
+    <p class="kicker rv">模 块 四 · 功 能 与 界 面</p>
+    <h2 class="big rv">影响力，<br>有处安放。</h2>
+    <p class="lede rv">疗愈村介绍、规划与预订，<br>皆在此承接。</p>
     <ul class="offer-list">
-      <li class="rv"><span class="ol-no">i.</span><div><p class="ol-name">村的介绍与规划</p><p class="ol-desc">疗愈房、共修厅、溪谷步道——都讲给想来的人听</p></div></li>
-      <li class="rv"><span class="ol-no">ii.</span><div><p class="ol-name">在线订房</p><p class="ol-desc">看房型、选日子、下定，一次完成</p></div></li>
-      <li class="rv"><span class="ol-no">iii.</span><div><p class="ol-name">慢慢生长的空间</p><p class="ol-desc">村每长出一分，小程序跟着长一分</p></div></li>
+      <li class="rv"><span class="ol-no">i.</span><div><p class="ol-name">村庄介绍与规划</p><p class="ol-desc">疗愈房、共修厅、溪谷步道，完整呈现。</p></div></li>
+      <li class="rv"><span class="ol-no">ii.</span><div><p class="ol-name">在线订房</p><p class="ol-desc">房型查看、日期选择、在线预订。</p></div></li>
+      <li class="rv"><span class="ol-no">iii.</span><div><p class="ol-name">同步生长</p><p class="ol-desc">村庄每进一步，小程序同步一步。</p></div></li>
     </ul>
 
     <div class="phones" style="margin-top:38px">
       <div>
         <div class="phone rv">
           <div class="screen screen--ivory">
-            <div class="ph-status"><span style="color:#1A1209">9:41</span><span class="ph-capsule"><i style="background:#1A1209"></i><i style="background:#1A1209"></i></span></div>
-            <div class="ph-nav" style="color:#1A1209">LAYA · 疗愈村</div>
+            <div class="ph-status"><span>9:41</span><span class="ph-capsule"><i></i><i></i></span></div>
+            <div class="ph-nav">LAYA · 疗愈村</div>
             <div class="ph-body">
               <div class="hero-card">
                 <p class="ht">幸福疗愈村</p>
@@ -564,96 +571,99 @@ h2.big{font-family:var(--serif);font-size:29px;font-weight:600;line-height:1.5;l
             </div>
           </div>
         </div>
-        <p class="phone-note rv">疗愈村 · 界面示意</p>
+        <p class="phone-note rv">界面示意 · 非最终设计</p>
       </div>
-    </div>
-
-    <div class="iter-card rv">
-      <div class="ic-top">
-        <span class="ic-label">模块四 · 疗愈村 · 迭代建设</span>
-        <span class="ic-price">3–5<small>万</small></span>
-      </div>
-      <p class="ic-sub">约 3–5 周上线</p>
-      <div class="ic-chips">
-        <span class="ic-chip">村的介绍与规划</span>
-        <span class="ic-chip">在线订房</span>
-      </div>
-      <p class="ic-note">以上为区间；每期开工前，单独确认内容与报价。</p>
     </div>
   </section>
 
-  <!-- 11 建设节奏 -->
+  <!-- P14 实施节奏 -->
   <section class="sec" style="background:var(--ivory-2)">
-    <p class="kicker rv">建 设 的 节 奏</p>
-    <h2 class="big rv">先立住一个，<br>再长出三个。</h2>
-    <p class="lede rv">我们建议从模块一开始；<br>如果你心里的顺序不一样，把它告诉我们。</p>
-    <div class="order rv">
-      <span class="ochip"><em>I</em>引流</span><span class="oarr">—</span>
-      <span class="ochip"><em>II</em>商城</span><span class="oarr">—</span>
-      <span class="ochip"><em>III</em>疗愈师</span><span class="oarr">—</span>
-      <span class="ochip"><em>IV</em>疗愈村</span>
-    </div>
+    <p class="kicker rv">实 施 节 奏</p>
+    <h2 class="big rv">从启动，<br>到上线。</h2>
+    <p class="lede rv">一步一步，让拉雅生态越来越完整。</p>
     <div class="path">
       <div class="pstep rv">
         <span class="dot"></span>
         <span class="no">I</span>
-        <h4>我们见面</h4>
-        <p>把顺序和内容，变成一页清楚的需求单</p>
-        <span class="when">第 1 周</span>
+        <h4>需求确认</h4>
+        <p>功能清单定稿，排期确认</p>
+        <div class="chips"><span class="when">第 1 周</span><span class="deliver">交付 · 需求确认单</span></div>
       </div>
       <div class="pstep rv">
         <span class="dot"></span>
         <span class="no">II</span>
-        <h4>你摸到原型</h4>
-        <p>真的手机原型，放进你手里</p>
-        <span class="when">第 2–3 周</span>
+        <h4>原型评审</h4>
+        <p>可交互手机原型，逐一确认</p>
+        <div class="chips"><span class="when">第 2–3 周</span><span class="deliver">交付 · 原型定稿</span></div>
       </div>
       <div class="pstep rv">
         <span class="dot"></span>
         <span class="no">III</span>
-        <h4>打磨与填充</h4>
-        <p>知识库、测评、资料，一一就位</p>
-        <span class="when">第 4–8 周</span>
+        <h4>开发与填充</h4>
+        <p>开发、测试、内容就位</p>
+        <div class="chips"><span class="when">第 4–8 周</span><span class="deliver">模块一上线 · 第 4 周</span></div>
       </div>
       <div class="pstep rv">
         <span class="dot"></span>
         <span class="no">IV</span>
-        <h4>亮灯</h4>
-        <p>你的线上之家，正式开门</p>
-        <span class="when">第 8–12 周</span>
+        <h4>上线</h4>
+        <p>正式发布，进入守护期</p>
+        <div class="chips"><span class="when">第 8–12 周</span><span class="deliver">模块二上线 · 一期完成</span></div>
       </div>
     </div>
-    <p class="footnote rv" style="margin-top:30px">模块二、三、四，在模块一上线后按你的顺序迭代；<br>每一期开工前，当期内容与报价单独确认。</p>
+    <p class="footnote rv" style="margin-top:30px">模块一于一个月内先行上线；<br>一期总周期，以需求确认单为准。</p>
   </section>
 
-  <!-- 12 投入三线 -->
+  <!-- P15 投入构成 -->
   <section class="sec">
-    <p class="kicker rv">你 的 投 入</p>
-    <h2 class="big rv">三条线，清清楚楚。</h2>
+    <p class="kicker rv">投 入 构 成</p>
+    <h2 class="big rv">投入清晰，<br>价值明确。</h2>
+    <p class="lede rv">一次建设，分项计价，<br>按三期正式推进。</p>
+
+    <div class="price-card rv">
+      <p class="pc-label">一 期 建 设 · 上 线 即 完 整</p>
+      <div class="pc-rows">
+        <div class="pc-row">
+          <div class="k">模块一 · 新用户引流<small>高维沟通 · 内在测评 · 内容呈现</small></div>
+          <div class="v">8–10<small>万</small></div>
+        </div>
+        <div class="pc-row">
+          <div class="k">模块二 · 商城购买<small>水晶购买 · 疗愈师预约 · 课程购买</small></div>
+          <div class="v">10–15<small>万</small></div>
+        </div>
+      </div>
+      <p class="pc-foot">模块一于一个月内先行上线；一期总周期，以需求确认单为准。</p>
+    </div>
+
     <div class="money-row rv">
-      <div class="mn"><b>一期建设</b><small>Module I</small></div>
-      <div class="mv">10–14 万</div>
-      <p>模块一 · 引流——高维沟通、测评、资料分享，一次立住；约 10–12 周上线</p>
+      <div class="mn"><b>二期建设 · 模块三</b><small>Module III</small></div>
+      <div class="mv">15–18 万</div>
+      <p>疗愈师生态——疗愈师团队管理 · 分销机制</p>
     </div>
     <div class="money-row rv">
-      <div class="mn"><b>模块迭代</b><small>Module II–IV</small></div>
-      <div class="mv">每期 3–8 万</div>
-      <p>商城 4–6 万 · 疗愈师 5–8 万 · 疗愈村 3–5 万——按你的顺序生长</p>
+      <div class="mn"><b>三期建设 · 模块四</b><small>Module IV</small></div>
+      <div class="mv">10–15 万</div>
+      <p>疗愈村生态——疗愈村活动 · 在线订房</p>
     </div>
     <div class="money-row rv">
       <div class="mn"><b>月度守护</b><small>Keep</small></div>
       <div class="mv">¥3,000–5,000 / 月</div>
-      <p>系统有人管，内容有人看着，AI 有人喂——你的家一直有人守</p>
+      <p>系统维护 · 内容更新 · AI 运行成本</p>
     </div>
-    <p class="footnote rv" style="margin-top:26px">以上为区间；签字之前，以最终确认单为准。守护亦可按年。</p>
+    <p class="footnote rv" style="margin-top:26px">以上为区间报价；最终以确认单为准。<br>守护服务可按年签约。</p>
   </section>
 
-  <!-- 13 结尾 -->
+  <!-- P16 结束页 -->
   <section class="closing">
     <img class="logo" src="assets/LAYA-Primary-Stacked-White-Master-v1.0.png" alt="LAYA">
-    <h2 class="rv">第一期，<br>从模块一开始？</h2>
-    <p class="rv">带着你心里的顺序来，<br>我们把它点亮。</p>
-    <p class="fin">LAYA · 线上之家 · INNER SUN · 2026.09</p>
+    <h2 class="rv">下一步，<br>从确认开始。</h2>
+    <p class="sub rv">确定模块顺序，启动一期。</p>
+    <ul class="confirm-list rv">
+      <li><span class="cno">i.</span>AI 拉雅功能清单</li>
+      <li><span class="cno">ii.</span>现有功能迁移清单</li>
+      <li><span class="cno">iii.</span>一期排期与报价</li>
+    </ul>
+    <p class="fin">LAYA · INNER SUN · 2026.09</p>
   </section>
 
 </main>
@@ -670,6 +680,20 @@ h2.big{font-family:var(--serif);font-size:29px;font-weight:600;line-height:1.5;l
   } else {
     document.querySelectorAll('.rv').forEach(function(el){ el.classList.add('in'); });
   }
+
+  document.querySelectorAll('.ptab').forEach(function(btn){
+    btn.addEventListener('click', function(){
+      var screen = btn.closest('.screen');
+      if (!screen) return;
+      screen.querySelectorAll('.ptab').forEach(function(b){
+        b.classList.toggle('is-active', b === btn);
+      });
+      screen.querySelectorAll('.ph-pane').forEach(function(p){
+        p.classList.toggle('is-on', p.getAttribute('data-pane') === btn.getAttribute('data-tab'));
+      });
+    });
+  });
+
   var bar = document.getElementById('bar');
   var ticking = false;
   function onScroll(){

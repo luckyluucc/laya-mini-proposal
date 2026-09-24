@@ -1,0 +1,788 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>LAYA 小程序 · 设计推进方案</title>
+<style>
+:root{
+  --green:#1B3A2D;
+  --green-2:#234838;
+  --green-3:#15291F;
+  --gold:#D4A882;
+  --gold-soft:rgba(212,168,130,.55);
+  --ivory:#F5F0E8;
+  --ivory-2:#EFE7DA;
+  --card:#FFFFFF;
+  --ink:#1A1209;
+  --t2:rgba(26,18,9,.68);
+  --t3:rgba(26,18,9,.42);
+  --line:rgba(26,18,9,.12);
+  --line-iv:rgba(245,240,232,.16);
+  --serif:'Noto Serif SC','Source Han Serif SC','Songti SC','STSong','SimSun',serif;
+  --sans:-apple-system,BlinkMacSystemFont,'PingFang SC','HarmonyOS Sans SC','Microsoft YaHei',sans-serif;
+  --latin:'Cormorant Garamond',Georgia,'Times New Roman',serif;
+}
+*{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+html{scroll-behavior:smooth}
+body{background:var(--green-3);font-family:var(--sans);color:var(--ink);line-height:1.7;-webkit-font-smoothing:antialiased}
+.page{max-width:1280px;margin:0 auto;background:var(--ivory);overflow-x:hidden;min-height:100vh}
+img{display:block;max-width:100%}
+
+#bar{position:fixed;top:0;left:0;height:3px;width:0;background:linear-gradient(90deg,var(--gold),#E8C9A8);z-index:99;transition:width .1s linear}
+
+.sec{padding:100px 104px 108px;position:relative}
+.kicker{font-size:12px;letter-spacing:.4em;color:var(--green);font-weight:600;margin-bottom:20px}
+h2.big{font-family:var(--serif);font-size:42px;font-weight:600;line-height:1.5;letter-spacing:.02em;margin-bottom:16px}
+.lede{font-family:var(--serif);font-size:18px;line-height:2;color:var(--t2)}
+.latin{font-family:var(--latin);font-style:italic;color:var(--gold);letter-spacing:.28em;font-size:14px}
+.footnote{font-size:12px;color:var(--t3);letter-spacing:.06em;line-height:1.9}
+
+/* ===== 封面 ===== */
+.cover{min-height:100vh;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;position:relative;
+  background:radial-gradient(circle at 50% 22%,rgba(212,168,130,.12),transparent 55%),var(--green);
+  padding:100px 40px 140px}
+.cover .logo{width:110px;margin-bottom:44px}
+.cover h1{font-family:var(--serif);font-size:68px;font-weight:600;color:var(--ivory);letter-spacing:.08em;line-height:1.3}
+.cover .sub{font-family:var(--serif);font-size:17px;color:rgba(245,240,232,.72);letter-spacing:.24em;margin-top:20px}
+.cover .latin{margin-top:48px;padding-left:.28em}
+.cover .date{font-size:11px;letter-spacing:.3em;color:rgba(245,240,232,.4);margin-top:14px}
+.scroll-cue{position:absolute;bottom:38px;left:50%;transform:translateX(-50%);display:flex;flex-direction:column;align-items:center;gap:10px;color:rgba(245,240,232,.55);font-size:11px;letter-spacing:.3em}
+.scroll-cue .chev{width:14px;height:14px;border-right:1.5px solid var(--gold-soft);border-bottom:1.5px solid var(--gold-soft);transform:rotate(45deg);animation:cue 1.6s ease-in-out infinite}
+@keyframes cue{0%,100%{opacity:.35;transform:rotate(45deg) translate(0,0)}50%{opacity:1;transform:rotate(45deg) translate(4px,4px)}}
+
+/* ===== 推进策略 · 四模块总览（四卡横排） ===== */
+.overview{display:grid;grid-template-columns:repeat(4,1fr);column-gap:18px;padding-top:110px;padding-bottom:110px}
+.overview>*{grid-column:1/-1}
+.overview h2{font-size:38px}
+.overview .lede{margin-top:0}
+.flow{display:flex;align-items:center;justify-content:center;gap:10px;margin:44px 0 48px;flex-wrap:wrap}
+.flow .fchip{font-size:12.5px;font-weight:700;letter-spacing:.14em;color:var(--green);background:rgba(27,58,45,.06);border:1px solid rgba(27,58,45,.14);padding:8px 20px;border-radius:999px}
+.flow .farr{color:rgba(26,18,9,.3);font-family:var(--latin);font-size:16px}
+.mod-card{background:var(--card);border:1px solid var(--line);border-radius:18px;padding:28px 26px;margin-bottom:0;position:relative;box-shadow:0 2px 10px rgba(26,18,9,.04);display:flex;flex-direction:column}
+.mod-card .no{font-family:var(--latin);font-size:15px;letter-spacing:.3em;color:var(--gold);font-weight:600}
+.mod-card .name{font-family:var(--serif);font-size:23px;font-weight:600;margin:10px 0 2px;letter-spacing:.1em;display:flex;align-items:baseline;gap:10px;flex-wrap:wrap}
+.mod-card .name em{font-style:normal;font-size:12px;font-weight:400;color:var(--t3);letter-spacing:.08em}
+.mod-card .lt{font-family:var(--latin);font-style:italic;font-size:13px;color:var(--t3);letter-spacing:.12em}
+.mod-card .promise{font-family:var(--serif);font-size:14.5px;color:var(--t2);margin-top:16px;line-height:1.8}
+.mod-card .for{margin-top:auto;padding-top:18px;border-top:1px solid var(--line);font-size:11.5px;letter-spacing:.08em;color:var(--t3)}
+.overview .footnote{margin-top:34px;text-align:center}
+
+/* ===== 分隔页（模块章节 · 居中大字） ===== */
+.divider{background:var(--green);min-height:64vh;padding:130px 90px;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;position:relative;overflow:hidden}
+.divider::after{content:'';position:absolute;inset:0;background:radial-gradient(circle at 80% 88%,rgba(212,168,130,.09),transparent 50%);pointer-events:none}
+.divider .logo{width:56px;margin-bottom:38px;opacity:.9}
+.divider .eyebrow{font-size:11px;letter-spacing:.34em;color:var(--gold);font-weight:600;margin-bottom:24px}
+.divider h2{font-family:var(--serif);font-size:52px;font-weight:600;line-height:1.5;color:var(--ivory);letter-spacing:.04em}
+.divider .sub{font-family:var(--serif);font-size:16px;color:rgba(245,240,232,.66);margin-top:28px;line-height:2.1}
+.divider .phase{display:inline-block;margin-top:32px;font-size:11px;letter-spacing:.24em;color:var(--gold);border:1px solid rgba(212,168,130,.55);padding:7px 20px;border-radius:999px;font-weight:600}
+
+/* ===== 功能清单 ===== */
+.offer-list{list-style:none}
+.ol-no{font-family:var(--latin);font-size:14px;color:var(--gold);letter-spacing:.1em;padding-top:3px;flex-shrink:0}
+.offer-list li{display:flex;gap:16px;padding:22px 2px;border-bottom:1px solid var(--line)}
+.offer-list li:last-child{border-bottom:none}
+.ol-name{font-family:var(--serif);font-size:17.5px;font-weight:600}
+.ol-desc{font-size:13.5px;color:var(--t2);margin-top:6px;line-height:1.9}
+
+/* ===== 手机 mockup ===== */
+.phone{width:272px;margin:0 auto;background:#0F1D16;border-radius:42px;padding:9px;box-shadow:0 26px 60px rgba(26,18,9,.24)}
+.screen{border-radius:34px;overflow:hidden;display:flex;flex-direction:column;min-height:460px;background:#F8F4ED;font-weight:300}
+.screen--green{background:linear-gradient(170deg,#1E4030,#1B3A2D);color:var(--ivory)}
+.screen--ivory{background:#F8F4ED;color:var(--ink)}
+.ph-status{display:flex;justify-content:space-between;align-items:center;padding:12px 18px 6px;font-size:10px;letter-spacing:.06em}
+.ph-capsule{display:inline-flex;gap:3px;align-items:center}
+.ph-capsule i{width:3.5px;height:7px;border-radius:2px;display:block}
+.ph-nav{padding:8px 18px 12px;font-family:var(--serif);font-size:15px;font-weight:500;border-bottom:1px solid var(--line-iv)}
+.screen--ivory .ph-nav{border-bottom:1px solid var(--line);color:var(--ink)}
+.ph-nav small{display:block;font-family:var(--sans);font-size:9px;font-weight:300;letter-spacing:.1em;margin-top:2px;color:rgba(245,240,232,.5)}
+.ph-body{flex:1;padding:14px 14px 10px;display:flex;flex-direction:column;gap:10px}
+.ph-timechip{align-self:center;font-size:9.5px;letter-spacing:.2em;color:rgba(245,240,232,.45);padding:2px 10px}
+.bub{max-width:82%;padding:10px 13px;border-radius:15px;font-size:12.5px;line-height:1.7}
+.bub--me{align-self:flex-end;background:rgba(245,240,232,.14);border-bottom-right-radius:4px;color:var(--ivory)}
+.bub--ai{align-self:flex-start;background:var(--ivory);border-bottom-left-radius:4px;color:var(--ink)}
+.typing{display:flex;gap:5px;align-self:flex-start;padding:11px 14px;background:rgba(245,240,232,.12);border-radius:15px;border-bottom-left-radius:4px}
+.typing i{width:5px;height:5px;border-radius:50%;background:rgba(245,240,232,.6);animation:tp 1.2s infinite}
+.typing i:nth-child(2){animation-delay:.2s}.typing i:nth-child(3){animation-delay:.4s}
+@keyframes tp{0%,60%,100%{opacity:.25;transform:translateY(0)}30%{opacity:1;transform:translateY(-2px)}}
+.ph-safety{font-size:8.5px;line-height:1.7;color:rgba(245,240,232,.4);text-align:center;margin:auto 0 8px;padding:0 14px}
+.ph-input{display:flex;align-items:center;gap:10px;margin:0 12px 14px;padding:10px 16px;background:rgba(245,240,232,.1);border-radius:999px;font-size:12px;color:rgba(245,240,232,.5)}
+.ph-input .send{width:26px;height:26px;border-radius:50%;background:var(--gold);flex-shrink:0;position:relative}
+.ph-input .send::after{content:'';position:absolute;top:8px;left:10px;width:7px;height:7px;border-top:1.6px solid #1A1209;border-right:1.6px solid #1A1209;transform:rotate(45deg)}
+.hero-card{background:linear-gradient(150deg,#1E4030,#1B3A2D);border-radius:16px;padding:20px 18px;color:var(--ivory);text-align:center}
+.hero-card .ht{font-family:var(--serif);font-size:15.5px;font-weight:500;line-height:1.7}
+.hero-card .hs{font-size:10px;color:rgba(245,240,232,.6);letter-spacing:.1em;margin:8px 0 14px}
+.hero-card .hb{display:inline-block;font-size:11.5px;letter-spacing:.14em;background:var(--gold);color:var(--ink);font-weight:600;padding:8px 22px;border-radius:999px}
+.ph-card{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:13px 14px}
+.ph-row{display:flex;align-items:center;gap:11px}
+.ph-thumb{width:38px;height:38px;border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:15px;font-weight:400;flex-shrink:0}
+.ph-avatar{width:38px;height:38px;border-radius:50%;background:var(--green);color:var(--ivory);display:flex;align-items:center;justify-content:center;font-size:15px;flex-shrink:0}
+.ph-name{font-size:13px;font-weight:400}
+.ph-sub{font-size:10.5px;color:var(--t3);margin-top:2px;letter-spacing:.04em}
+.ph-price{font-family:var(--latin);font-size:15px;font-weight:700;color:var(--green)}
+.ph-link{font-size:11px;color:var(--green);font-weight:600;letter-spacing:.06em;flex-shrink:0}
+.ph-tagpill{display:inline-block;font-size:9.5px;letter-spacing:.16em;color:var(--ink);background:var(--gold);padding:3px 10px;border-radius:999px;font-weight:600}
+.ph-tabbar{display:flex;border-top:1px solid var(--line);padding:10px 0 14px;margin-top:2px}
+.ph-tab{flex:1;text-align:center;font-size:10px;color:var(--t3);display:flex;flex-direction:column;align-items:center;gap:4px;letter-spacing:.08em}
+.ph-tab .dot-t{width:7px;height:7px;border-radius:50%;background:rgba(26,18,9,.15)}
+.ph-tab.is-active{color:var(--green);font-weight:700}
+.ph-tab.is-active .dot-t{background:var(--gold)}
+.phone-note{text-align:center;font-size:10.5px;color:var(--t3);letter-spacing:.14em;margin-top:16px}
+.cat-chips{display:flex;gap:7px;flex-wrap:wrap}
+.cat-chips span{font-size:10px;letter-spacing:.1em;padding:4px 11px;border-radius:999px;border:1px solid var(--line);color:var(--t3)}
+.cat-chips span.on{background:var(--green);color:var(--ivory);border-color:var(--green);font-weight:600}
+.slot{display:flex;justify-content:space-between;align-items:center;font-size:11.5px;color:var(--t2);padding:9px 0;border-bottom:1px dashed var(--line)}
+.share-card{background:linear-gradient(150deg,rgba(212,168,130,.18),rgba(212,168,130,.08));border:1px solid rgba(212,168,130,.45);border-radius:14px;padding:13px 14px}
+.share-card .sc-t{font-size:11.5px;color:var(--t2);line-height:1.8;margin-top:10px}
+.share-stats{display:flex;gap:22px;margin-top:12px}
+.share-stats b{font-family:var(--latin);font-size:18px;color:var(--green);display:block}
+.share-stats span{font-size:9.5px;color:var(--t3);letter-spacing:.1em}
+.share-btn{margin-top:12px;text-align:center;font-size:11.5px;font-weight:700;letter-spacing:.14em;color:var(--green);border:1px solid rgba(27,58,45,.28);border-radius:999px;padding:8px}
+.phones{display:flex;flex-direction:column;align-items:center;gap:0}
+
+/* ===== 交互 Tab（模块一 · 三个界面） ===== */
+.ph-pane{display:none;flex:1;flex-direction:column;min-height:0}
+.ph-pane.is-on{display:flex}
+.pane--green{background:linear-gradient(170deg,#1E4030,#1B3A2D);color:var(--ivory)}
+.pane--ivory{background:#F8F4ED;color:var(--ink)}
+.pane--ivory .ph-status{color:var(--ink)}
+.pane--ivory .ph-capsule i{background:var(--ink)}
+.pane--ivory .ph-nav{color:var(--ink);border-bottom:1px solid var(--line)}
+.ph-tabbar3{display:flex;border-top:1px solid var(--line);padding:8px 0 12px;background:#F8F4ED}
+.ptab{flex:1;background:none;border:none;font-family:var(--sans);font-size:11px;letter-spacing:.08em;color:var(--t3);padding:6px 0;display:flex;flex-direction:column;align-items:center;gap:4px;cursor:pointer;font-weight:300}
+.ptab .dot-t{width:7px;height:7px;border-radius:50%;background:rgba(26,18,9,.15)}
+.ptab.is-active{color:var(--green);font-weight:600}
+.ptab.is-active .dot-t{background:var(--gold)}
+.tab-hint{display:flex;align-items:center;justify-content:center;gap:8px;margin-top:24px;font-size:11px;letter-spacing:.2em;color:var(--t3)}
+.tab-hint .tdot{width:6px;height:6px;border-radius:50%;background:var(--gold);animation:pulse 1.8s ease-in-out infinite}
+@keyframes pulse{0%,100%{opacity:.3}50%{opacity:1}}
+
+/* ===== 横版分栏：功能定义页（左文案 · 右清单） ===== */
+.sec:has(.offer-list):not(:has(.phones)){
+  display:grid;grid-template-columns:minmax(0,.9fr) minmax(0,1.1fr);column-gap:100px;align-items:center
+}
+.sec:has(.offer-list):not(:has(.phones))>.offer-list{grid-column:2;grid-row:1/span 3;margin-top:0}
+.sec:has(.offer-list):not(:has(.phones))>.footnote{grid-column:1/-1;align-self:end}
+
+/* ===== 横版分栏：界面示意页（左文案 · 右手机） ===== */
+.sec:has(.phones):not(:has(.offer-list)){
+  display:grid;grid-template-columns:minmax(0,1fr) auto;column-gap:110px;align-items:center
+}
+.sec:has(.phones):not(:has(.offer-list))>.phones{grid-column:2;grid-row:1/span 3;margin-top:0!important}
+
+/* ===== 横版三栏：功能与界面合体页（文案 · 清单 · 手机） ===== */
+.sec:has(.offer-list):has(.phones){
+  display:grid;grid-template-columns:minmax(0,.78fr) minmax(0,1fr) 300px;column-gap:64px;align-items:center
+}
+.sec:has(.offer-list):has(.phones)>.offer-list{grid-column:2;grid-row:1/span 3;margin-top:0}
+.sec:has(.offer-list):has(.phones)>.phones{grid-column:3;grid-row:1/span 3;margin-top:0!important}
+.sec>h2.big,.sec>.lede{grid-column:1}
+.sec>.kicker{grid-column:1}
+
+/* ===== 投入构成（标题通栏 · 左价格卡 · 右分项） ===== */
+.sec:has(.price-card){
+  display:grid;grid-template-columns:1.08fr 1fr;column-gap:26px;row-gap:18px;align-items:stretch
+}
+.sec:has(.price-card)>.kicker,
+.sec:has(.price-card)>h2.big,
+.sec:has(.price-card)>.lede,
+.sec:has(.price-card)>.footnote{grid-column:1/-1}
+.sec:has(.price-card)>.price-card{grid-column:1;grid-row:span 3;margin-top:0}
+.sec:has(.price-card)>.money-row{margin-top:0}
+.price-card{background:linear-gradient(155deg,#1E4030,#1B3A2D);border-radius:20px;padding:34px 32px;color:var(--ivory);box-shadow:0 16px 40px rgba(27,58,45,.28);display:flex;flex-direction:column}
+.pc-label{font-size:11px;letter-spacing:.26em;color:var(--gold);font-weight:600}
+.pc-rows{margin-top:14px;border-top:1px solid var(--line-iv)}
+.pc-row{display:flex;justify-content:space-between;align-items:baseline;gap:12px;padding:20px 0;border-bottom:1px solid var(--line-iv)}
+.pc-row .k{font-size:14.5px;letter-spacing:.08em;font-family:var(--serif)}
+.pc-row .k small{display:block;font-family:var(--sans);font-size:10px;color:rgba(245,240,232,.45);margin-top:3px;letter-spacing:.06em}
+.pc-row .v{font-family:var(--latin);font-size:27px;font-weight:700;color:var(--gold);white-space:nowrap}
+.pc-row .v small{font-size:12px;font-weight:400;color:rgba(245,240,232,.55);margin-left:2px}
+.pc-foot{font-size:11px;color:rgba(245,240,232,.45);line-height:1.9;margin-top:16px}
+.money-row{background:var(--card);border:1px solid var(--line);border-radius:16px;padding:22px 26px}
+.money-row .mn{display:flex;align-items:baseline;justify-content:space-between;gap:10px}
+.money-row .mn b{font-family:var(--serif);font-size:17px;font-weight:600}
+.money-row .mn small{font-family:var(--latin);font-style:italic;font-size:12px;color:var(--gold);letter-spacing:.14em}
+.money-row .mv{font-family:var(--latin);font-size:24px;font-weight:700;color:var(--green);margin-top:6px}
+.money-row p{font-size:12.5px;color:var(--t2);margin-top:8px;line-height:1.8}
+
+/* ===== 实施节奏（横向时间线） ===== */
+.path{margin-top:70px;position:relative;display:grid;grid-template-columns:repeat(4,1fr);column-gap:40px}
+.path::before{content:'';position:absolute;left:9px;right:9px;top:9px;height:1.5px;width:auto;background:linear-gradient(90deg,var(--gold),rgba(212,168,130,.15))}
+.pstep{position:relative;padding-top:48px}
+.pstep .dot{position:absolute;left:0;top:0;width:19px;height:19px;border-radius:50%;background:var(--ivory-2);border:1.5px solid var(--gold);display:flex;align-items:center;justify-content:center}
+.pstep .dot::after{content:'';width:7px;height:7px;border-radius:50%;background:var(--gold)}
+.pstep .no{font-family:var(--latin);font-size:12px;letter-spacing:.3em;color:var(--gold);font-weight:700}
+.pstep h4{font-family:var(--serif);font-size:19px;font-weight:600;margin:4px 0 6px}
+.pstep p{font-size:13.5px;color:var(--t2);line-height:1.8}
+.pstep .chips{display:flex;flex-wrap:wrap;gap:8px;margin-top:12px}
+.pstep .when{font-size:11px;letter-spacing:.14em;color:var(--green);background:rgba(27,58,45,.07);border:1px solid rgba(27,58,45,.14);padding:4px 12px;border-radius:999px;font-weight:600}
+.pstep .deliver{font-size:11px;letter-spacing:.12em;color:var(--gold);border:1px solid rgba(212,168,130,.6);padding:4px 12px;border-radius:999px;font-weight:600;background:rgba(212,168,130,.08)}
+.sec:has(.path)>.footnote{margin-top:44px}
+
+.demo-cta{display:inline-flex;align-items:center;gap:14px;margin-top:48px;padding:15px 34px;border:1px solid rgba(212,168,130,.55);border-radius:999px;color:var(--gold);font-family:var(--serif);font-size:14px;letter-spacing:.24em;text-decoration:none;background:rgba(212,168,130,.07);transition:background .3s}
+.demo-cta .arr{font-family:var(--latin);letter-spacing:0}
+.demo-cta:hover{background:rgba(212,168,130,.16)}
+
+/* ===== 结尾 ===== */
+.closing{background:radial-gradient(circle at 50% 26%,rgba(212,168,130,.1),transparent 52%),var(--green);padding:160px 60px 130px;text-align:center}
+.closing .logo{width:84px;margin:0 auto 42px}
+.closing h2{font-family:var(--serif);font-size:46px;font-weight:600;color:var(--ivory);line-height:1.6}
+.closing .sub{font-family:var(--serif);font-size:16.5px;color:rgba(245,240,232,.68);margin-top:24px;line-height:2.1}
+.confirm-list{list-style:none;margin-top:46px;text-align:left;display:inline-block}
+.confirm-list li{display:flex;gap:18px;align-items:baseline;padding:17px 6px;border-bottom:1px solid var(--line-iv);font-family:var(--serif);font-size:16.5px;color:rgba(245,240,232,.85)}
+.confirm-list li:last-child{border-bottom:none}
+.confirm-list .cno{font-family:var(--latin);font-size:13px;color:var(--gold);letter-spacing:.12em}
+.closing .fin{font-size:10px;letter-spacing:.34em;color:rgba(245,240,232,.35);margin-top:72px}
+
+/* ===== 入场动画 ===== */
+.rv{opacity:0;transform:translateY(26px);transition:opacity .9s cubic-bezier(.4,0,.2,1),transform .9s cubic-bezier(.4,0,.2,1)}
+.rv.in{opacity:1;transform:none}
+
+/* ===== 窄屏回退（接近原竖版） ===== */
+@media (max-width:980px){
+  .page{max-width:560px}
+  .sec{padding:64px 26px 72px}
+  .kicker{font-size:11px;letter-spacing:.34em;margin-bottom:18px}
+  h2.big{font-size:29px;margin-bottom:14px}
+  .lede{font-size:17px}
+  .cover{min-height:92vh;padding:80px 26px 110px}
+  .cover .logo{width:96px;margin-bottom:36px}
+  .cover h1{font-size:40px}
+  .cover .sub{font-size:15px;letter-spacing:.2em;margin-top:16px}
+  .overview{display:block;padding-top:84px;padding-bottom:84px}
+  .overview h2{font-size:27px}
+  .overview .lede{margin-top:26px}
+  .flow{gap:8px;margin:36px 0 26px}
+  .mod-card{margin-bottom:14px;padding:24px 22px}
+  .mod-card .name{font-size:26px}
+  .mod-card .promise{font-size:15px;margin-top:14px}
+  .mod-card .for{margin-top:14px;padding-top:14px}
+  .overview .footnote{margin-top:26px}
+  .divider{display:flex;min-height:0;padding:88px 30px;text-align:left;align-items:flex-start}
+  .divider h2{font-size:30px}
+  .divider .sub{font-size:15.5px;margin-top:24px}
+  .divider .phase{margin-top:26px}
+  .offer-list{margin-top:26px}
+  .offer-list li{padding:18px 2px}
+  .ol-name{font-size:16.5px}
+  .sec:has(.offer-list):not(:has(.phones)),
+  .sec:has(.phones):not(:has(.offer-list)),
+  .sec:has(.offer-list):has(.phones),
+  .sec:has(.price-card){display:block}
+  .sec:has(.phones)>.phones{margin-top:38px!important}
+  .phones{gap:30px}
+  .path{display:block;margin-top:38px}
+  .path::before{left:17px;right:auto;top:10px;bottom:10px;width:1.5px;height:auto}
+  .pstep{padding:0 0 34px 54px}
+  .pstep .dot{left:8px;top:2px}
+  .sec:has(.path)>.footnote{margin-top:30px}
+  .price-card{margin-top:34px;padding:28px 24px}
+  .pc-row{padding:15px 0}
+  .money-row{margin-top:14px;padding:24px 22px}
+  .closing{padding:100px 30px 90px}
+  .closing h2{font-size:30px}
+  .closing .sub{font-size:15.5px;margin-top:20px}
+  .confirm-list{margin-top:40px}
+  .confirm-list li{font-size:15.5px;padding:14px 4px}
+  .demo-cta{margin-top:44px;font-size:13.5px;padding:14px 30px}
+}
+@media (prefers-reduced-motion:reduce){
+  .rv{transition:none;opacity:1;transform:none}
+  .scroll-cue .chev,.typing i,.tab-hint .tdot{animation:none}
+}
+</style>
+</head>
+<body>
+<div id="bar"></div>
+<main class="page">
+
+  <!-- P01 封面 -->
+  <header class="cover">
+    <img class="logo" src="assets/LAYA-Primary-Stacked-White-Master-v1.0.png" alt="LAYA">
+    <h1>LAYA 小程序</h1>
+    <p class="sub">设 计 推 进 方 案</p>
+    <p class="latin">Inner Sun</p>
+    <p class="date">2026 · 09</p>
+    <div class="scroll-cue"><span>向下滑动</span><i class="chev"></i></div>
+  </header>
+
+  <!-- P02 推进策略 · 四模块一览 -->
+  <section class="sec overview">
+    <p class="kicker rv">推 进 策 略</p>
+    <h2 class="big rv">四个模块。<br>一个体系。</h2>
+    <p class="lede rv">从引流到承接，<br>完整商业闭环。</p>
+    <div class="flow rv">
+      <span class="fchip">引流</span><span class="farr">—</span>
+      <span class="fchip">成交</span><span class="farr">—</span>
+      <span class="fchip">裂变</span><span class="farr">—</span>
+      <span class="fchip">承接</span>
+    </div>
+    <div class="mod-card rv">
+      <div class="no">I</div>
+      <div class="name">引流<em>新用户获取</em></div>
+      <div class="lt">The Encounter</div>
+      <p class="promise">让新用户，遇见拉雅。</p>
+      <div class="for">高维沟通 · 内在测评 · 内容呈现</div>
+    </div>
+    <div class="mod-card rv">
+      <div class="no">II</div>
+      <div class="name">商城<em>成交转化</em></div>
+      <div class="lt">The Store</div>
+      <p class="promise">让遇见，成为成交。</p>
+      <div class="for">水晶购买 · 疗愈师预约 · 课程购买</div>
+    </div>
+    <div class="mod-card rv">
+      <div class="no">III</div>
+      <div class="name">疗愈师<em>裂变增长</em></div>
+      <div class="lt">The Healers</div>
+      <p class="promise">让疗愈师，也参与进来。</p>
+      <div class="for">疗愈师团队管理 · 分销机制</div>
+    </div>
+    <div class="mod-card rv">
+      <div class="no">IV</div>
+      <div class="name">疗愈村生态<em>影响力承接</em></div>
+      <div class="lt">The Village</div>
+      <p class="promise">一座村，正在生长。</p>
+      <div class="for">疗愈村活动 · 在线订房</div>
+    </div>
+    <p class="footnote rv" style="margin-top:26px;text-align:center">四个模块，按阶段迭代上线。</p>
+  </section>
+
+  <!-- P04 模块一 · 章节页 -->
+  <section class="divider">
+    <img class="logo" src="assets/LAYA-Primary-Stacked-White-Master-v1.0.png" alt="LAYA">
+    <p class="eyebrow rv">模 块 一 · THE ENCOUNTER</p>
+    <h2 class="rv">让新用户，<br>遇见拉雅。</h2>
+    <p class="sub rv">模块一 · 新用户引流<br>高维沟通 · 内在测评 · 内容呈现</p>
+    <span class="phase rv">一 期 上 线</span>
+  </section>
+
+  <!-- P05 模块一 · 功能定义 -->
+  <section class="sec" style="background:var(--ivory-2)">
+    <p class="kicker rv">模 块 一 · 功 能 定 义</p>
+    <h2 class="big rv">高维沟通。<br>随时在场。</h2>
+    <p class="lede rv">AI 拉雅——由你的课程、文字与答疑<br>训练的数字分身。</p>
+    <ul class="offer-list">
+      <li class="rv"><span class="ol-no">i.</span><div><p class="ol-name">高维沟通（AI 拉雅）</p><p class="ol-desc">新用户的第一入口。深夜在线，回应如你。安全边界内对话，必要时转介专业支持。</p></div></li>
+      <li class="rv"><span class="ol-no">ii.</span><div><p class="ol-name">内在测评</p><p class="ol-desc">三分钟，一份可分享的测评报告。认识你的第一步，也是用户带走的第一份礼物。</p></div></li>
+      <li class="rv"><span class="ol-no">iii.</span><div><p class="ol-name">内容呈现</p><p class="ol-desc">视频与文章沉淀于此。认识你的人，更了解你。</p></div></li>
+    </ul>
+    <p class="footnote rv" style="margin-top:24px">AI 拉雅的功能清单，将在项目启动会上共同确认。</p>
+  </section>
+
+  <!-- P06 模块一 · 界面示意（三个 Tab，可交互） -->
+  <section class="sec">
+    <p class="kicker rv">模 块 一 · 界 面 示 意</p>
+    <h2 class="big rv">首页即入口，<br>对话即连接。</h2>
+    <p class="lede rv">三个 Tab，逐个点开，<br>看每个页面的样子。</p>
+
+    <div class="phones">
+      <div>
+        <div class="phone rv">
+          <div class="screen">
+            <!-- Tab 一 · 高维沟通 -->
+            <div class="ph-pane pane--green is-on" data-pane="chat">
+              <div class="ph-status"><span>23:47</span><span class="ph-capsule"><i style="background:rgba(245,240,232,.8)"></i><i style="background:rgba(245,240,232,.8)"></i></span></div>
+              <div class="ph-nav">拉雅 · 高维沟通<small>她的数字分身 · 随时在场</small></div>
+              <div class="ph-body">
+                <div class="ph-timechip">深 夜 23:47</div>
+                <div class="bub bub--me">今天又和妈妈吵架了，心里很堵……</div>
+                <div class="bub bub--ai">先深深呼吸一次。你不需要现在就原谅谁——先陪陪那个委屈的自己。</div>
+                <div class="typing"><i></i><i></i><i></i></div>
+              </div>
+              <p class="ph-safety">如遇紧急情绪危机，请联系当地心理援助热线。<br>高维沟通不能替代专业心理帮助。</p>
+              <div class="ph-input"><span style="flex:1">说给她听……</span><span class="send"></span></div>
+            </div>
+            <!-- Tab 二 · 测评 -->
+            <div class="ph-pane pane--ivory" data-pane="test">
+              <div class="ph-status"><span>9:41</span><span class="ph-capsule"><i></i><i></i></span></div>
+              <div class="ph-nav">LAYA · 内在测评</div>
+              <div class="ph-body">
+                <div class="hero-card">
+                  <p class="ht">此刻的你，<br>内在是什么天气？</p>
+                  <p class="hs">3 分钟 · 免费内在测评</p>
+                  <span class="hb">开始测评</span>
+                </div>
+                <div class="ph-card">
+                  <span class="ph-tagpill">第 3 题 · 共 12 题</span>
+                  <p style="font-size:12.5px;margin-top:10px;line-height:1.7">最近两周，你的睡眠怎么样？</p>
+                  <div class="cat-chips" style="margin-top:10px"><span class="on">安稳</span><span>时好时坏</span><span>经常失眠</span></div>
+                </div>
+                <div class="ph-card">
+                  <div class="ph-row">
+                    <div class="ph-thumb" style="background:#D4A882;color:#1A1209">晴</div>
+                    <div style="flex:1;min-width:0"><div class="ph-name">你的内在天气 · 晴间多云</div><div class="ph-sub">测评完成 · 可生成分享报告</div></div>
+                    <span class="ph-link">分享 ›</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <!-- Tab 三 · 介绍 -->
+            <div class="ph-pane pane--ivory" data-pane="intro">
+              <div class="ph-status"><span>9:41</span><span class="ph-capsule"><i></i><i></i></span></div>
+              <div class="ph-nav">LAYA · 介绍</div>
+              <div class="ph-body">
+                <div class="ph-card">
+                  <p style="font-family:var(--serif);font-size:14px;line-height:1.9">「身体不是问题的来源，<br>是答案的居所。」</p>
+                  <p class="ph-sub" style="margin-top:8px">拉雅 · 疗愈师</p>
+                </div>
+                <div class="ph-card">
+                  <span class="ph-tagpill">视频</span>
+                  <div class="ph-row" style="margin-top:10px">
+                    <div class="ph-thumb" style="background:#D4A882;color:#1A1209">▶</div>
+                    <div style="flex:1;min-width:0"><div class="ph-name">情绪，是来送信的人</div><div class="ph-sub">12:36 · 系列 · 与身体对话</div></div>
+                  </div>
+                </div>
+                <div class="ph-card">
+                  <span class="ph-tagpill">文章</span>
+                  <div class="ph-row" style="margin-top:10px">
+                    <div class="ph-thumb" style="background:#1B3A2D;color:#F5F0E8">文</div>
+                    <div style="flex:1;min-width:0"><div class="ph-name">与身体和解的七个练习</div><div class="ph-sub">8 分钟阅读</div></div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <!-- 底部 Tab 栏 -->
+            <div class="ph-tabbar3">
+              <button class="ptab is-active" data-tab="chat" type="button"><span class="dot-t"></span>高维沟通</button>
+              <button class="ptab" data-tab="test" type="button"><span class="dot-t"></span>测评</button>
+              <button class="ptab" data-tab="intro" type="button"><span class="dot-t"></span>介绍</button>
+            </div>
+          </div>
+        </div>
+        <p class="phone-note rv">界面示意 · 非最终设计</p>
+        <div class="tab-hint rv"><span class="tdot"></span><span>点 击 上 方 Tab 切 换</span></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- P07 模块二 · 章节页 -->
+  <section class="divider">
+    <img class="logo" src="assets/LAYA-Primary-Stacked-White-Master-v1.0.png" alt="LAYA">
+    <p class="eyebrow rv">模 块 二 · THE STORE</p>
+    <h2 class="rv">让遇见，<br>成为成交。</h2>
+    <p class="sub rv">模块二 · 商城购买<br>水晶购买 · 疗愈师预约 · 课程购买</p>
+    <span class="phase rv">一 期 上 线</span>
+  </section>
+
+  <!-- P08 模块二 · 功能定义 -->
+  <section class="sec" style="background:var(--ivory-2)">
+    <p class="kicker rv">模 块 二 · 功 能 定 义</p>
+    <h2 class="big rv">完整的<br>商业闭环。</h2>
+    <p class="lede rv">完整复刻现有至心谷能力，<br>一次搬进自己的家。</p>
+    <ul class="offer-list">
+      <li class="rv"><span class="ol-no">i.</span><div><p class="ol-name">水晶商城</p><p class="ol-desc">商品上架、下单、支付、订单管理，全流程自有。</p></div></li>
+      <li class="rv"><span class="ol-no">ii.</span><div><p class="ol-name">疗愈师预约</p><p class="ol-desc">服务展示、档期管理、在线预约。</p></div></li>
+      <li class="rv"><span class="ol-no">iii.</span><div><p class="ol-name">课程购买</p><p class="ol-desc">线上课程与训练营，一站式报名。</p></div></li>
+    </ul>
+  </section>
+
+  <!-- P09 模块二 · 界面示意 -->
+  <section class="sec">
+    <p class="kicker rv">模 块 二 · 界 面 示 意</p>
+    <h2 class="big rv">所见，<br>即所购。</h2>
+    <p class="lede rv">分类清晰，路径最短。</p>
+    <div class="phones" style="margin-top:38px">
+      <div>
+        <div class="phone rv">
+          <div class="screen screen--ivory">
+            <div class="ph-status"><span>9:41</span><span class="ph-capsule"><i></i><i></i></span></div>
+            <div class="ph-nav">LAYA · 商城</div>
+            <div class="ph-body">
+              <div class="cat-chips"><span class="on">全部</span><span>水晶</span><span>课程</span><span>疗愈师</span></div>
+              <div class="ph-card">
+                <div class="ph-row">
+                  <div class="ph-thumb" style="background:#1B3A2D;color:#F5F0E8">晶</div>
+                  <div style="flex:1;min-width:0"><div class="ph-name">紫水晶 · 静心手串</div><div class="ph-sub">天然水晶 · 现货顺丰</div></div>
+                  <span class="ph-price">¥299</span>
+                </div>
+              </div>
+              <div class="ph-card">
+                <div class="ph-row">
+                  <div class="ph-thumb" style="background:#D4A882;color:#1A1209">课</div>
+                  <div style="flex:1;min-width:0"><div class="ph-name">21 天身体觉察营</div><div class="ph-sub">录播 + 社群共修</div></div>
+                  <span class="ph-price">¥680</span>
+                </div>
+              </div>
+              <div class="ph-card">
+                <div class="ph-row">
+                  <div class="ph-avatar">满</div>
+                  <div style="flex:1;min-width:0"><div class="ph-name">小满 · 疗愈师</div><div class="ph-sub">首次体验 60 分钟 · 线上</div></div>
+                  <span class="ph-link">立即预约 ›</span>
+                </div>
+              </div>
+            </div>
+            <div class="ph-tabbar">
+              <div class="ph-tab"><span class="dot-t"></span>首页</div>
+              <div class="ph-tab is-active"><span class="dot-t"></span>商城</div>
+              <div class="ph-tab"><span class="dot-t"></span>我的</div>
+            </div>
+          </div>
+        </div>
+        <p class="phone-note rv">界面示意 · 非最终设计</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- P10 模块三 · 章节页 -->
+  <section class="divider">
+    <img class="logo" src="assets/LAYA-Primary-Stacked-White-Master-v1.0.png" alt="LAYA">
+    <p class="eyebrow rv">模 块 三 · THE HEALERS</p>
+    <h2 class="rv">让疗愈师，<br>也参与进来。</h2>
+    <p class="sub rv">模块三 · 疗愈师生态<br>研究院疗愈师资源，即增长渠道</p>
+    <span class="phase rv">二 期 上 线</span>
+  </section>
+
+  <!-- P11 模块三 · 功能定义与界面示意 -->
+  <section class="sec" style="background:var(--ivory-2)">
+    <p class="kicker rv">模 块 三 · 功 能 与 界 面</p>
+    <h2 class="big rv">疗愈师，<br>即渠道。</h2>
+    <p class="lede rv">团队管理、分销，一体完成。</p>
+    <ul class="offer-list">
+      <li class="rv"><span class="ol-no">i.</span><div><p class="ol-name">疗愈师团队管理</p><p class="ol-desc">针对疗愈师联创团队的素材管理、人员跟进、培训课程。</p></div></li>
+      <li class="rv"><span class="ol-no">ii.</span><div><p class="ol-name">分销机制</p><p class="ol-desc">疗愈师分享小程序，用户经分享成交，奖励金自动结算。</p></div></li>
+    </ul>
+
+    <div class="phones" style="margin-top:38px">
+      <div>
+        <div class="phone rv">
+          <div class="screen screen--ivory">
+            <div class="ph-status"><span>9:41</span><span class="ph-capsule"><i></i><i></i></span></div>
+            <div class="ph-nav">LAYA · 疗愈师中心</div>
+            <div class="ph-body">
+              <div class="ph-card">
+                <div class="ph-row">
+                  <div class="ph-avatar">满</div>
+                  <div style="flex:1;min-width:0"><div class="ph-name">小满 · 联创疗愈师</div><div class="ph-sub">团队 12 位疗愈师 · 3 个小组</div></div>
+                </div>
+                <div class="cat-chips" style="margin-top:12px"><span class="on">素材管理</span><span>人员跟进</span><span>培训课程</span></div>
+                <div style="margin-top:6px">
+                  <div class="slot"><span>新疗愈师档案 · 待完善</span><span class="ph-link">跟进 ›</span></div>
+                  <div class="slot" style="border-bottom:none"><span>联创基础培训 · 第 3 讲</span><span class="ph-link">查看 ›</span></div>
+                </div>
+              </div>
+              <div class="share-card">
+                <span class="ph-tagpill">分销</span>
+                <p class="sc-t">把小程序分享给朋友，朋友在其中成交，奖励金自动结算。</p>
+                <div class="share-stats">
+                  <div><b>¥1,280</b><span>本月奖励金</span></div>
+                  <div><b>17</b><span>带来的新朋友</span></div>
+                </div>
+                <div class="share-btn">生成我的邀请卡</div>
+              </div>
+            </div>
+            <div class="ph-tabbar">
+              <div class="ph-tab"><span class="dot-t"></span>首页</div>
+              <div class="ph-tab is-active"><span class="dot-t"></span>疗愈师</div>
+              <div class="ph-tab"><span class="dot-t"></span>我的</div>
+            </div>
+          </div>
+        </div>
+        <p class="phone-note rv">界面示意 · 非最终设计</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- P12 模块四 · 章节页 -->
+  <section class="divider">
+    <img class="logo" src="assets/LAYA-Primary-Stacked-White-Master-v1.0.png" alt="LAYA">
+    <p class="eyebrow rv">模 块 四 · THE VILLAGE</p>
+    <h2 class="rv">一座村，<br>正在生长。</h2>
+    <p class="sub rv">模块四 · 疗愈村 · 影响力承接<br>幸福疗愈村的线上门户</p>
+    <span class="phase rv">三 期 上 线 · 随 村 庄 建 设 同 步 推 进</span>
+  </section>
+
+  <!-- P13 模块四 · 功能定义与界面示意 -->
+  <section class="sec">
+    <p class="kicker rv">模 块 四 · 功 能 与 界 面</p>
+    <h2 class="big rv">影响力，<br>有处安放。</h2>
+    <p class="lede rv">疗愈村介绍、规划与预订，<br>皆在此承接。</p>
+    <ul class="offer-list">
+      <li class="rv"><span class="ol-no">i.</span><div><p class="ol-name">村庄介绍与规划</p><p class="ol-desc">疗愈房、共修厅、溪谷步道，完整呈现。</p></div></li>
+      <li class="rv"><span class="ol-no">ii.</span><div><p class="ol-name">在线订房</p><p class="ol-desc">房型查看、日期选择、在线预订。</p></div></li>
+      <li class="rv"><span class="ol-no">iii.</span><div><p class="ol-name">同步生长</p><p class="ol-desc">村庄每进一步，小程序同步一步。</p></div></li>
+    </ul>
+
+    <div class="phones" style="margin-top:38px">
+      <div>
+        <div class="phone rv">
+          <div class="screen screen--ivory">
+            <div class="ph-status"><span>9:41</span><span class="ph-capsule"><i></i><i></i></span></div>
+            <div class="ph-nav">LAYA · 疗愈村</div>
+            <div class="ph-body">
+              <div class="hero-card">
+                <p class="ht">幸福疗愈村</p>
+                <p class="hs">森林里，一个慢慢长成的家</p>
+                <span class="hb">了解这座村</span>
+              </div>
+              <div class="ph-card">
+                <span class="ph-tagpill">在建 · 一期</span>
+                <div class="ph-row" style="margin-top:12px">
+                  <div class="ph-thumb" style="background:#1B3A2D;color:#F5F0E8">村</div>
+                  <div style="flex:1;min-width:0"><div class="ph-name">6 间疗愈房已开放</div><div class="ph-sub">共修厅 · 溪谷步道 在建</div></div>
+                </div>
+              </div>
+              <div class="ph-card">
+                <div class="ph-row">
+                  <div class="ph-thumb" style="background:#D4A882;color:#1A1209">房</div>
+                  <div style="flex:1;min-width:0"><div class="ph-name">溪景双床房</div><div class="ph-sub">含早 · 溪谷景观</div></div>
+                  <span class="ph-price">¥880<small style="font-size:9px;font-weight:400;color:var(--t3)">/晚</small></span>
+                </div>
+              </div>
+              <div class="ph-card">
+                <div class="ph-row">
+                  <div class="ph-thumb" style="background:#D4A882;color:#1A1209">居</div>
+                  <div style="flex:1;min-width:0"><div class="ph-name">森屿独栋</div><div class="ph-sub">独院 · 含私人疗愈室</div></div>
+                  <span class="ph-price">¥1,280<small style="font-size:9px;font-weight:400;color:var(--t3)">/晚</small></span>
+                </div>
+              </div>
+            </div>
+            <div class="ph-tabbar">
+              <div class="ph-tab"><span class="dot-t"></span>首页</div>
+              <div class="ph-tab is-active"><span class="dot-t"></span>疗愈村</div>
+              <div class="ph-tab"><span class="dot-t"></span>我的</div>
+            </div>
+          </div>
+        </div>
+        <p class="phone-note rv">界面示意 · 非最终设计</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- P14 实施节奏 -->
+  <section class="sec" style="background:var(--ivory-2)">
+    <p class="kicker rv">实 施 节 奏</p>
+    <h2 class="big rv">从启动，<br>到上线。</h2>
+    <p class="lede rv">一步一步，让拉雅生态越来越完整。</p>
+    <div class="path">
+      <div class="pstep rv">
+        <span class="dot"></span>
+        <span class="no">I</span>
+        <h4>需求确认</h4>
+        <p>功能清单定稿，排期确认</p>
+        <div class="chips"><span class="when">第 1 周</span><span class="deliver">交付 · 需求确认单</span></div>
+      </div>
+      <div class="pstep rv">
+        <span class="dot"></span>
+        <span class="no">II</span>
+        <h4>原型评审</h4>
+        <p>可交互手机原型，逐一确认</p>
+        <div class="chips"><span class="when">第 2–3 周</span><span class="deliver">交付 · 原型定稿</span></div>
+      </div>
+      <div class="pstep rv">
+        <span class="dot"></span>
+        <span class="no">III</span>
+        <h4>开发与填充</h4>
+        <p>开发、测试、内容就位</p>
+        <div class="chips"><span class="when">第 4–8 周</span><span class="deliver">模块一上线 · 第 4 周</span></div>
+      </div>
+      <div class="pstep rv">
+        <span class="dot"></span>
+        <span class="no">IV</span>
+        <h4>上线</h4>
+        <p>正式发布，进入守护期</p>
+        <div class="chips"><span class="when">第 8–12 周</span><span class="deliver">模块二上线 · 一期完成</span></div>
+      </div>
+    </div>
+    <p class="footnote rv" style="margin-top:30px">模块一于一个月内先行上线；<br>一期总周期，以需求确认单为准。</p>
+  </section>
+
+  <!-- P15 投入构成 -->
+  <section class="sec">
+    <p class="kicker rv">投 入 构 成</p>
+    <h2 class="big rv">投入清晰，<br>价值明确。</h2>
+    <p class="lede rv">一次建设，分项计价，<br>按三期正式推进。</p>
+
+    <div class="price-card rv">
+      <p class="pc-label">一 期 建 设 · 上 线 即 完 整</p>
+      <div class="pc-rows">
+        <div class="pc-row">
+          <div class="k">模块一 · 新用户引流<small>高维沟通 · 内在测评 · 内容呈现</small></div>
+          <div class="v">8–10<small>万</small></div>
+        </div>
+        <div class="pc-row">
+          <div class="k">模块二 · 商城购买<small>水晶购买 · 疗愈师预约 · 课程购买</small></div>
+          <div class="v">10–15<small>万</small></div>
+        </div>
+      </div>
+      <p class="pc-foot">模块一于一个月内先行上线；一期总周期，以需求确认单为准。</p>
+    </div>
+
+    <div class="money-row rv">
+      <div class="mn"><b>二期建设 · 模块三</b><small>Module III</small></div>
+      <div class="mv">15–18 万</div>
+      <p>疗愈师生态——疗愈师团队管理 · 分销机制</p>
+    </div>
+    <div class="money-row rv">
+      <div class="mn"><b>三期建设 · 模块四</b><small>Module IV</small></div>
+      <div class="mv">10–15 万</div>
+      <p>疗愈村生态——疗愈村活动 · 在线订房</p>
+    </div>
+    <div class="money-row rv">
+      <div class="mn"><b>月度守护</b><small>Keep</small></div>
+      <div class="mv">¥3,000–5,000 / 月</div>
+      <p>系统维护 · 内容更新 · AI 运行成本</p>
+    </div>
+    <p class="footnote rv" style="margin-top:26px">以上为区间报价；最终以确认单为准。<br>守护服务可按年签约。</p>
+  </section>
+
+  <!-- P16 结束页 -->
+  <section class="closing">
+    <img class="logo" src="assets/LAYA-Primary-Stacked-White-Master-v1.0.png" alt="LAYA">
+    <h2 class="rv">下一步，<br>从确认开始。</h2>
+    <p class="sub rv">确定模块顺序，启动一期。</p>
+    <ul class="confirm-list rv">
+      <li><span class="cno">i.</span>AI 拉雅功能清单</li>
+      <li><span class="cno">ii.</span>现有功能迁移清单</li>
+      <li><span class="cno">iii.</span>一期排期与报价</li>
+    </ul>
+    <a class="demo-cta rv" href="demo.html"><span>体验完整概念演示</span><span class="arr">→</span></a>
+    <p class="fin">LAYA · INNER SUN · 2026.09</p>
+  </section>
+
+</main>
+<script>
+(function(){
+  var io = null;
+  if ('IntersectionObserver' in window) {
+    io = new IntersectionObserver(function(es){
+      es.forEach(function(e){
+        if (e.isIntersecting) { e.target.classList.add('in'); io.unobserve(e.target); }
+      });
+    }, { threshold: .12, rootMargin: '0px 0px -6% 0px' });
+    document.querySelectorAll('.rv').forEach(function(el){ io.observe(el); });
+  } else {
+    document.querySelectorAll('.rv').forEach(function(el){ el.classList.add('in'); });
+  }
+
+  document.querySelectorAll('.ptab').forEach(function(btn){
+    btn.addEventListener('click', function(){
+      var screen = btn.closest('.screen');
+      if (!screen) return;
+      screen.querySelectorAll('.ptab').forEach(function(b){
+        b.classList.toggle('is-active', b === btn);
+      });
+      screen.querySelectorAll('.ph-pane').forEach(function(p){
+        p.classList.toggle('is-on', p.getAttribute('data-pane') === btn.getAttribute('data-tab'));
+      });
+    });
+  });
+
+  var bar = document.getElementById('bar');
+  var ticking = false;
+  function onScroll(){
+    if (ticking) return;
+    ticking = true;
+    requestAnimationFrame(function(){
+      var h = document.documentElement;
+      var max = h.scrollHeight - h.clientHeight;
+      bar.style.width = (max > 0 ? (h.scrollTop / max) * 100 : 0) + '%';
+      ticking = false;
+    });
+  }
+  window.addEventListener('scroll', onScroll, { passive: true });
+  onScroll();
+})();
+</script>
+</body>
+</html>

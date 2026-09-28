@@ -1,0 +1,1151 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no,viewport-fit=cover">
+<title>拉雅艺术疗愈村 · 小程序演示</title>
+<style>
+:root{
+  --green:#1B3A2D;--green-2:#234838;--green-3:#15291F;
+  --gold:#D4A882;--gold-2:#E8C9A8;--ivory:#F5F0E8;--ivory-2:#EFE7DA;
+  --card:#FFFFFF;--ink:#1A1209;--t2:rgba(26,18,9,.66);--t3:rgba(26,18,9,.4);
+  --line:rgba(26,18,9,.1);--lineIv:rgba(245,240,232,.16);
+  --serif:'Noto Serif SC','Source Han Serif SC','Songti SC','STSong','SimSun',serif;
+  --sans:-apple-system,BlinkMacSystemFont,'PingFang SC','HarmonyOS Sans SC','Microsoft YaHei',sans-serif;
+  --latin:'Cormorant Garamond',Georgia,'Times New Roman',serif;
+  --ease:cubic-bezier(.32,.72,.28,1);
+}
+*{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+html,body{height:100%}
+body{position:fixed;inset:0;overflow:hidden;overscroll-behavior:none;background:#12211A;font-family:var(--sans);-webkit-font-smoothing:antialiased;color:var(--ink)}
+.stage{position:absolute;inset:0;background:radial-gradient(circle at 18% 8%,rgba(212,168,130,.07),transparent 42%),radial-gradient(circle at 84% 92%,rgba(46,94,74,.22),transparent 46%),#12211A}
+
+/* ===== 桌面侧栏 ===== */
+.side{display:none;position:absolute;left:0;top:0;bottom:0;width:320px;padding:56px 44px;z-index:2;flex-direction:column}
+.side .slogo{height:58px;object-fit:contain;align-self:flex-start}
+.side h1{font-family:var(--serif);font-size:22px;font-weight:500;color:var(--ivory);letter-spacing:.08em;margin-top:34px}
+.side .ssub{font-family:var(--serif);font-size:12.5px;color:rgba(245,240,232,.5);letter-spacing:.14em;margin-top:8px}
+.side nav{margin-top:44px}
+.side nav button{display:flex;align-items:baseline;gap:14px;width:100%;background:none;border:none;border-bottom:1px solid rgba(245,240,232,.1);padding:15px 2px;cursor:pointer;text-align:left;transition:opacity .25s}
+.side nav button .no{font-family:var(--latin);font-size:11px;letter-spacing:.2em;color:rgba(212,168,130,.75);width:22px;flex-shrink:0}
+.side nav button .nm{font-family:var(--serif);font-size:15px;color:rgba(245,240,232,.82);letter-spacing:.06em;font-weight:500}
+.side nav button .ds{font-size:10px;color:rgba(245,240,232,.34);letter-spacing:.1em;margin-left:auto}
+.side nav button.on .nm{color:var(--gold-2)}
+.side nav button.on .no{color:var(--gold)}
+.side .stry{margin-top:auto;font-size:10px;line-height:2;color:rgba(245,240,232,.32);letter-spacing:.14em}
+.side .stry b{display:block;font-family:var(--latin);font-style:italic;font-weight:400;color:rgba(212,168,130,.6);letter-spacing:.2em;margin-bottom:6px}
+@media (min-width:1080px){.side{display:flex}}
+
+/* ===== 手机 ===== */
+.phone-wrap{position:absolute;left:50%;top:50%;width:426px;height:898px;transform:translate(-50%,-50%);transform-origin:center;z-index:3}
+@media (min-width:1080px){.phone-wrap{left:calc(50% + 160px)}}
+.phone{width:426px;height:898px;background:#0B0F0D;border-radius:62px;padding:12px;box-shadow:0 42px 100px rgba(0,0,0,.55),0 4px 18px rgba(0,0,0,.4),inset 0 0 0 1.5px rgba(255,255,255,.07)}
+.screen{position:relative;width:402px;height:874px;border-radius:50px;overflow:hidden;background:var(--ivory)}
+
+/* 系统层 */
+.island{position:absolute;top:11px;left:50%;transform:translateX(-50%);width:120px;height:34px;border-radius:20px;background:#0A0A0A;z-index:30}
+.sbar{position:absolute;top:0;left:0;right:0;height:54px;padding:16px 30px 0;display:flex;justify-content:space-between;align-items:flex-start;z-index:30;pointer-events:none}
+.sbar .time{font-size:13.5px;font-weight:600;letter-spacing:.02em;color:var(--ink);transition:color .35s}
+body.dark-chrome .sbar .time{color:var(--ivory)}
+.sicons{display:flex;align-items:center;gap:5.5px}
+.sicons svg{display:block}
+.sicons .ic-fill{fill:var(--ink);transition:fill .35s}
+.sicons .ic-stroke{stroke:var(--ink);transition:stroke .35s}
+body.dark-chrome .sicons .ic-fill{fill:var(--ivory)}
+body.dark-chrome .sicons .ic-stroke{stroke:var(--ivory)}
+.capsule{position:absolute;top:62px;right:16px;width:84px;height:32px;border-radius:999px;background:rgba(26,18,9,.05);border:1px solid rgba(26,18,9,.08);display:flex;align-items:center;justify-content:space-around;z-index:30}
+.capsule .dot3{letter-spacing:1.5px;color:rgba(26,18,9,.5);font-size:12px;font-weight:700;line-height:1;margin-top:-2px}
+.capsule .cir{width:11px;height:11px;border-radius:50%;border:1.5px solid rgba(26,18,9,.5)}
+body.dark-chrome .capsule{background:rgba(245,240,232,.1);border-color:rgba(245,240,232,.18)}
+body.dark-chrome .capsule .dot3{color:rgba(245,240,232,.75)}
+body.dark-chrome .capsule .cir{border-color:rgba(245,240,232,.75)}
+.homebar{position:absolute;bottom:8px;left:50%;transform:translateX(-50%);width:120px;height:5px;border-radius:3px;background:rgba(26,18,9,.8);z-index:30;transition:background .3s}
+body.dark-chrome .homebar{background:rgba(245,240,232,.85)}
+
+/* ===== Tab 栏 ===== */
+.tabbar{position:absolute;bottom:0;left:0;right:0;height:88px;background:rgba(245,240,232,.94);backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px);border-top:1px solid var(--line);display:flex;z-index:4;padding:8px 8px 20px}
+.tabbtn{flex:1;background:none;border:none;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:5px;cursor:pointer;font-family:var(--sans);position:relative}
+.tabbtn svg{display:block;stroke:rgba(26,18,9,.36);transition:stroke .3s}
+.tabbtn span{font-size:9.5px;letter-spacing:.1em;color:rgba(26,18,9,.38);font-weight:400;transition:color .3s}
+.tabbtn.on svg{stroke:var(--green)}
+.tabbtn.on span{color:var(--green);font-weight:600}
+.tabbtn .cb{position:absolute;top:4px;right:calc(50% - 24px);min-width:15px;height:15px;border-radius:8px;background:#B0552E;color:#fff;font-size:8.5px;font-weight:700;display:none;align-items:center;justify-content:center;padding:0 4px}
+.tabbtn .cb.show{display:flex}
+
+/* ===== 页面容器 ===== */
+.pg{position:absolute;left:0;top:0;bottom:0;right:0;background:var(--ivory);display:none;flex-direction:column;overflow:hidden}
+.pg.tabroot{bottom:88px}
+.pg.sub{z-index:6;box-shadow:-26px 0 56px rgba(10,18,14,.32)}
+.pg.act{display:flex}
+@keyframes pgPush{from{transform:translateX(100%)}to{transform:translateX(0)}}
+@keyframes pgUnder{from{transform:translateX(0)}to{transform:translateX(-22%)}}
+@keyframes pgPop{from{transform:translateX(0)}to{transform:translateX(100%)}}
+@keyframes pgReveal{from{transform:translateX(-22%)}to{transform:translateX(0)}}
+@keyframes pgTab{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:translateY(0)}}
+.pg.anim-push{animation:pgPush .44s var(--ease) both}
+.pg.anim-under{animation:pgUnder .44s var(--ease) both}
+.pg.anim-pop{animation:pgPop .42s var(--ease) both}
+.pg.anim-reveal{animation:pgReveal .42s var(--ease) both}
+.pg.anim-tab{animation:pgTab .4s var(--ease) both}
+
+.pnav{flex-shrink:0;height:98px;padding:58px 16px 0;display:flex;align-items:center;justify-content:center;position:relative;background:var(--ivory);z-index:2}
+.pnav .ttl{font-family:var(--serif);font-size:15.5px;font-weight:600;letter-spacing:.14em;color:var(--ink)}
+.pnav .backbtn{position:absolute;left:10px;top:54px;width:40px;height:40px;border:none;background:none;cursor:pointer;display:flex;align-items:center;justify-content:center}
+.pnav .backbtn svg{stroke:var(--ink);opacity:.75}
+.pnav .modchip{position:absolute;right:16px;top:62px;font-size:8.5px;letter-spacing:.18em;color:var(--t3);font-weight:600}
+.pbody{position:relative;flex:1;min-height:0;overflow-y:auto;-webkit-overflow-scrolling:touch;padding:4px 16px 26px}
+.pbody--full{padding:0}
+.pbody::-webkit-scrollbar,.sidehide::-webkit-scrollbar{display:none}
+
+/* ===== 通用组件 ===== */
+.footnote{font-size:9px;color:var(--t3);letter-spacing:.14em;line-height:2;text-align:center;margin:22px 0 10px}
+.sec-h{display:flex;align-items:baseline;justify-content:space-between;margin:26px 2px 12px}
+.sec-h .t{font-family:var(--serif);font-size:14.5px;font-weight:600;letter-spacing:.16em;color:var(--ink)}
+.sec-h .more{font-size:9.5px;color:var(--t3);letter-spacing:.1em;background:none;border:none;cursor:pointer;display:flex;align-items:center;gap:3px}
+.sec-h .more svg{stroke:var(--t3)}
+.card{background:var(--card);border:1px solid var(--line);border-radius:14px}
+.gold-t{color:#A9713C}
+.chip-gold{display:inline-block;font-size:8.5px;letter-spacing:.12em;color:#A9713C;border:1px solid rgba(169,113,60,.35);border-radius:999px;padding:1.5px 8px;font-weight:600}
+
+/* toast */
+#toast{position:absolute;left:50%;bottom:150px;transform:translateX(-50%) translateY(14px);background:rgba(21,41,31,.94);color:var(--ivory);font-size:11.5px;letter-spacing:.12em;padding:11px 22px;border-radius:999px;z-index:60;opacity:0;pointer-events:none;transition:all .35s var(--ease);white-space:nowrap}
+#toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
+
+/* ===== 首页 ===== */
+.greenhead{background:linear-gradient(165deg,#1E4030,#1B3A2D);padding:66px 20px 24px;position:relative;overflow:hidden}
+.greenhead::after{content:'';position:absolute;top:-70px;right:-60px;width:220px;height:220px;border-radius:50%;background:radial-gradient(circle,rgba(212,168,130,.16),transparent 68%)}
+.brandrow{display:flex;align-items:center;justify-content:space-between;margin-bottom:18px;position:relative;z-index:1}
+.brandrow .slogo{height:32px;object-fit:contain}
+.brandrow .hi{font-size:10px;color:rgba(245,240,232,.55);letter-spacing:.18em}
+.hdate{font-family:var(--serif);font-size:19px;font-weight:500;color:var(--ivory);letter-spacing:.1em;position:relative;z-index:1}
+.hdate small{display:block;font-family:var(--latin);font-style:italic;font-size:10px;letter-spacing:.24em;color:rgba(212,168,130,.7);margin-top:5px}
+.banners{display:flex;overflow-x:auto;scroll-snap-type:x mandatory;gap:10px;border-radius:16px;margin:18px -20px 0;padding:0 20px;scrollbar-width:none}
+.banners::-webkit-scrollbar{display:none}
+.banners .bn{position:relative;flex:0 0 100%;height:150px;border-radius:16px;overflow:hidden;scroll-snap-align:center;cursor:pointer;border:none;padding:0}
+.banners .bn img{width:100%;height:100%;object-fit:cover;display:block}
+.banners .bn .cap{position:absolute;left:0;right:0;bottom:0;padding:26px 16px 12px;background:linear-gradient(transparent,rgba(10,20,15,.72));text-align:left}
+.banners .bn .cap b{display:block;font-family:var(--serif);font-size:13.5px;font-weight:600;color:var(--ivory);letter-spacing:.14em}
+.banners .bn .cap i{font-style:normal;font-size:9px;color:rgba(245,240,232,.66);letter-spacing:.16em;display:block;margin-top:3px}
+.bdots{display:flex;gap:5px;justify-content:center;margin-top:10px}
+.bdots i{width:4px;height:4px;border-radius:2px;background:rgba(245,240,232,.3);transition:all .3s}
+.bdots i.on{width:12px;background:var(--gold)}
+.quickgrid{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin:18px 0 4px}
+.qbtn{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:13px 4px 11px;display:flex;flex-direction:column;align-items:center;gap:7px;cursor:pointer}
+.qbtn svg{stroke:var(--green)}
+.qbtn span{font-size:9.5px;letter-spacing:.08em;color:var(--t2)}
+.hcourse{display:flex;gap:12px;background:var(--card);border:1px solid var(--line);border-radius:14px;padding:10px;margin-bottom:10px;cursor:pointer}
+.hcourse img{width:86px;height:86px;border-radius:10px;object-fit:cover;flex-shrink:0}
+.hcourse .in{flex:1;min-width:0;display:flex;flex-direction:column;justify-content:space-between;padding:3px 0}
+.hcourse .nm{font-family:var(--serif);font-size:13.5px;font-weight:600;letter-spacing:.08em}
+.hcourse .mt{font-size:9.5px;color:var(--t2);letter-spacing:.06em;display:flex;gap:10px}
+.hcourse .cap{font-size:9px;color:var(--t3);letter-spacing:.06em}
+.hcourse .cap em{font-style:normal;color:#A9713C}
+.goods-scroll{display:flex;gap:10px;overflow-x:auto;margin:0 -16px;padding:2px 16px 6px;scrollbar-width:none}
+.goods-scroll::-webkit-scrollbar{display:none}
+.gcard{flex:0 0 118px;background:var(--card);border:1px solid var(--line);border-radius:14px;overflow:hidden;cursor:pointer}
+.gcard img{width:100%;height:108px;object-fit:cover;display:block}
+.gcard .in{padding:8px 10px 10px}
+.gcard .nm{font-size:10.5px;letter-spacing:.04em;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.gcard .pr{font-size:11.5px;font-weight:700;color:var(--green);margin-top:4px}
+.gcard .pr s{font-size:8.5px;color:var(--t3);font-weight:400;margin-left:4px}
+.villagecard{position:relative;border-radius:16px;overflow:hidden;height:170px;margin-top:6px;border:none;padding:0;cursor:pointer;width:100%}
+.villagecard img{width:100%;height:100%;object-fit:cover;display:block}
+.villagecard .cap{position:absolute;left:0;right:0;bottom:0;padding:34px 16px 14px;background:linear-gradient(transparent,rgba(10,20,15,.74));text-align:left}
+.villagecard .cap b{font-family:var(--serif);font-size:14px;font-weight:600;color:var(--ivory);letter-spacing:.18em;display:block}
+.villagecard .cap i{font-style:normal;font-size:9px;color:rgba(245,240,232,.7);letter-spacing:.16em}
+
+/* ===== 课程 ===== */
+.daystrip{display:flex;gap:6px;overflow-x:auto;margin:6px -16px 14px;padding:0 16px;scrollbar-width:none}
+.daystrip::-webkit-scrollbar{display:none}
+.dchip{flex:1 0 44px;background:var(--card);border:1px solid var(--line);border-radius:12px;padding:9px 4px;text-align:center;cursor:pointer}
+.dchip .w{font-size:9px;color:var(--t3);letter-spacing:.1em}
+.dchip .d{font-family:var(--latin);font-size:15px;color:var(--t2);margin-top:2px}
+.dchip.on{background:var(--green);border-color:var(--green)}
+.dchip.on .w{color:rgba(245,240,232,.6)}
+.dchip.on .d{color:var(--gold-2)}
+.crs{display:flex;gap:12px;background:var(--card);border:1px solid var(--line);border-radius:14px;padding:11px;margin-bottom:10px;cursor:pointer}
+.crs img{width:92px;height:92px;border-radius:10px;object-fit:cover;flex-shrink:0}
+.crs .in{flex:1;min-width:0;display:flex;flex-direction:column;justify-content:space-between;padding:2px 0}
+.crs .nm{font-family:var(--serif);font-size:14px;font-weight:600;letter-spacing:.08em}
+.crs .nm .full{font-size:8.5px;color:#B0552E;border:1px solid rgba(176,85,46,.4);border-radius:999px;padding:1px 6px;margin-left:6px;letter-spacing:.1em;vertical-align:2px;font-family:var(--sans);font-weight:600}
+.crs .mt{font-size:9.5px;color:var(--t2);letter-spacing:.05em;line-height:1.8}
+.crs .pb{height:3px;border-radius:2px;background:rgba(26,18,9,.08);overflow:hidden;margin:5px 0 4px}
+.crs .pb i{display:block;height:100%;background:linear-gradient(90deg,var(--gold),#E8C9A8);border-radius:2px}
+.crs .cap{font-size:8.5px;color:var(--t3);letter-spacing:.06em}
+.crs .cap em{font-style:normal;color:#A9713C;font-weight:600}
+.crs.full{opacity:.62}
+
+/* ===== 详情通用 ===== */
+.dt-hero{position:relative;height:250px;overflow:hidden;margin:0 -16px;flex-shrink:0}
+.dt-hero img{width:100%;height:100%;object-fit:cover;display:block}
+.dt-hero .scrim{position:absolute;inset:0;background:linear-gradient(rgba(10,18,14,.05) 40%,rgba(10,18,14,.6))}
+.dt-hero .httl{position:absolute;left:18px;right:18px;bottom:14px}
+.dt-hero .httl b{font-family:var(--serif);font-size:19px;font-weight:600;color:var(--ivory);letter-spacing:.12em;display:block}
+.dt-hero .httl i{font-style:normal;font-size:9.5px;color:rgba(245,240,232,.75);letter-spacing:.16em;display:block;margin-top:4px}
+.dt-price{display:flex;align-items:baseline;gap:8px;padding:14px 2px 4px}
+.dt-price b{font-family:var(--latin);font-size:26px;color:var(--green);font-weight:600}
+.dt-price span{font-size:9.5px;color:var(--t3);letter-spacing:.1em}
+.mrow{display:flex;justify-content:space-between;align-items:center;padding:12px 2px;border-bottom:1px solid var(--line);font-size:11px}
+.mrow .k{color:var(--t3);letter-spacing:.14em;font-size:9.5px;flex-shrink:0;margin-right:14px}
+.mrow .v{color:var(--ink);letter-spacing:.04em;text-align:right}
+.mrow .v.gold{color:#A9713C;font-weight:600}
+.blk-t{font-family:var(--serif);font-size:13px;font-weight:600;letter-spacing:.16em;margin:20px 2px 10px;display:flex;align-items:center;gap:8px}
+.blk-t::after{content:'';flex:1;height:1px;background:var(--line)}
+.para{font-size:11px;line-height:2.1;color:var(--t2);letter-spacing:.04em;text-align:justify}
+.fachips{display:flex;flex-wrap:wrap;gap:7px}
+.fachips i{font-style:normal;font-size:9.5px;color:var(--t2);border:1px solid var(--line);border-radius:999px;padding:4px 11px;letter-spacing:.08em;background:var(--card)}
+.notecard{background:rgba(212,168,130,.1);border:1px solid rgba(212,168,130,.3);border-radius:12px;padding:12px 14px;font-size:9.5px;line-height:1.9;color:rgba(26,18,9,.72);letter-spacing:.05em}
+.notecard b{color:#A9713C;letter-spacing:.14em;display:block;margin-bottom:3px;font-size:9px}
+.cta-wrap{flex-shrink:0;padding:12px 16px 22px;background:rgba(245,240,232,.96);border-top:1px solid var(--line);display:flex;align-items:center;gap:12px}
+.cta{flex:1;height:48px;border:none;border-radius:999px;background:var(--green);color:var(--ivory);font-size:12.5px;letter-spacing:.22em;font-weight:600;cursor:pointer;font-family:var(--sans);transition:opacity .25s}
+.cta:active{opacity:.82}
+.cta.gold{background:linear-gradient(120deg,#C89A6E,#D4A882)}
+.cta[disabled]{background:rgba(26,18,9,.14);color:rgba(26,18,9,.4);cursor:not-allowed}
+.cta-mini{height:44px;padding:0 22px;border:none;border-radius:999px;background:var(--green);color:var(--ivory);font-size:11px;letter-spacing:.14em;font-weight:600;cursor:pointer}
+
+/* 老师行 */
+.trow{display:flex;align-items:center;gap:11px;background:var(--card);border:1px solid var(--line);border-radius:14px;padding:11px 13px}
+.trow img{width:42px;height:42px;border-radius:50%;object-fit:cover}
+.trow .nm{font-family:var(--serif);font-size:13px;font-weight:600;letter-spacing:.1em}
+.trow .rl{font-size:9px;color:var(--t3);letter-spacing:.12em;margin-top:3px}
+
+/* ===== 住宿 ===== */
+.datefilter{display:flex;align-items:center;gap:10px;background:var(--card);border:1px solid var(--line);border-radius:14px;padding:11px 14px;margin-bottom:13px}
+.datefilter .lab{font-size:9px;color:var(--t3);letter-spacing:.14em}
+.datefilter .val{font-size:12px;font-weight:600;letter-spacing:.06em;color:var(--green);flex:1;text-align:center}
+.datefilter svg{stroke:var(--t3)}
+.roomcard{background:var(--card);border:1px solid var(--line);border-radius:16px;overflow:hidden;margin-bottom:12px;cursor:pointer}
+.roomcard img{width:100%;height:160px;object-fit:cover;display:block}
+.roomcard .in{padding:12px 14px 14px}
+.roomcard .r1{display:flex;justify-content:space-between;align-items:baseline}
+.roomcard .nm{font-family:var(--serif);font-size:15px;font-weight:600;letter-spacing:.1em}
+.roomcard .pr{font-family:var(--latin);font-size:19px;font-weight:600;color:var(--green)}
+.roomcard .pr small{font-size:9.5px;color:var(--t3);font-family:var(--sans);font-weight:400}
+.roomcard .meta{font-size:9.5px;color:var(--t2);letter-spacing:.06em;margin-top:6px}
+.roomcard .r2{display:flex;justify-content:space-between;align-items:center;margin-top:10px}
+.roomcard .left{font-size:9px;letter-spacing:.1em}
+.roomcard .left.em{color:#B0552E;font-weight:600}
+.roomcard .left.ok{color:var(--t3)}
+.datepick{display:flex;gap:6px;overflow-x:auto;margin:4px -16px 4px;padding:2px 16px;scrollbar-width:none}
+.datepick::-webkit-scrollbar{display:none}
+.dpchip{flex:0 0 62px;background:var(--card);border:1px solid var(--line);border-radius:12px;padding:8px 4px;text-align:center;cursor:pointer}
+.dpchip .m{font-size:8.5px;color:var(--t3);letter-spacing:.1em}
+.dpchip .n{font-family:var(--latin);font-size:17px;color:var(--t2);margin:2px 0}
+.dpchip .w{font-size:8px;color:var(--t3);letter-spacing:.08em}
+.dpchip.sel{background:var(--green);border-color:var(--green)}
+.dpchip.sel .m,.dpchip.sel .w{color:rgba(245,240,232,.6)}
+.dpchip.sel .n{color:var(--gold-2)}
+.dpchip.sel.gold{background:#B0552E;border-color:#B0552E}
+.dpchip.sel.gold .n{color:#fff}
+.nightsbar{display:flex;justify-content:space-between;align-items:center;background:rgba(27,58,45,.05);border-radius:12px;padding:11px 14px;margin:10px 0 2px;font-size:10.5px;letter-spacing:.08em}
+.nightsbar b{font-family:var(--latin);font-size:16px;color:var(--green)}
+/* 表单 */
+.fcell{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:4px 14px;margin-bottom:10px}
+.fcell .frow{display:flex;align-items:center;gap:12px;padding:12px 0;border-bottom:1px solid var(--line)}
+.fcell .frow:last-child{border-bottom:none}
+.fcell .k{font-size:9.5px;color:var(--t3);letter-spacing:.14em;width:64px;flex-shrink:0}
+.fcell input,.fcell textarea{flex:1;border:none;outline:none;font-size:12px;color:var(--ink);letter-spacing:.04em;background:none;font-family:var(--sans);resize:none}
+.fcell input::placeholder,.fcell textarea::placeholder{color:rgba(26,18,9,.28)}
+.priceline{display:flex;justify-content:space-between;font-size:10.5px;letter-spacing:.06em;padding:7px 2px;color:var(--t2)}
+.priceline b{color:var(--ink);font-weight:600}
+.priceline.total{border-top:1px dashed var(--line);margin-top:6px;padding-top:12px;font-size:11.5px}
+.priceline.total b{font-family:var(--latin);font-size:19px;color:#B0552E}
+
+/* ===== 商城 ===== */
+.cats{display:flex;gap:8px;margin:4px 0 14px}
+.catchip{background:var(--card);border:1px solid var(--line);border-radius:999px;padding:6px 15px;font-size:10px;letter-spacing:.12em;color:var(--t2);cursor:pointer}
+.catchip.on{background:var(--green);border-color:var(--green);color:var(--ivory)}
+.wfall{column-count:2;column-gap:10px}
+.wfall .wcard{break-inside:avoid;background:var(--card);border:1px solid var(--line);border-radius:14px;overflow:hidden;margin-bottom:10px;cursor:pointer}
+.wfall .wcard img{width:100%;object-fit:cover;display:block}
+.wcard .in{padding:9px 11px 11px}
+.wcard .nm{font-size:11px;letter-spacing:.04em;line-height:1.5}
+.wcard .sub{font-size:8.5px;color:var(--t3);letter-spacing:.06em;margin-top:3px}
+.wcard .pr{margin-top:7px;display:flex;align-items:baseline;gap:5px}
+.wcard .pr b{font-size:13px;color:var(--green);font-weight:700}
+.wcard .pr s{font-size:9px;color:var(--t3)}
+.viptag{display:inline-block;font-size:8px;color:#A9713C;background:rgba(212,168,130,.16);border-radius:4px;padding:1px 5px;letter-spacing:.08em;font-weight:600}
+
+/* 购物车 */
+.crow{display:flex;gap:11px;background:var(--card);border:1px solid var(--line);border-radius:14px;padding:10px;margin-bottom:9px;align-items:center}
+.crow img{width:64px;height:64px;border-radius:10px;object-fit:cover;flex-shrink:0}
+.crow .in{flex:1;min-width:0}
+.crow .nm{font-size:11px;letter-spacing:.04em}
+.crow .pr{font-size:12px;font-weight:700;color:var(--green);margin-top:4px}
+.crow .pr s{font-size:8.5px;color:var(--t3);font-weight:400;margin-left:4px}
+.qty{display:flex;align-items:center;gap:2px;flex-shrink:0}
+.qty button{width:24px;height:24px;border:1px solid var(--line);background:var(--card);border-radius:7px;font-size:13px;color:var(--t2);cursor:pointer;line-height:1;display:flex;align-items:center;justify-content:center}
+.qty span{width:26px;text-align:center;font-size:11.5px;font-weight:600}
+.cart-bar{flex-shrink:0;background:var(--card);border-top:1px solid var(--line);padding:12px 16px 24px;display:flex;align-items:center;gap:14px}
+.cart-bar .sum{flex:1;font-size:10px;color:var(--t3);letter-spacing:.1em}
+.cart-bar .sum b{font-family:var(--latin);font-size:20px;color:#B0552E;letter-spacing:0;margin-left:6px}
+
+/* 订单卡 */
+.ocard{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:13px 14px;margin-bottom:10px}
+.ocard .o1{display:flex;justify-content:space-between;align-items:center;margin-bottom:9px}
+.ocard .oid{font-size:8.5px;color:var(--t3);letter-spacing:.1em}
+.ocard .st{font-size:9.5px;letter-spacing:.12em;font-weight:600}
+.ocard .st.g{color:#A9713C}.ocard .st.n{color:var(--t3)}.ocard .st.b{color:#3D6B54}
+.ocard .obody{display:flex;gap:10px;align-items:center}
+.ocard .obody img{width:56px;height:56px;border-radius:9px;object-fit:cover;flex-shrink:0}
+.ocard .oi{flex:1;min-width:0}
+.ocard .onm{font-size:11px;letter-spacing:.04em}
+.ocard .omt{font-size:9px;color:var(--t3);letter-spacing:.08em;margin-top:4px}
+.ocard .opr{font-size:11.5px;font-weight:700;color:var(--green)}
+.ocard .ofoot{border-top:1px dashed var(--line);margin-top:10px;padding-top:9px;display:flex;justify-content:space-between;align-items:center}
+.ocard .olog{font-size:8.5px;color:var(--t3);letter-spacing:.06em}
+.ocard .olog b{color:var(--t2);font-weight:600;letter-spacing:.04em}
+.empty{text-align:center;padding:56px 0;color:var(--t3)}
+.empty svg{stroke:rgba(26,18,9,.2);margin-bottom:14px}
+.empty p{font-size:10px;letter-spacing:.16em}
+
+/* ===== 我的 ===== */
+.mhead{background:linear-gradient(165deg,#1E4030,#1B3A2D);padding:70px 18px 30px;position:relative;overflow:hidden}
+.mhead::after{content:'';position:absolute;top:-60px;right:-50px;width:200px;height:200px;border-radius:50%;background:radial-gradient(circle,rgba(212,168,130,.15),transparent 68%)}
+.urow{display:flex;align-items:center;gap:14px;position:relative;z-index:1}
+.avatar{width:56px;height:56px;border-radius:50%;background:linear-gradient(135deg,#2C5340,#1B3A2D);border:1.5px solid rgba(212,168,130,.5);display:flex;align-items:center;justify-content:center;font-family:var(--serif);font-size:20px;color:var(--gold-2);cursor:pointer}
+.urow .un{font-family:var(--serif);font-size:16.5px;font-weight:600;color:var(--ivory);letter-spacing:.1em}
+.urow .up{font-size:9px;color:rgba(245,240,232,.55);letter-spacing:.14em;margin-top:5px}
+.memcard{margin:-18px 16px 0;background:linear-gradient(125deg,#24473A,#1B3A2D);border:1px solid rgba(212,168,130,.35);border-radius:16px;padding:15px 16px;position:relative;z-index:2;cursor:pointer;box-shadow:0 12px 30px rgba(10,20,15,.25)}
+.memcard .mtag{position:absolute;top:14px;right:15px;font-size:8px;letter-spacing:.2em;color:var(--gold-2);border:1px solid rgba(212,168,130,.5);border-radius:999px;padding:2.5px 9px}
+.memcard .mt1{font-family:var(--serif);font-size:14.5px;font-weight:600;color:var(--ivory);letter-spacing:.2em}
+.memcard .mt2{font-size:8.5px;color:rgba(245,240,232,.6);letter-spacing:.14em;margin-top:6px}
+.memcard .mt3{display:flex;justify-content:space-between;align-items:baseline;margin-top:13px}
+.memcard .mt3 .pts{font-size:8.5px;color:rgba(245,240,232,.55);letter-spacing:.14em}
+.memcard .mt3 .pts b{font-family:var(--latin);font-size:17px;color:var(--gold-2);letter-spacing:.04em;margin-left:5px}
+.memcard .mt3 .go{font-size:9px;color:var(--gold-2);letter-spacing:.14em;display:flex;align-items:center;gap:3px}
+.memcard .mt3 .go svg{stroke:var(--gold-2)}
+.mgrid{display:grid;grid-template-columns:repeat(4,1fr);gap:6px;margin:14px 16px 0}
+.mcell{background:var(--card);border:1px solid var(--line);border-radius:13px;padding:12px 2px 10px;display:flex;flex-direction:column;align-items:center;gap:6px;cursor:pointer}
+.mcell svg{stroke:var(--green)}
+.mcell span{font-size:8.5px;letter-spacing:.08em;color:var(--t2)}
+.mlist{margin:14px 16px 0}
+.mitem{display:flex;align-items:center;gap:12px;background:var(--card);border:1px solid var(--line);border-radius:13px;padding:13px 14px;margin-bottom:8px;cursor:pointer}
+.mitem svg{stroke:var(--green);flex-shrink:0}
+.mitem .t{flex:1;font-size:11px;letter-spacing:.1em;color:var(--ink)}
+.mitem .sub{font-size:8.5px;color:var(--t3);letter-spacing:.06em;margin-top:3px}
+.mitem .arr{stroke:var(--t3)}
+
+/* ===== 会员页 ===== */
+.vip-hero{background:linear-gradient(150deg,#24473A,#163024);padding:70px 20px 34px;text-align:center;position:relative;overflow:hidden;margin:0 -16px}
+.vip-hero::after{content:'';position:absolute;bottom:-90px;left:50%;transform:translateX(-50%);width:300px;height:220px;border-radius:50%;background:radial-gradient(circle,rgba(212,168,130,.2),transparent 66%)}
+.vip-hero .vt{font-family:var(--serif);font-size:20px;font-weight:600;color:var(--ivory);letter-spacing:.24em}
+.vip-hero .vs{font-size:9px;color:rgba(245,240,232,.6);letter-spacing:.2em;margin-top:9px}
+.vip-hero .vp{font-family:var(--latin);font-size:38px;color:var(--gold-2);margin-top:20px;font-weight:600}
+.vip-hero .vp small{font-size:11px;color:rgba(245,240,232,.55);letter-spacing:.16em;font-family:var(--sans);font-weight:400}
+.benefit{display:flex;gap:12px;background:var(--card);border:1px solid var(--line);border-radius:14px;padding:13px;margin-bottom:9px;align-items:center}
+.benefit .bi{width:38px;height:38px;border-radius:11px;background:rgba(27,58,45,.07);display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.benefit .bi svg{stroke:var(--green)}
+.benefit .bt{font-size:11.5px;font-weight:600;letter-spacing:.08em}
+.benefit .bd{font-size:9px;color:var(--t3);letter-spacing:.06em;margin-top:3px}
+
+/* ===== 积分页 ===== */
+.pt-hero{background:linear-gradient(150deg,#24473A,#163024);margin:0 -16px;padding:64px 20px 28px;text-align:center}
+.pt-hero .pt1{font-size:9px;color:rgba(245,240,232,.55);letter-spacing:.24em}
+.pt-hero .pt2{font-family:var(--latin);font-size:42px;color:var(--gold-2);margin-top:10px;font-weight:600}
+.pt-hero .pt2 small{font-size:11px;color:rgba(245,240,232,.5);letter-spacing:.14em;font-family:var(--sans);font-weight:400;margin-left:7px}
+.pt-act{display:flex;gap:9px;margin:-16px 16px 0;position:relative;z-index:2}
+.pt-act button{flex:1;height:42px;border-radius:12px;border:1px solid var(--line);background:var(--card);font-size:10.5px;letter-spacing:.12em;color:var(--t2);cursor:pointer}
+.pt-act button.pri{background:var(--green);color:var(--ivory);border-color:var(--green);font-weight:600}
+.ptrec{display:flex;justify-content:space-between;align-items:center;padding:12px 2px;border-bottom:1px solid var(--line)}
+.ptrec .pn{font-size:11px;letter-spacing:.06em}
+.ptrec .pd{font-size:8.5px;color:var(--t3);letter-spacing:.1em;margin-top:4px}
+.ptrec .pv{font-family:var(--latin);font-size:15px;font-weight:600}
+.ptrec .pv.plus{color:#3D6B54}
+.ptrec .pv.minus{color:#B0552E}
+
+/* ===== 村子介绍 ===== */
+.vsec{margin-bottom:16px;border-radius:16px;overflow:hidden;background:var(--card);border:1px solid var(--line)}
+.vsec img{width:100%;height:150px;object-fit:cover;display:block}
+.vsec .in{padding:13px 15px 15px}
+.vsec .vt{font-family:var(--serif);font-size:14px;font-weight:600;letter-spacing:.14em;display:flex;justify-content:space-between;align-items:baseline}
+.vsec .vt i{font-family:var(--latin);font-style:italic;font-size:9px;color:var(--gold);letter-spacing:.18em;font-weight:400}
+.vsec .vd{font-size:10px;line-height:2;color:var(--t2);letter-spacing:.04em;margin-top:7px;text-align:justify}
+
+/* ===== 招商 ===== */
+.jsec{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:14px 15px;margin-bottom:10px}
+.jsec .jt{font-size:9px;color:#A9713C;letter-spacing:.22em;font-weight:600;margin-bottom:8px}
+.jsec .jd{font-size:10.5px;line-height:2;color:var(--t2);letter-spacing:.04em}
+.jsec .jd b{color:var(--ink);font-weight:600}
+.jtags{display:flex;flex-wrap:wrap;gap:7px}
+.jtags i{font-style:normal;font-size:9.5px;color:var(--green);background:rgba(27,58,45,.06);border:1px solid rgba(27,58,45,.14);border-radius:999px;padding:4px 12px;letter-spacing:.1em}
+.okmsg{text-align:center;padding:34px 0 10px}
+.okmsg .okc{width:64px;height:64px;border-radius:50%;background:rgba(61,107,84,.1);display:flex;align-items:center;justify-content:center;margin:0 auto 16px}
+.okmsg .okc svg{stroke:#3D6B54}
+.okmsg b{font-family:var(--serif);font-size:15px;font-weight:600;letter-spacing:.2em;display:block}
+.okmsg p{font-size:9.5px;color:var(--t3);letter-spacing:.1em;margin-top:8px;line-height:1.9}
+
+/* 订单成功浮层 */
+#payok{position:absolute;inset:0;background:rgba(13,24,18,.55);backdrop-filter:blur(3px);z-index:50;display:none;align-items:center;justify-content:center}
+#payok.show{display:flex}
+#payok .okbox{width:270px;background:var(--ivory);border-radius:20px;padding:30px 22px 22px;text-align:center;animation:pgTab .4s var(--ease) both}
+#payok .okc{width:58px;height:58px;border-radius:50%;background:rgba(61,107,84,.12);display:flex;align-items:center;justify-content:center;margin:0 auto 14px}
+#payok .okc svg{stroke:#3D6B54}
+#payok b{font-family:var(--serif);font-size:14.5px;font-weight:600;letter-spacing:.22em;display:block}
+#payok p{font-size:9.5px;color:var(--t3);letter-spacing:.1em;margin-top:7px;line-height:1.8}
+#payok button{margin-top:16px;width:100%;height:42px;border:none;border-radius:999px;background:var(--green);color:var(--ivory);font-size:11px;letter-spacing:.2em;font-weight:600;cursor:pointer}
+</style>
+</head>
+<body>
+<div class="stage">
+
+  <!-- 桌面侧栏 -->
+  <aside class="side">
+    <img class="slogo" src="assets/LAYA-Primary-Stacked-White-Master-v1.0.png" alt="LAYA">
+    <h1>拉雅艺术疗愈村</h1>
+    <div class="ssub">小程序 · 前端概念演示</div>
+    <nav id="sidenav">
+      <button class="on" data-act="home"><span class="no">01</span><span class="nm">首页总览</span><span class="ds">轮播 · 入口</span></button>
+      <button data-act="course"><span class="no">02</span><span class="nm">课程预约</span><span class="ds">周课表 · 容量</span></button>
+      <button data-act="room"><span class="no">03</span><span class="nm">住宿预订</span><span class="ds">房型 · 房量</span></button>
+      <button data-act="shop"><span class="no">04</span><span class="nm">商城 · 会员 · 积分</span><span class="ds">会员价 · 抵扣</span></button>
+      <button data-act="village"><span class="no">05</span><span class="nm">村子与招商</span><span class="ds">图文 · 留资</span></button>
+      <button data-act="mine"><span class="no">06</span><span class="nm">我的</span><span class="ds">订单 · 会员</span></button>
+    </nav>
+    <div class="stry"><b>The Healing Village</b>课程 · 住宿 · 商城 · 会员<br>一座村，正在生长</div>
+  </aside>
+
+  <!-- 手机 -->
+  <div class="phone-wrap">
+    <div class="phone">
+      <div class="screen" id="screen">
+
+        <div class="island"></div>
+        <div class="sbar"><span class="time">9:41</span>
+          <span class="sicons">
+            <svg width="16" height="11" viewBox="0 0 16 11"><path d="M1 8.5C2.5 10 4 10.6 5.5 10.6S8.5 10 10 8.5" fill="none" stroke-width="1.4" stroke-linecap="round" class="ic-stroke"/><path d="M4.5 6C5 6.5 5.5 6.8 6 6.8S7 6.5 7.5 6" fill="none" stroke-width="1.4" stroke-linecap="round" class="ic-stroke"/><rect x="10.8" y="3.4" width="3.6" height="6.4" rx="1.2" class="ic-fill"/><rect x="1" y="8.2" width="2" height="2" rx=".5" class="ic-fill"/><rect x="4.1" y="6.6" width="2" height="3.6" rx=".5" class="ic-fill"/><rect x="7.2" y="4.8" width="2" height="5.4" rx=".5" class="ic-fill"/></svg>
+            <svg width="23" height="11" viewBox="0 0 23 11"><rect x=".5" y=".8" width="19" height="9.4" rx="2.4" fill="none" stroke-width="1.1" class="ic-stroke"/><rect x="2" y="2.3" width="14.5" height="6.4" rx="1.4" class="ic-fill"/><path d="M21 4.2v3.4c1-.3 1.6-.9 1.6-1.7S22 4.5 21 4.2z" class="ic-fill"/></svg>
+          </span>
+        </div>
+        <div class="capsule"><span class="dot3">···</span><span class="cir"></span></div>
+        <div class="homebar"></div>
+
+        <!-- ========== 首页 ========== -->
+        <div class="pg tabroot act" id="pg-home">
+          <div class="pbody pbody--full">
+            <div class="greenhead">
+              <div class="brandrow">
+                <img class="slogo" src="assets/LAYA-Primary-Stacked-White-Master-v1.0.png" alt="">
+                <span class="hi">早安，溪谷村民</span>
+              </div>
+              <div class="hdate">九月廿八 · 周一<small>Monday, in the valley</small></div>
+              <div class="banners" id="banners">
+                <button class="bn" data-go="village"><img src="assets/village-hero.jpg" alt=""><span class="cap"><b>一座村，正在生长</b><i>拉雅艺术疗愈村 · 山谷里的家</i></span></button>
+                <button class="bn" data-go="course"><img src="assets/course-morning.jpg" alt=""><span class="cap"><b>晨间冥想 · 每日七点</b><i>溪谷平台 · 免费预约</i></span></button>
+                <button class="bn" data-go="room"><img src="assets/hall.jpg" alt=""><span class="cap"><b>共修厅已开放</b><i>颂钵 · 身体觉察 · 呼吸练习</i></span></button>
+              </div>
+              <div class="bdots" id="bdots"><i class="on"></i><i></i><i></i></div>
+            </div>
+            <div style="padding:0 16px 26px">
+              <div class="quickgrid">
+                <button class="qbtn" data-go="course"><svg width="21" height="21" viewBox="0 0 24 24" fill="none" stroke-width="1.5"><rect x="3" y="5" width="18" height="16" rx="3"/><path d="M3 10h18M8 3v4M16 3v4" stroke-linecap="round"/></svg><span>课程预约</span></button>
+                <button class="qbtn" data-go="room"><svg width="21" height="21" viewBox="0 0 24 24" fill="none" stroke-width="1.5"><path d="M3 19V9l9-5 9 5v10" stroke-linejoin="round"/><path d="M7 19v-6h10v6" stroke-linejoin="round"/></svg><span>住宿预订</span></button>
+                <button class="qbtn" data-go="shop"><svg width="21" height="21" viewBox="0 0 24 24" fill="none" stroke-width="1.5"><path d="M5 8h14l-1.2 12H6.2L5 8z" stroke-linejoin="round"/><path d="M9 8V6.5a3 3 0 016 0V8" stroke-linecap="round"/></svg><span>村庄市集</span></button>
+                <button class="qbtn" data-go="village"><svg width="21" height="21" viewBox="0 0 24 24" fill="none" stroke-width="1.5"><path d="M4 20V10l8-6 8 6v10" stroke-linejoin="round"/><path d="M10 20v-5h4v5" stroke-linejoin="round"/></svg><span>村子介绍</span></button>
+              </div>
+              <div class="sec-h"><span class="t">本周课程</span><button class="more" data-go="course">全部<svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke-width="2"><path d="M9 5l7 7-7 7" stroke-linecap="round" stroke-linejoin="round"/></svg></button></div>
+              <div id="home-courses"></div>
+              <div class="sec-h"><span class="t">村庄严选</span><button class="more" data-go="shop">全部<svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke-width="2"><path d="M9 5l7 7-7 7" stroke-linecap="round" stroke-linejoin="round"/></svg></button></div>
+              <div class="goods-scroll" id="home-goods"></div>
+              <button class="villagecard" data-go="village"><img src="assets/course-morning.jpg" alt=""><span class="cap"><b>溪谷步道</b><i>晨雾 · 松林 · 流水声</i></span></button>
+              <div class="footnote">拉雅艺术疗愈村 · 小程序概念演示<br>LAYA HEALING VILLAGE · DEMO</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- ========== 课程 ========== -->
+        <div class="pg tabroot" id="pg-course">
+          <div class="pnav"><span class="ttl">课程预约</span><span class="modchip">周课表 · 容量预约</span></div>
+          <div class="pbody">
+            <div class="daystrip" id="daystrip"></div>
+            <div id="courselist"></div>
+            <div class="footnote">课程按周排期 · 容量有限建议提前预约</div>
+          </div>
+        </div>
+
+        <!-- ========== 住宿 ========== -->
+        <div class="pg tabroot" id="pg-room">
+          <div class="pnav"><span class="ttl">住宿预订</span><span class="modchip">房型 · 房量</span></div>
+          <div class="pbody">
+            <div class="datefilter">
+              <span class="lab">入 住</span><span class="val" id="df-in">09 月 29 日</span>
+              <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke-width="2"><path d="M5 12h14M13 6l6 6-6 6" stroke-linecap="round" stroke-linejoin="round"/></svg>
+              <span class="lab">离 店</span><span class="val" id="df-out">09 月 30 日</span>
+            </div>
+            <div id="roomlist"></div>
+            <div class="footnote">以上房价为演示数据 · 含早餐与晨课</div>
+          </div>
+        </div>
+
+        <!-- ========== 商城 ========== -->
+        <div class="pg tabroot" id="pg-shop">
+          <div class="pnav"><span class="ttl">村庄市集</span><span class="modchip">会员价 · 太阳币</span></div>
+          <div class="pbody">
+            <div class="cats" id="shopcats"></div>
+            <div class="wfall" id="shoplist"></div>
+            <div class="footnote">村庄自产 · 山泉灌溉 · 顺丰直发</div>
+          </div>
+        </div>
+
+        <!-- ========== 我的 ========== -->
+        <div class="pg tabroot" id="pg-mine">
+          <div class="pbody pbody--full">
+            <div class="mhead">
+              <div class="urow">
+                <div class="avatar" onclick="toast('微信一键授权登录（演示）')">雅</div>
+                <div><div class="un">溪谷村民</div><div class="up">138****8866 · 微信已绑定</div></div>
+              </div>
+            </div>
+            <div class="memcard" data-go="member">
+              <span class="mtag">生效中</span>
+              <div class="mt1">村民会员</div>
+              <div class="mt2">2027 年 09 月 28 日 到期</div>
+              <div class="mt3">
+                <span class="pts">太阳币<b>320</b></span>
+                <span class="go">会员权益<svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke-width="2"><path d="M9 5l7 7-7 7" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
+              </div>
+            </div>
+            <div class="mgrid">
+              <button class="mcell" data-go="bookings"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke-width="1.5"><rect x="4" y="3" width="16" height="18" rx="3"/><path d="M8 8h8M8 12h8M8 16h5" stroke-linecap="round"/></svg><span>我的预约</span></button>
+              <button class="mcell" data-go="roomorders"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke-width="1.5"><path d="M3 19V9l9-5 9 5v10" stroke-linejoin="round"/><path d="M7 19v-6h10v6" stroke-linejoin="round"/></svg><span>住宿订单</span></button>
+              <button class="mcell" data-go="shoporders"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke-width="1.5"><path d="M5 8h14l-1.2 12H6.2L5 8z" stroke-linejoin="round"/><path d="M9 8V6.5a3 3 0 016 0V8" stroke-linecap="round"/></svg><span>商品订单</span></button>
+              <button class="mcell" data-go="points"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke-width="1.5"><circle cx="12" cy="12" r="8.5"/><path d="M12 7.5v9M9.4 10.2c0-1.4 1.2-2.2 2.6-2.2s2.6.8 2.6 2.2c0 2.6-5.2 1.8-5.2 4.4 0 1.4 1.2 2.2 2.6 2.2s2.6-.8 2.6-2.2" stroke-linecap="round"/></svg><span>太阳币</span></button>
+            </div>
+            <div class="mlist">
+              <button class="mitem" data-go="village"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke-width="1.5"><path d="M4 20V10l8-6 8 6v10" stroke-linejoin="round"/><path d="M10 20v-5h4v5" stroke-linejoin="round"/></svg><div><div class="t">村子介绍</div><div class="sub">疗愈房 · 共修厅 · 溪谷步道</div></div><svg class="arr" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke-width="1.8"><path d="M9 5l7 7-7 7" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
+              <button class="mitem" data-go="join"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke-width="1.5"><circle cx="9" cy="8" r="3.2"/><path d="M3.5 19.5c.7-3 2.9-4.6 5.5-4.6s4.8 1.6 5.5 4.6M16 5.5a3 3 0 010 5.6M18.5 14.5c1.6.7 2.6 2 3 3.8" stroke-linecap="round"/></svg><div><div class="t">招商合作</div><div class="sub">入驻方向 · 留资登记</div></div><svg class="arr" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke-width="1.8"><path d="M9 5l7 7-7 7" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
+              <button class="mitem" onclick="toast('客服电话 400-000-0000（演示）')"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke-width="1.5"><path d="M5 4h4l1.6 4.2-2.3 1.8a13 13 0 005.7 5.7l1.8-2.3L20 15v4a1.8 1.8 0 01-2 1.8C10.4 20.1 3.9 13.6 3.2 6A1.8 1.8 0 015 4z" stroke-linejoin="round"/></svg><div><div class="t">联系村子</div><div class="sub">客服 · 导航 · 到访指引</div></div><svg class="arr" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke-width="1.8"><path d="M9 5l7 7-7 7" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
+            </div>
+            <div class="footnote">演示数据 · 会员与太阳币状态可在真实系统中配置</div>
+          </div>
+        </div>
+
+        <!-- ========== 课程详情 ========== -->
+        <div class="pg sub" id="pg-crs-dt">
+          <div class="pnav"><button class="backbtn" onclick="pop('pg-crs-dt')"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke-width="1.8"><path d="M15 5l-7 7 7 7" stroke-linecap="round" stroke-linejoin="round"/></svg></button><span class="ttl">课程详情</span><span class="modchip">课程预约</span></div>
+          <div class="pbody">
+            <div class="dt-hero" style="margin:0 -16px 14px"><img id="cd-img" src="" alt=""><div class="scrim"></div><div class="httl"><b id="cd-name"></b><i id="cd-sub"></i></div></div>
+            <div id="cd-meta"></div>
+            <div class="blk-t">带领老师</div>
+            <div class="trow"><img src="assets/healer-xiaoman.jpg" alt=""><div><div class="nm">小满老师</div><div class="rl">拉雅艺术疗愈村 · 常驻疗愈师</div></div></div>
+            <div class="blk-t">课程介绍</div>
+            <div class="para" id="cd-desc"></div>
+            <div class="blk-t">预约须知</div>
+            <div class="notecard"><b>取 消 规 则</b>开课前 2 小时内不可取消；如无法到场请提前在小程序「我的预约」中取消，把位置留给其他村民。</div>
+            <div class="footnote">课程免费 · 容量有限</div>
+          </div>
+          <div class="cta-wrap"><button class="cta" id="cd-cta" onclick="bookCourse()">立即预约</button></div>
+        </div>
+
+        <!-- ========== 我的预约 ========== -->
+        <div class="pg sub" id="pg-bookings">
+          <div class="pnav"><button class="backbtn" onclick="pop('pg-bookings')"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke-width="1.8"><path d="M15 5l-7 7 7 7" stroke-linecap="round" stroke-linejoin="round"/></svg></button><span class="ttl">我的预约</span><span class="modchip">课程预约</span></div>
+          <div class="pbody" id="bk-list"></div>
+        </div>
+
+        <!-- ========== 房型详情 ========== -->
+        <div class="pg sub" id="pg-room-dt">
+          <div class="pnav"><button class="backbtn" onclick="pop('pg-room-dt')"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke-width="1.8"><path d="M15 5l-7 7 7 7" stroke-linecap="round" stroke-linejoin="round"/></svg></button><span class="ttl">房型详情</span><span class="modchip">住宿预订</span></div>
+          <div class="pbody">
+            <div class="dt-hero" style="margin:0 -16px 14px"><img id="rd-img" src="" alt=""><div class="scrim"></div><div class="httl"><b id="rd-name"></b><i id="rd-sub"></i></div></div>
+            <div id="rd-meta"></div>
+            <div class="blk-t">配套设施</div>
+            <div class="fachips" id="rd-fac"></div>
+            <div class="blk-t">入住说明</div>
+            <div id="rd-stay"></div>
+            <div class="blk-t">选择日期</div>
+            <div class="datepick" id="rd-dates"></div>
+            <div class="nightsbar" id="rd-nights"></div>
+            <div class="notecard" style="margin-top:12px"><b>退 订 规 则</b>入住前 48 小时内不可取消；此前取消将全额退款。房量有限，预订成功即锁定房源。</div>
+            <div class="footnote">演示数据 · 房价随季节浮动</div>
+          </div>
+          <div class="cta-wrap"><button class="cta" id="rd-cta" onclick="roomOrder()">立即预订</button></div>
+        </div>
+
+        <!-- ========== 住宿下单 ========== -->
+        <div class="pg sub" id="pg-room-od">
+          <div class="pnav"><button class="backbtn" onclick="pop('pg-room-od')"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke-width="1.8"><path d="M15 5l-7 7 7 7" stroke-linecap="round" stroke-linejoin="round"/></svg></button><span class="ttl">确认预订</span><span class="modchip">住宿预订</span></div>
+          <div class="pbody">
+            <div class="ocard" id="ro-room"></div>
+            <div class="blk-t">入住人信息</div>
+            <div class="fcell">
+              <div class="frow"><span class="k">姓 名</span><input id="ro-name" value="林小雅" placeholder="与证件一致"></div>
+              <div class="frow"><span class="k">手机号</span><input id="ro-tel" value="138 0000 8866" placeholder="用于接收入住通知"></div>
+            </div>
+            <div class="blk-t">费用明细</div>
+            <div id="ro-price"></div>
+            <div class="footnote">仅微信支付 · 支付成功后锁定房量</div>
+          </div>
+          <div class="cta-wrap"><button class="cta" id="ro-cta" onclick="submitRoom()">提交并支付</button></div>
+        </div>
+
+        <!-- ========== 住宿订单 ========== -->
+        <div class="pg sub" id="pg-roomorders">
+          <div class="pnav"><button class="backbtn" onclick="pop('pg-roomorders')"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke-width="1.8"><path d="M15 5l-7 7 7 7" stroke-linecap="round" stroke-linejoin="round"/></svg></button><span class="ttl">住宿订单</span><span class="modchip">待入住 · 已完成</span></div>
+          <div class="pbody" id="ro-list"></div>
+        </div>
+
+        <!-- ========== 商品详情 ========== -->
+        <div class="pg sub" id="pg-prod-dt">
+          <div class="pnav"><button class="backbtn" onclick="pop('pg-prod-dt')"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke-width="1.8"><path d="M15 5l-7 7 7 7" stroke-linecap="round" stroke-linejoin="round"/></svg></button><span class="ttl">商品详情</span><span class="modchip">村庄市集</span></div>
+          <div class="pbody">
+            <div class="dt-hero" style="margin:0 -16px 14px"><img id="pd-img" src="" alt=""><div class="scrim"></div></div>
+            <div class="dt-price" style="align-items:baseline"><b id="pd-price"></b><s id="pd-op" style="font-size:10px;color:var(--t3)"></s><span class="viptag">会员价</span></div>
+            <div style="font-family:var(--serif);font-size:15.5px;font-weight:600;letter-spacing:.08em;padding:0 2px" id="pd-name"></div>
+            <div style="font-size:9.5px;color:var(--t3);letter-spacing:.1em;margin:6px 2px 0" id="pd-sub"></div>
+            <div class="blk-t">商品详情</div>
+            <div class="para" id="pd-desc"></div>
+            <div class="blk-t">购买须知</div>
+            <div class="notecard"><b>发 货 说 明</b>村庄自产，下单后 48 小时内由顺丰发出；会员下单自动按会员价结算，并获得等额太阳币。</div>
+            <div class="footnote">仅单规格 · 演示数据</div>
+          </div>
+          <div class="cta-wrap">
+            <button class="cta" style="flex:1;background:transparent;border:1.2px solid var(--green);color:var(--green)" onclick="addCart()">加入购物车</button>
+            <button class="cta gold" style="flex:1" onclick="buyNow()">立即购买</button>
+          </div>
+        </div>
+
+        <!-- ========== 购物车 ========== -->
+        <div class="pg sub" id="pg-cart">
+          <div class="pnav"><button class="backbtn" onclick="pop('pg-cart')"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke-width="1.8"><path d="M15 5l-7 7 7 7" stroke-linecap="round" stroke-linejoin="round"/></svg></button><span class="ttl">购物车</span><span class="modchip">村庄市集</span></div>
+          <div class="pbody" id="cart-list"></div>
+          <div class="cart-bar"><span class="sum">合计<b id="cart-sum">¥0</b></span><button class="cta-mini" onclick="goCheckout()">去结算</button></div>
+        </div>
+
+        <!-- ========== 确认订单 ========== -->
+        <div class="pg sub" id="pg-confirm">
+          <div class="pnav"><button class="backbtn" onclick="pop('pg-confirm')"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke-width="1.8"><path d="M15 5l-7 7 7 7" stroke-linecap="round" stroke-linejoin="round"/></svg></button><span class="ttl">确认订单</span><span class="modchip">微信支付</span></div>
+          <div class="pbody">
+            <div class="ocard" style="padding:12px 14px">
+              <div style="font-size:9px;color:var(--t3);letter-spacing:.16em;margin-bottom:7px">收 货 信 息</div>
+              <div style="font-size:11.5px;letter-spacing:.04em;line-height:1.9">林小雅 · 138****8866<br><span style="color:var(--t2)">浙江省杭州市西湖区 · 溪谷路 1 号 拉雅艺术疗愈村</span></div>
+            </div>
+            <div id="cf-items" style="margin-top:10px"></div>
+            <div class="blk-t">支付方式</div>
+            <div class="mrow"><span class="k">方 式</span><span class="v">微信支付</span></div>
+            <div class="mrow" style="border-bottom:none"><span class="k">太阳币</span>
+              <span style="flex:1;text-align:right;margin-right:10px;font-size:9.5px;color:var(--t3);letter-spacing:.04em">可用 320 枚 · 抵扣 ¥3.20</span>
+              <button id="pt-toggle" onclick="togglePoints()" style="width:40px;height:22px;border-radius:11px;border:none;background:rgba(26,18,9,.12);position:relative;cursor:pointer;transition:background .25s"><i id="pt-knob" style="position:absolute;top:2px;left:2px;width:18px;height:18px;border-radius:50%;background:#fff;transition:left .25s;box-shadow:0 1px 4px rgba(0,0,0,.2)"></i></button>
+            </div>
+            <div class="blk-t">费用明细</div>
+            <div id="cf-price"></div>
+            <div class="footnote">支付成功后按实付金额发放太阳币</div>
+          </div>
+          <div class="cta-wrap"><button class="cta" id="cf-cta" onclick="payOrder()">提交订单</button></div>
+        </div>
+
+        <!-- ========== 商品订单 ========== -->
+        <div class="pg sub" id="pg-shoporders">
+          <div class="pnav"><button class="backbtn" onclick="pop('pg-shoporders')"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke-width="1.8"><path d="M15 5l-7 7 7 7" stroke-linecap="round" stroke-linejoin="round"/></svg></button><span class="ttl">商品订单</span><span class="modchip">物流 · 售后</span></div>
+          <div class="pbody" id="so-list"></div>
+        </div>
+
+        <!-- ========== 会员 ========== -->
+        <div class="pg sub" id="pg-member">
+          <div class="pnav"><button class="backbtn" onclick="pop('pg-member')"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke-width="1.8"><path d="M15 5l-7 7 7 7" stroke-linecap="round" stroke-linejoin="round"/></svg></button><span class="ttl">村民会员</span><span class="modchip">会员 · 积分</span></div>
+          <div class="pbody">
+            <div class="vip-hero" style="margin:0 -16px 16px">
+              <div class="vt">村民会员</div>
+              <div class="vs">VILLAGE MEMBER · 年卡</div>
+              <div class="vp">¥399<small> / 年</small></div>
+              <div style="font-size:9px;color:rgba(245,240,232,.55);letter-spacing:.14em;margin-top:8px">当前状态：生效中 · 2027-09-28 到期</div>
+            </div>
+            <div class="benefit"><div class="bi"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke-width="1.5"><rect x="3" y="5" width="18" height="16" rx="3"/><path d="M3 10h18M8 3v4M16 3v4" stroke-linecap="round"/></svg></div><div><div class="bt">全部课程免费预约</div><div class="bd">周课表任意场次，无需付费</div></div></div>
+            <div class="benefit"><div class="bi"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke-width="1.5"><path d="M5 8h14l-1.2 12H6.2L5 8z" stroke-linejoin="round"/><path d="M9 8V6.5a3 3 0 016 0V8" stroke-linecap="round"/></svg></div><div><div class="bt">市集商品会员价</div><div class="bd">全场商品自动按会员价结算</div></div></div>
+            <div class="benefit"><div class="bi"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke-width="1.5"><path d="M12 3.5C7 3.5 4.5 8 4.5 12S7 20.5 12 20.5 19.5 16 19.5 12 17 3.5 12 3.5z"/><path d="M12 7.5v9M9.4 10.2c0-1.4 1.2-2.2 2.6-2.2s2.6.8 2.6 2.2c0 2.6-5.2 1.8-5.2 4.4 0 1.4 1.2 2.2 2.6 2.2s2.6-.8 2.6-2.2" stroke-linecap="round"/></svg></div><div><div class="bt">消费获赠太阳币</div><div class="bd">每消费 1 元获 1 枚，可抵现可兑换</div></div></div>
+            <div class="benefit"><div class="bi"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke-width="1.5"><circle cx="12" cy="8" r="4.5"/><path d="M4.5 20c1-3.6 4-5.5 7.5-5.5S18.5 16.4 19.5 20" stroke-linecap="round"/></svg></div><div><div class="bt">四季茶饮 · 生日花束</div><div class="bd">到村享四季茶饮，生日赠手扎花束</div></div></div>
+            <div class="notecard" style="margin-top:4px"><b>说 明</b>仅单一会员等级；不支持自动续费。会员价在登录后自动生效，无需另行操作。</div>
+            <div class="footnote">演示数据 · 已开通状态</div>
+          </div>
+          <div class="cta-wrap"><button class="cta" disabled>已开通 · 生效中</button></div>
+        </div>
+
+        <!-- ========== 太阳币 ========== -->
+        <div class="pg sub" id="pg-points">
+          <div class="pnav"><button class="backbtn" onclick="pop('pg-points')"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke-width="1.8"><path d="M15 5l-7 7 7 7" stroke-linecap="round" stroke-linejoin="round"/></svg></button><span class="ttl">太阳币</span><span class="modchip">会员 · 积分</span></div>
+          <div class="pbody pbody--full">
+            <div class="pt-hero">
+              <div class="pt1">我的太阳币余额</div>
+              <div class="pt2">320<small>枚</small></div>
+            </div>
+            <div class="pt-act"><button class="pri" onclick="toast('兑换功能即将开放（演示）')">积分兑换</button><button onclick="toast('抵扣在下单时自动生效（演示）')">抵扣说明</button></div>
+            <div style="padding:16px 16px 26px">
+              <div class="blk-t" style="margin-top:6px">收支明细</div>
+              <div class="ptrec"><div><div class="pn">村民会员开通赠礼</div><div class="pd">2026-09-01</div></div><span class="pv plus">+200</span></div>
+              <div class="ptrec"><div><div class="pn">消费获取 · 时令菜篮</div><div class="pd">2026-09-14</div></div><span class="pv plus">+88</span></div>
+              <div class="ptrec"><div><div class="pn">消费获取 · 山泉胚芽米</div><div class="pd">2026-09-20</div></div><span class="pv plus">+62</span></div>
+              <div class="ptrec"><div><div class="pn">兑换 · 村民明信片</div><div class="pd">2026-09-22</div></div><span class="pv minus">-30</span></div>
+              <div class="notecard" style="margin-top:16px"><b>规 则 说 明</b>消费 1 元获 1 枚太阳币；下单时按 100 : 1 抵扣现金，抵扣比例由后台统一配置；不支持转账与转赠。</div>
+              <div class="footnote">演示数据</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- ========== 村子介绍 ========== -->
+        <div class="pg sub" id="pg-village">
+          <div class="pnav"><button class="backbtn" onclick="pop('pg-village')"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke-width="1.8"><path d="M15 5l-7 7 7 7" stroke-linecap="round" stroke-linejoin="round"/></svg></button><span class="ttl">村子介绍</span><span class="modchip">图文展示</span></div>
+          <div class="pbody">
+            <div class="vsec"><img src="assets/village-hero.jpg" alt=""><div class="in"><div class="vt">山谷概览<i>THE VALLEY</i></div><div class="vd">村子藏在半山的溪谷之间，晨雾从松林里漫出来，又被日头收走。稻田沿溪而种，木屋沿稻而建，一切按山原来的样子生长。</div></div></div>
+            <div class="vsec"><img src="assets/room-creek.jpg" alt=""><div class="in"><div class="vt">疗愈房<i>HEALING ROOMS</i></div><div class="vd">每间疗愈房都面向溪谷，山泉引入户内。清晨在流水声里醒来，夜里只剩虫鸣。房内备茶席与静心香，入住即含晨课。</div></div></div>
+            <div class="vsec"><img src="assets/hall.jpg" alt=""><div class="in"><div class="vt">共修厅<i>THE HALL</i></div><div class="vd">全村共同的心脏。颂钵、身体觉察、呼吸练习都在这里发生。整面的窗把四季请进来，坐在垫上，山就是背景。</div></div></div>
+            <div class="vsec"><img src="assets/course-morning.jpg" alt=""><div class="in"><div class="vt">溪谷步道<i>CREEK PATH</i></div><div class="vd">沿溪三里，青石与木栈相接。每日清晨的正念行走从这里出发，走到上游的老樟树下，再慢慢走回来。</div></div></div>
+            <div class="footnote">拉雅艺术疗愈村 · 一座村，正在生长</div>
+          </div>
+        </div>
+
+        <!-- ========== 招商合作 ========== -->
+        <div class="pg sub" id="pg-join">
+          <div class="pnav"><button class="backbtn" onclick="pop('pg-join')"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke-width="1.8"><path d="M15 5l-7 7 7 7" stroke-linecap="round" stroke-linejoin="round"/></svg></button><span class="ttl">招商合作</span><span class="modchip">留资登记</span></div>
+          <div class="pbody">
+            <div class="jsec"><div class="jt">入 驻 方 向</div><div class="jtags"><i>手作工坊</i><i>轻食咖啡</i><i>花艺植物</i><i>独立书店</i><i>艺术展览</i><i>疗愈服务</i></div></div>
+            <div class="jsec"><div class="jt">合 作 形 式</div><div class="jd"><b>空间入驻</b>——村内独立空间或共享铺位，按季合作。<br><b>内容共创</b>——工作坊、课程与展览联合策划。<br><b>市集摊位</b>——节气市集与主题活动优先预留。</div></div>
+            <div class="jsec"><div class="jt">村 子 提 供</div><div class="jd">稳定客流与线上曝光（小程序 / 视频号）、统一品牌运营、仓储物流支持，以及一座正在生长的村庄本身。</div></div>
+            <div class="blk-t">留下你的信息</div>
+            <div class="fcell">
+              <div class="frow"><span class="k">姓 名</span><input id="ld-name" placeholder="怎么称呼你"></div>
+              <div class="frow"><span class="k">联系电话</span><input id="ld-tel" placeholder="方便我们联系你"></div>
+              <div class="frow"><span class="k">经营品类</span><input id="ld-cat" placeholder="如：手作 / 轻食 / 花艺"></div>
+              <div class="frow"><span class="k">合作意向</span><textarea id="ld-msg" rows="3" placeholder="想以什么方式进村（选填）"></textarea></div>
+            </div>
+            <div class="footnote">提交后由村子统一回复 · 请保持电话畅通</div>
+          </div>
+          <div class="cta-wrap"><button class="cta" onclick="submitLead()">提交留资</button></div>
+        </div>
+
+        <!-- Tab 栏 -->
+        <div class="tabbar" id="tabbar">
+          <button class="tabbtn on" data-tab="home"><svg width="21" height="21" viewBox="0 0 24 24" fill="none" stroke-width="1.5"><path d="M4 20V10l8-6 8 6v10" stroke-linejoin="round"/><path d="M10 20v-5h4v5" stroke-linejoin="round"/></svg><span>首页</span></button>
+          <button class="tabbtn" data-tab="course"><svg width="21" height="21" viewBox="0 0 24 24" fill="none" stroke-width="1.5"><rect x="3" y="5" width="18" height="16" rx="3"/><path d="M3 10h18M8 3v4M16 3v4" stroke-linecap="round"/></svg><span>课程</span><span class="cb" id="cb-course">1</span></button>
+          <button class="tabbtn" data-tab="room"><svg width="21" height="21" viewBox="0 0 24 24" fill="none" stroke-width="1.5"><path d="M3 19V9l9-5 9 5v10" stroke-linejoin="round"/><path d="M7 19v-6h10v6" stroke-linejoin="round"/></svg><span>住宿</span></button>
+          <button class="tabbtn" data-tab="shop"><svg width="21" height="21" viewBox="0 0 24 24" fill="none" stroke-width="1.5"><path d="M5 8h14l-1.2 12H6.2L5 8z" stroke-linejoin="round"/><path d="M9 8V6.5a3 3 0 016 0V8" stroke-linecap="round"/></svg><span>市集</span><span class="cb" id="cb-cart">0</span></button>
+          <button class="tabbtn" data-tab="mine"><svg width="21" height="21" viewBox="0 0 24 24" fill="none" stroke-width="1.5"><circle cx="12" cy="8" r="4"/><path d="M4.5 20c1-3.6 4-5.5 7.5-5.5S18.5 16.4 19.5 20" stroke-linecap="round"/></svg><span>我的</span></button>
+        </div>
+
+        <div id="toast"></div>
+        <div id="payok"><div class="okbox"><div class="okc"><svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke-width="2"><path d="M4.5 12.5l5 5 10-11" stroke-linecap="round" stroke-linejoin="round"/></svg></div><b id="pok-t">支付成功</b><p id="pok-d"></p><button onclick="closePayok()">完 成</button></div></div>
+
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+/* ================= 数据 ================= */
+var COURSES=[
+ {d:0,name:'晨间冥想',sub:'Morning Meditation · 溪谷平台',time:'周一 07:00 – 07:45',loc:'溪谷平台',img:'assets/course-morning.jpg',cap:50,booked:31,desc:'以呼吸为锚，在晨雾里开始一天。四十五分钟的静坐与身体扫描，适合初学与长期练习者。' },
+ {d:1,name:'颂钵疗愈',sub:'Singing Bowl · 共修厅',time:'周二 19:00 – 20:00',loc:'共修厅',img:'assets/course-audio.jpg',cap:50,booked:42,desc:'钵音沿地面漫过身体，让紧了一天的神经松下来。躺下即可，无需任何基础。'},
+ {d:2,name:'身体觉察',sub:'Body Awareness · 共修厅',time:'周三 09:00 – 10:15',loc:'共修厅',img:'assets/course-body.jpg',cap:50,booked:18,desc:'缓慢的动作与触碰练习，重新听见身体的声音。请穿着宽松衣物。'},
+ {d:3,name:'呼吸练习',sub:'Breathwork · 溪谷平台',time:'周四 07:00 – 07:30',loc:'溪谷平台',img:'assets/course-morning.jpg',cap:50,booked:26,desc:'三十分钟的清晨呼吸法，把氧气送到紧绷的地方，带着清醒进到一天里。'},
+ {d:4,name:'正念行走',sub:'Mindful Walking · 溪谷步道',time:'周五 16:30 – 17:30',loc:'溪谷步道',img:'assets/village-hero.jpg',cap:30,booked:12,desc:'沿溪三里，慢慢走。每一步都踩实，把心从远处收回来。'},
+ {d:5,name:'颂钵疗愈 · 深度场',sub:'Deep Sound Bath · 共修厅',time:'周六 19:00 – 20:30',loc:'共修厅',img:'assets/course-audio.jpg',cap:50,booked:50,desc:'九十分钟的深度声音浴，适合需要彻底休息的人。每月仅一场。'},
+ {d:6,name:'瑜伽晨课',sub:'Morning Yoga · 共修厅',time:'周日 07:00 – 08:00',loc:'共修厅',img:'assets/course-body.jpg',cap:50,booked:22,desc:'温和的流瑜伽，跟随晨光伸展。自带垫子或使用村内的。'}
+];
+var ROOMS=[
+ {id:'creek',name:'溪谷景观房',sub:'CREEK VIEW · 面溪而居',img:'assets/room-creek.jpg',price:780,left:3,bed:'1.8m 大床',area:'32 ㎡',side:'溪谷侧 · 二层',
+  fac:['独立卫浴','山泉热水','茶席','隔音窗','地暖','晨课包含'],
+  desc:'面向溪谷的景观房，整面的窗把流水声请进屋里。清晨在鸟鸣里醒来，夜里枕着溪声入睡。'},
+ {id:'cabin',name:'林间木屋',sub:'FOREST CABIN · 独栋',img:'assets/room-cabin.jpg',price:980,left:1,bed:'1.8m 大床 + 榻榻米',area:'45 ㎡',side:'松林间 · 独栋木屋',
+  fac:['独立卫浴','山泉热水','壁炉','私汤','观景露台','晨课包含'],
+  desc:'推门即是松林。独栋木屋带私汤与壁炉，适合想彻底安静几天的人。'}
+];
+var PRODUCTS=[
+ {id:'rice',cat:'farm',img:'assets/prod-rice.jpg',h:130,name:'山泉胚芽米 · 2kg',sub:'当季稻作 · 冷链直发',price:68,vip:58,desc:'溪谷梯田当季稻作，山泉水灌溉，保留胚芽与米香。两公斤装，顺丰发出。'},
+ {id:'veggie',cat:'farm',img:'assets/prod-veggie.jpg',h:150,name:'时令菜篮 · 每周配',sub:'溪谷菜园现摘',price:98,vip:88,desc:'菜园当周现摘，叶菜根茎搭配六至八种，配送到家。每周三发货。'},
+ {id:'honey',cat:'farm',img:'assets/prod-honey.jpg',h:130,name:'野花蜂蜜 · 500g',sub:'山中蜂场原蜜',price:128,vip:108,desc:'后山蜂场的野花原蜜，一年只取两次。温水冲饮，或直接抹在早点的面包上。'},
+ {id:'rose',cat:'oil',img:'assets/prod-rose.jpg',h:145,name:'玫瑰纯露 · 100ml',sub:'晨露蒸馏',price:168,vip:145,desc:'村里花田的玫瑰，趁晨露未收时采下，当日蒸馏。可作化妆水，也可喷在枕边。'},
+ {id:'mugwort',cat:'oil',img:'assets/prod-mugwort.jpg',h:140,name:'艾草按摩油 · 50ml',sub:'陈年艾草浸泡',price:198,vip:175,desc:'三年陈艾冷浸的山茶油，睡前揉开在肩颈。是村子理疗房同款。'},
+ {id:'flowers',cat:'flower',img:'assets/prod-flowers.jpg',h:135,name:'手扎野花束',sub:'溪谷时令花材',price:138,vip:120,desc:'当周溪谷开什么就扎什么，牛皮纸与麻绳手扎。附一张村里写的卡片。'}
+];
+var CATS=[['all','全部'],['farm','农产品'],['oil','精油香氛'],['flower','鲜花']];
+var S={
+ tab:'home',day:0,cat:'all',
+ cart:{},usePoints:false,curCourse:null,curRoom:null,rdIn:1,rdOut:2,
+ bookings:[{name:'晨间冥想',time:'10-05 周一 07:00',loc:'溪谷平台',st:'待参加'}],
+ roomOrders:[{name:'溪谷景观房',img:'assets/room-creek.jpg',dates:'10-02 → 10-03',nights:1,price:780,st:'待入住'}],
+ shopOrders:[{items:[{img:'assets/prod-veggie.jpg',name:'时令菜篮 · 每周配',qty:1,vip:88}],total:88,pay:85,st:'已发货',logi:'顺丰速运 · SF 1390 0000 8866',date:'09-25'}]
+};
+
+/* ================= 框架 ================= */
+var $=function(s){return document.querySelector(s)};
+function toast(m){var t=$('#toast');t.textContent=m;t.classList.add('show');clearTimeout(t._tm);t._tm=setTimeout(function(){t.classList.remove('show')},1800)}
+function showTab(name){
+ S.tab=name;
+ document.querySelectorAll('.pg.tabroot').forEach(function(p){p.classList.remove('act','anim-tab')});
+ var pg=$('#pg-'+name);pg.classList.add('act','anim-tab');
+ document.querySelectorAll('.pg.sub').forEach(function(p){p.classList.remove('act','anim-push','anim-pop','anim-under','anim-reveal')});
+ document.querySelectorAll('.tabbtn').forEach(function(b){b.classList.toggle('on',b.dataset.tab===name)});
+ document.querySelectorAll('#sidenav button').forEach(function(b){b.classList.toggle('on',b.dataset.act===name)});
+ var m={home:'home',course:'course',room:'room',shop:'shop',mine:'mine'};
+ if(m[name]){document.querySelectorAll('#sidenav button').forEach(function(b){b.classList.toggle('on',b.dataset.act===m[name])})}
+}
+var subStack=[];
+function push(id){
+ var pg=$('#'+id);if(pg.classList.contains('act'))return;
+ subStack.push(id);pg.classList.add('act','anim-push');
+ var top=subStack[subStack.length-2];
+ if(top){var u=$('#'+top);if(u){u.classList.add('anim-under')}}
+}
+function pop(id){
+ var pg=$('#'+id);
+ pg.classList.add('anim-pop');
+ setTimeout(function(){pg.classList.remove('act','anim-pop')},420);
+ var idx=subStack.indexOf(id);if(idx>-1)subStack.splice(idx,1);
+ var top=subStack[subStack.length-1];
+ if(top){var u=$('#'+top);if(u){u.classList.remove('anim-under');u.classList.add('anim-reveal');setTimeout(function(){u.classList.remove('anim-reveal')},420)}}
+}
+function openPage(key){
+ var map={village:'pg-village',join:'pg-join',member:'pg-member',points:'pg-points',bookings:'pg-bookings',roomorders:'pg-roomorders',shoporders:'pg-shoporders',cart:'pg-cart'};
+ if(map[key]){push(map[key]);if(key==='cart')renderCart();if(key==='bookings')renderBookings();if(key==='roomorders')renderRoomOrders();if(key==='shoporders')renderShopOrders()}
+}
+document.querySelectorAll('.tabbtn').forEach(function(b){b.addEventListener('click',function(){showTab(b.dataset.tab)})});
+document.querySelectorAll('#sidenav button').forEach(function(b){
+ b.addEventListener('click',function(){
+  var a=b.dataset.act;
+  if(a==='village'){showTab('home');openPage('village')}
+  else if(a==='join'){showTab('mine');openPage('join')}
+  else showTab(a);
+ })});
+document.addEventListener('click',function(e){
+ var g=e.target.closest('[data-go]');if(!g)return;
+ var k=g.dataset.go;
+ if(k==='course'||k==='room'||k==='shop'||k==='home'||k==='mine'){showTab(k)}
+ else openPage(k);
+});
+
+/* ================= 首页 ================= */
+function renderHome(){
+ var hc=$('#home-courses');hc.innerHTML='';
+ COURSES.slice(0,2).forEach(function(c){
+  var full=c.booked>=c.cap;
+  var d=document.createElement('div');d.className='hcourse';
+  d.innerHTML='<img src="'+c.img+'"><div class="in"><div class="nm">'+c.name+'</div><div class="mt"><span>'+c.time.split(' ')[1]+'</span><span>'+c.loc+'</span></div><div class="cap">已约 <em>'+c.booked+'/'+c.cap+'</em>'+(full?' · 已满班':'')+'</div></div>';
+  d.onclick=function(){openCourse(c)};hc.appendChild(d);
+ });
+ var hg=$('#home-goods');hg.innerHTML='';
+ PRODUCTS.slice(0,4).forEach(function(p){
+  var d=document.createElement('div');d.className='gcard';
+  d.innerHTML='<img src="'+p.img+'" style="height:100px"><div class="in"><div class="nm">'+p.name.split(' ·')[0]+'</div><div class="pr">¥'+p.vip+'<s>¥'+p.price+'</s></div></div>';
+  d.onclick=function(){openProduct(p)};hg.appendChild(d);
+ });
+}
+var bn=$('#banners'),bd=$('#bdots');
+bn.addEventListener('scroll',function(){
+ var i=Math.round(bn.scrollLeft/bn.clientWidth);
+ bd.querySelectorAll('i').forEach(function(d,j){d.classList.toggle('on',j===i)});
+});
+
+/* ================= 课程 ================= */
+function renderDays(){
+ var ds=$('#daystrip');ds.innerHTML='';
+ var ws=['一','二','三','四','五','六','日'];
+ for(var i=0;i<7;i++){
+  var d=document.createElement('div');d.className='dchip'+(S.day===i?' on':'');
+  d.innerHTML='<div class="w">周'+ws[i]+'</div><div class="d">'+(28+i)+'</div>';
+  d.onclick=function(i){return function(){S.day=i;renderDays();renderCourses()}}(i);
+  ds.appendChild(d);
+ }
+}
+function renderCourses(){
+ var cl=$('#courselist');cl.innerHTML='';
+ var list=COURSES.filter(function(c){return c.d===S.day});
+ if(!list.length){cl.innerHTML='<div class="empty"><p>本周此日暂无排课</p></div>';return}
+ list.forEach(function(c){cl.appendChild(crsCard(c))});
+}
+function crsCard(c){
+ var full=c.booked>=c.cap;
+ var d=document.createElement('div');d.className='crs'+(full?' full':'');
+ var pct=Math.round(c.booked/c.cap*100);
+ d.innerHTML='<img src="'+c.img+'"><div class="in"><div class="nm">'+c.name+(full?'<span class="full">已满班</span>':'')+'</div>'+
+  '<div class="mt">'+c.time.split(' ').slice(1).join(' ')+'<br>'+c.loc+'</div>'+
+  '<div class="pb"><i style="width:'+pct+'%"></i></div>'+
+  '<div class="cap">'+(full?'约满 · 不可提交':'已约 <em>'+c.booked+'</em> / '+c.cap+' 人')+'</div></div>';
+ d.onclick=function(){openCourse(c)};
+ return d;
+}
+function openCourse(c){
+ S.curCourse=c;
+ $('#cd-img').src=c.img;$('#cd-name').textContent=c.name;$('#cd-sub').textContent=c.sub;
+ var full=c.booked>=c.cap;
+ $('#cd-meta').innerHTML=
+  '<div class="mrow"><span class="k">时 间</span><span class="v">'+c.time+'</span></div>'+
+  '<div class="mrow"><span class="k">地 点</span><span class="v">'+c.loc+'</span></div>'+
+  '<div class="mrow"><span class="k">费 用</span><span class="v gold">村民免费</span></div>'+
+  '<div class="mrow" style="border-bottom:none"><span class="k">容 量</span><span class="v">'+(full?'已满班':'剩余 '+(c.cap-c.booked)+' 位 · 已约 '+c.booked+'/'+c.cap)+'</span></div>';
+ $('#cd-desc').textContent=c.desc;
+ var b=$('#cd-cta');
+ if(full){b.disabled=true;b.textContent='已满班 · 不可预约'}
+ else{b.disabled=false;b.textContent='立即预约'}
+ push('pg-crs-dt');
+}
+function bookCourse(){
+ var c=S.curCourse;if(!c||c.booked>=c.cap)return;
+ c.booked++;
+ S.bookings.unshift({name:c.name,time:c.time,loc:c.loc,st:'待参加'});
+ toast('预约成功 · 已放入「我的预约」');
+ renderCourses();renderHome();
+ pop('pg-crs-dt');
+ $('#cb-course').classList.add('show');
+}
+function renderBookings(){
+ var el=$('#bk-list');el.innerHTML='';
+ if(!S.bookings.length){el.innerHTML='<div class="empty"><svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke-width="1.2"><rect x="4" y="3" width="16" height="18" rx="3"/><path d="M8 8h8M8 12h8M8 16h5" stroke-linecap="round"/></svg><p>暂无预约记录</p></div>';return}
+ S.bookings.forEach(function(b){
+  var d=document.createElement('div');d.className='ocard';
+  d.innerHTML='<div class="o1"><span class="oid">预约 · '+b.loc+'</span><span class="st '+(b.st==='待参加'?'g':'n')+'">'+b.st+'</span></div>'+
+   '<div class="oi"><div class="onm" style="font-family:var(--serif);font-size:13.5px;letter-spacing:.1em">'+b.name+'</div><div class="omt">'+b.time+' · '+b.loc+'</div></div>'+
+   (b.st==='待参加'?'<button class="cta-mini" style="height:34px;font-size:9.5px;padding:0 16px;background:transparent;border:1px solid var(--line);color:var(--t2)" onclick="cancelBk(this)">取消预约</button>':'');
+  el.appendChild(d);
+ });
+}
+function cancelBk(btn){
+ var card=btn.closest('.ocard');
+ var nm=card.querySelector('.onm').textContent;
+ var b=S.bookings.find(function(x){return x.name===nm&&x.st==='待参加'});
+ if(b){b.st='已取消';
+  var c=COURSES.find(function(x){return x.name===nm});if(c)c.booked--;
+  renderCourses()}
+ renderBookings();toast('已取消 · 开课前 2 小时内不可取消');
+}
+
+/* ================= 住宿 ================= */
+function renderRooms(){
+ var rl=$('#roomlist');rl.innerHTML='';
+ ROOMS.forEach(function(r){
+  var d=document.createElement('div');d.className='roomcard';
+  d.innerHTML='<img src="'+r.img+'"><div class="in"><div class="r1"><span class="nm">'+r.name+'</span><span class="pr">¥'+r.price+'<small> / 晚</small></span></div>'+
+   '<div class="meta">'+r.bed+' · '+r.area+' · '+r.side+'</div>'+
+   '<div class="r2"><span class="left '+(r.left<=1?'em':'ok')+'">'+(r.left<=1?'仅剩 '+r.left+' 间':'剩余 '+r.left+' 间')+'</span><span class="chip-gold">含早餐 · 含晨课</span></div></div>';
+  d.onclick=function(){openRoom(r)};
+  rl.appendChild(d);
+ });
+ var dfi=$('#df-in'),dfo=$('#df-out');
+ dfi.textContent=dstr(S.rdIn);dfo.textContent=dstr(S.rdOut);
+}
+function dstr(off){
+ var dt=new Date(2026,8,28);dt.setDate(dt.getDate()+off);
+ return String(dt.getMonth()+1).padStart(2,'0')+' 月 '+String(dt.getDate()).padStart(2,'0')+' 日';
+}
+function openRoom(r){
+ S.curRoom=r;
+ $('#rd-img').src=r.img;$('#rd-name').textContent=r.name;$('#rd-sub').textContent=r.sub;
+ $('#rd-meta').innerHTML=
+  '<div class="dt-price"><b>¥'+r.price+'</b><span>/ 晚 · 含早餐与晨课</span></div>'+
+  '<div class="mrow"><span class="k">床 型</span><span class="v">'+r.bed+'</span></div>'+
+  '<div class="mrow"><span class="k">面 积</span><span class="v">'+r.area+'</span></div>'+
+  '<div class="mrow"><span class="k">位 置</span><span class="v">'+r.side+'</span></div>'+
+  '<div class="mrow" style="border-bottom:none"><span class="k">今 日</span><span class="v '+(r.left<=1?'gold':'')+'">'+(r.left<=1?'仅剩 '+r.left+' 间 · 房量紧张':'剩余 '+r.left+' 间')+'</span></div>';
+ $('#rd-fac').innerHTML=r.fac.map(function(f){return '<i>'+f+'</i>'}).join('');
+ $('#rd-stay').innerHTML=
+  '<div class="mrow"><span class="k">入 住</span><span class="v">14:00 后</span></div>'+
+  '<div class="mrow" style="border-bottom:none"><span class="k">离 店</span><span class="v">次日 12:00 前</span></div>';
+ renderRdDates();
+ push('pg-room-dt');
+}
+function renderRdDates(){
+ var dp=$('#rd-dates');dp.innerHTML='';
+ for(var i=0;i<14;i++){
+  var dt=new Date(2026,8,28);dt.setDate(dt.getDate()+i);
+  var ws=['日','一','二','三','四','五','六'];
+  var d=document.createElement('div');
+  var isIn=i===S.rdIn,isOut=i===S.rdOut;
+  d.className='dpchip'+(isIn?' sel':'')+(isOut?' sel gold':'');
+  d.innerHTML='<div class="m">'+(i===0?'今天':(i===1?'明天':'09/'+String(dt.getDate()).padStart(2,'0')))+'</div><div class="n">'+dt.getDate()+'</div><div class="w">周'+ws[dt.getDay()]+'</div>';
+  d.onclick=function(i){return function(){pickDate(i)}}(i);
+  dp.appendChild(d);
+ }
+ var nights=S.rdOut-S.rdIn;
+ $('#rd-nights').innerHTML='<span>'+dstr(S.rdIn)+' 入住 → '+dstr(S.rdOut)+' 离店 · <b>'+nights+'</b> 晚</span><span style="font-family:var(--latin);font-size:16px;color:var(--green);font-weight:600">¥'+nights*S.curRoom.price+'</span>';
+}
+function pickDate(i){
+ if(i>=S.rdOut){S.rdIn=i;S.rdOut=Math.min(i+1,13)}
+ else{S.rdIn=i}
+ renderRdDates();
+}
+function roomOrder(){
+ var r=S.curRoom,n=S.rdOut-S.rdIn;
+ $('#ro-room').innerHTML='<div class="o1"><span class="oid">'+dstr(S.rdIn)+' → '+dstr(S.rdOut)+'</span><span class="st g">'+n+' 晚</span></div>'+
+  '<div class="obody"><img src="'+r.img+'"><div class="oi"><div class="onm" style="font-family:var(--serif);font-size:13.5px;letter-spacing:.1em">'+r.name+'</div><div class="omt">'+r.bed+' · '+r.area+'</div></div><span class="opr">¥'+r.price*n+'</span></div>';
+ $('#ro-price').innerHTML=
+  '<div class="priceline"><span>房费 · ¥'+r.price+' × '+n+' 晚</span><b>¥'+r.price*n+'</b></div>'+
+  '<div class="priceline"><span>早餐 · 晨课</span><b>已含</b></div>'+
+  '<div class="priceline total"><span>合计</span><b>¥'+r.price*n+'</b></div>';
+ $('#ro-cta').textContent='提交并支付 ¥'+r.price*n;
+ push('pg-room-od');
+}
+function submitRoom(){
+ var r=S.curRoom,n=S.rdOut-S.rdIn;
+ S.roomOrders.unshift({name:r.name,img:r.img,dates:dstr(S.rdIn)+' → '+dstr(S.rdOut),nights:n,price:r.price,st:'待入住'});
+ payok('预订成功','已锁定 '+dstr(S.rdIn)+' 的房源 · 微信支付（演示）',function(){
+  pop('pg-room-od');pop('pg-room-dt');renderRooms();
+  showTab('room');openPage('roomorders');
+ });
+}
+function renderRoomOrders(){
+ var el=$('#ro-list');el.innerHTML='';
+ if(!S.roomOrders.length){el.innerHTML='<div class="empty"><p>暂无住宿订单</p></div>';return}
+ S.roomOrders.forEach(function(o){
+  var d=document.createElement('div');d.className='ocard';
+  d.innerHTML='<div class="o1"><span class="oid">'+o.dates+'</span><span class="st '+(o.st==='待入住'?'g':'n')+'">'+o.st+'</span></div>'+
+   '<div class="obody"><img src="'+o.img+'"><div class="oi"><div class="onm" style="font-family:var(--serif);font-size:13.5px;letter-spacing:.1em">'+o.name+'</div><div class="omt">'+o.nights+' 晚 · ¥'+o.price+'/晚</div></div><span class="opr">¥'+o.price*o.nights+'</span></div>'+
+   '<div class="ofoot"><span class="olog">入住人 <b>林小雅</b> · 已微信支付</span>'+(o.st==='待入住'?'<button class="cta-mini" style="height:32px;font-size:9.5px;padding:0 15px;background:transparent;border:1px solid var(--line);color:var(--t2)" onclick="toast(\'入住前 48 小时内不可取消（演示）\')">取消订单</button>':'')+'</div>';
+  el.appendChild(d);
+ });
+}
+
+/* ================= 商城 ================= */
+function renderCats(){
+ var c=$('#shopcats');c.innerHTML='';
+ CATS.forEach(function(ct){
+  var d=document.createElement('button');d.className='catchip'+(S.cat===ct[0]?' on':'');
+  d.textContent=ct[1];
+  d.onclick=function(){S.cat=ct[0];renderCats();renderShop()};
+  c.appendChild(d);
+ });
+}
+function renderShop(){
+ var sl=$('#shoplist');sl.innerHTML='';
+ PRODUCTS.filter(function(p){return S.cat==='all'||p.cat===S.cat}).forEach(function(p){
+  var d=document.createElement('div');d.className='wcard';
+  d.innerHTML='<img src="'+p.img+'" style="height:'+p.h+'px"><div class="in"><div class="nm">'+p.name+'</div><div class="sub">'+p.sub+'</div>'+
+   '<div class="pr"><b>¥'+p.vip+'</b><s>¥'+p.price+'</s><span class="viptag">会员价</span></div></div>';
+  d.onclick=function(){openProduct(p)};
+  sl.appendChild(d);
+ });
+}
+function openProduct(p){
+ S.curProd=p;
+ $('#pd-img').src=p.img;$('#pd-price').textContent='¥'+p.vip;$('#pd-op').textContent='原价 ¥'+p.price;
+ $('#pd-name').textContent=p.name;$('#pd-sub').textContent=p.sub+' · 每消费 1 元获 1 太阳币';
+ $('#pd-desc').textContent=p.desc;
+ push('pg-prod-dt');
+}
+function addCart(){
+ var p=S.curProd;
+ S.cart[p.id]=(S.cart[p.id]||0)+1;
+ updCartBadge();toast('已加入购物车');
+}
+function buyNow(){
+ var p=S.curProd;
+ S.cart={};S.cart[p.id]=1;
+ updCartBadge();
+ renderConfirm();
+ push('pg-confirm');
+}
+function updCartBadge(){
+ var n=Object.values(S.cart).reduce(function(a,b){return a+b},0);
+ var cb=$('#cb-cart');cb.textContent=n;cb.classList.toggle('show',n>0);
+}
+function renderCart(){
+ var cl=$('#cart-list');cl.innerHTML='';
+ var keys=Object.keys(S.cart);
+ if(!keys.length){cl.innerHTML='<div class="empty"><svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke-width="1.2"><path d="M5 8h14l-1.2 12H6.2L5 8z" stroke-linejoin="round"/><path d="M9 8V6.5a3 3 0 016 0V8" stroke-linecap="round"/></svg><p>购物车是空的</p></div>'}
+ keys.forEach(function(id){
+  var p=PRODUCTS.find(function(x){return x.id===id});
+  var q=S.cart[id];
+  var d=document.createElement('div');d.className='crow';
+  d.innerHTML='<img src="'+p.img+'"><div class="in"><div class="nm">'+p.name+'</div><div class="pr">¥'+p.vip+'<s>¥'+p.price+'</s></div></div>'+
+   '<div class="qty"><button onclick="qtyC(\''+id+'\',-1)">−</button><span>'+q+'</span><button onclick="qtyC(\''+id+'\',1)">+</button></div>';
+  cl.appendChild(d);
+ });
+ var sum=cartSum();
+ $('#cart-sum').textContent='¥'+sum.toFixed(2);
+}
+function qtyC(id,d){
+ S.cart[id]=(S.cart[id]||0)+d;
+ if(S.cart[id]<=0)delete S.cart[id];
+ updCartBadge();renderCart();
+}
+function cartSum(){
+ return Object.keys(S.cart).reduce(function(a,id){
+  var p=PRODUCTS.find(function(x){return x.id===id});return a+p.vip*S.cart[id]},0);
+}
+function cartSaved(){
+ return Object.keys(S.cart).reduce(function(a,id){
+  var p=PRODUCTS.find(function(x){return x.id===id});return a+(p.price-p.vip)*S.cart[id]},0);
+}
+function goCheckout(){
+ if(!Object.keys(S.cart).length){toast('购物车是空的');return}
+ renderConfirm();pop('pg-cart');push('pg-confirm');
+}
+function togglePoints(){
+ S.usePoints=!S.usePoints;
+ var t=$('#pt-toggle');
+ t.style.background=S.usePoints?'var(--green)':'rgba(26,18,9,.12)';
+ $('#pt-knob').style.left=S.usePoints?'20px':'2px';
+ renderConfirmPrice();
+}
+function renderConfirm(){
+ var ci=$('#cf-items');ci.innerHTML='';
+ Object.keys(S.cart).forEach(function(id){
+  var p=PRODUCTS.find(function(x){return x.id===id});
+  var d=document.createElement('div');d.className='ocard';
+  d.innerHTML='<div class="obody"><img src="'+p.img+'"><div class="oi"><div class="onm">'+p.name+'</div><div class="omt">× '+S.cart[id]+'</div></div><span class="opr">¥'+p.vip*S.cart[id]+'</span></div>';
+  ci.appendChild(d);
+ });
+ renderConfirmPrice();
+}
+function renderConfirmPrice(){
+ var sum=cartSum(),saved=cartSaved();
+ var pt=S.usePoints?Math.min(3.2,sum):0;
+ $('#cf-price').innerHTML=
+  '<div class="priceline"><span>商品合计（会员价）</span><b>¥'+sum.toFixed(2)+'</b></div>'+
+  '<div class="priceline"><span>会员已省</span><b style="color:#3D6B54">−¥'+saved.toFixed(2)+'</b></div>'+
+  '<div class="priceline"><span>太阳币抵扣（320 枚）</span><b style="color:#B0552E">−¥'+pt.toFixed(2)+'</b></div>'+
+  '<div class="priceline total"><span>实付</span><b>¥'+(sum-pt).toFixed(2)+'</b></div>';
+ $('#cf-cta').textContent='微信支付 · ¥'+(sum-pt).toFixed(2);
+}
+function payOrder(){
+ var sum=cartSum(),pt=S.usePoints?Math.min(3.2,sum):0;
+ var items=Object.keys(S.cart).map(function(id){
+  var p=PRODUCTS.find(function(x){return x.id===id});
+  return {img:p.img,name:p.name,qty:S.cart[id],vip:p.vip}});
+ var dt=new Date();var ds='09-'+dt.getDate();
+ S.shopOrders.unshift({items:items,total:sum,pay:(sum-pt).toFixed(2),st:'待发货',logi:'',date:ds});
+ S.cart={};updCartBadge();
+ payok('支付成功','获得 '+Math.round(sum)+' 枚太阳币 · 微信支付（演示）',function(){
+  pop('pg-confirm');showTab('shop');openPage('shoporders');
+ });
+}
+function renderShopOrders(){
+ var el=$('#so-list');el.innerHTML='';
+ if(!S.shopOrders.length){el.innerHTML='<div class="empty"><p>暂无商品订单</p></div>';return}
+ S.shopOrders.forEach(function(o){
+  var d=document.createElement('div');d.className='ocard';
+  var stc=o.st==='待发货'?'g':(o.st==='已发货'?'b':'n');
+  var itemsHtml=o.items.map(function(it){
+   return '<div class="obody" style="margin-bottom:8px"><img src="'+it.img+'"><div class="oi"><div class="onm">'+it.name+'</div><div class="omt">× '+it.qty+'</div></div><span class="opr">¥'+it.vip*it.qty+'</span></div>'
+  }).join('');
+  d.innerHTML='<div class="o1"><span class="oid">'+o.date+' 下单</span><span class="st '+stc+'">'+o.st+'</span></div>'+itemsHtml+
+   '<div class="ofoot"><span class="olog">'+(o.logi?'物流 <b>'+o.logi+'</b>':'待村庄打包发货')+'</span><span style="font-size:9px;color:var(--t3)">实付 <b style="color:#B0552E;font-size:11px">¥'+o.pay+'</b></span></div>';
+  el.appendChild(d);
+ });
+}
+
+/* ================= 招商留资 ================= */
+function submitLead(){
+ var nm=$('#ld-name').value.trim(),tel=$('#ld-tel').value.trim(),cat=$('#ld-cat').value.trim();
+ if(!nm||!tel||!cat){toast('请完整填写姓名 · 电话 · 品类');return}
+ payok('提交成功','村子会在 3 个工作日内与你联系（演示）',function(){
+  pop('pg-join');
+  $('#ld-name').value='';$('#ld-tel').value='';$('#ld-cat').value='';$('#ld-msg').value='';
+ });
+}
+
+/* ================= 支付浮层 ================= */
+function payok(t,d,cb){
+ $('#pok-t').textContent=t;$('#pok-d').textContent=d;
+ var ov=$('#payok');ov.classList.add('show');
+ ov._cb=cb;
+}
+function closePayok(){
+ var ov=$('#payok');ov.classList.remove('show');
+ if(ov._cb){ov._cb();ov._cb=null}
+}
+
+/* ================= 初始化 ================= */
+renderHome();renderDays();renderCourses();renderRooms();renderCats();renderShop();
+updCartBadge();
+$('#cb-course').classList.add('show');
+</script>
+</body>
+</html>
